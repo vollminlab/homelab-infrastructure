@@ -1,0 +1,18 @@
+[Unit]
+Description=Pi-hole Flask API Service
+After=network.target
+Wants=pihole-FTL.service
+
+[Service]
+EnvironmentFile=/etc/pihole-flask-api/.env
+
+ExecStart=/opt/pihole-flask-api-venv/bin/gunicorn --workers 2 --bind 0.0.0.0:5001 --chdir /opt/pihole-flask-api/src recordimporter:app
+WorkingDirectory=/opt/pihole-flask-api
+Environment="PATH=/opt/pihole-flask-api-venv/bin"
+User=www-data
+Group=www-data
+Restart=always
+
+[Install]
+WantedBy=multi-user.target
+

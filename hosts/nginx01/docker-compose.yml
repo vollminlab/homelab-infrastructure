@@ -28,3 +28,4 @@ services:
       MYSQL_PASSWORD: '${DB_PASSWORD}'
     volumes:
       - ./mysql:/var/lib/mysql
+

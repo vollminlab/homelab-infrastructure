@@ -1,1 +1,6 @@
+# Ignore real secret env files (e.g. hosts/nginx01/.env)
 .env
+*.env
+
+# Allow redacted env snapshots pulled by collect-host-configs.sh
+!*-flask-api.env
