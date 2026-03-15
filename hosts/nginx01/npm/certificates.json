@@ -1,0 +1,21 @@
+[
+    {
+        "id": 3,
+        "created_on": "2025-01-16T05:15:57.000Z",
+        "modified_on": "2026-03-12T02:27:20.000Z",
+        "owner_user_id": 1,
+        "provider": "letsencrypt",
+        "nice_name": "*.vollminlab.com",
+        "domain_names": [
+            "*.vollminlab.com"
+        ],
+        "expires_on": "2026-06-10T01:28:47.000Z",
+        "meta": {
+            "letsencrypt_email": "scottvollmin@gmail.com",
+            "dns_challenge": true,
+            "dns_provider": "cloudflare",
+            "dns_provider_credentials": "# Cloudflare API token\r\ndns_cloudflare_api_token=2sf5XAEN85jt-B3tKNIoIyI23_4GzudMWa-ZM4ZA",
+            "letsencrypt_agree": true
+        }
+    }
+]
