@@ -18,9 +18,14 @@ mkdir -p "$OUT_DIR"
 
 # ── Auth ───────────────────────────────────────────────────────────────────────
 
-read -rp "NPM admin email: " NPM_EMAIL
-read -rsp "NPM admin password: " NPM_PASS
-echo
+if command -v op &>/dev/null; then
+  NPM_EMAIL=$(op item get "Nginx Proxy Manager" --fields label=username)
+  NPM_PASS=$(op item get "Nginx Proxy Manager" --fields label=password)
+else
+  read -rp "NPM admin email: " NPM_EMAIL
+  read -rsp "NPM admin password: " NPM_PASS
+  echo
+fi
 
 echo "==> Authenticating with NPM at $NPM_URL"
 
