@@ -143,3 +143,9 @@ Host k8sworker06
   User vollmin
   IdentitiesOnly yes
   IdentityFile ~/.ssh/k8sworker06_id_ed25519.pub
+
+Host udm
+  HostName 192.168.1.1
+  User root
+  IdentitiesOnly yes
+  IdentityFile ~/.ssh/udm_se_id_ed25519.pub
