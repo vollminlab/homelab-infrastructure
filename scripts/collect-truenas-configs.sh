@@ -18,7 +18,7 @@ mkdir -p "$OUT_DIR"
 # ── Auth ───────────────────────────────────────────────────────────────────────
 
 if command -v op &>/dev/null; then
-  TRUENAS_KEY=$(op read "op://Homelab/truenas_api/password")
+  TRUENAS_KEY=$(op item get 5n53chsckejehks7ke2arv2n6e --fields label=password --reveal)
 else
   read -rsp "TrueNAS API key: " TRUENAS_KEY
   echo

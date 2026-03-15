@@ -19,8 +19,9 @@ mkdir -p "$OUT_DIR"
 # ── Auth ───────────────────────────────────────────────────────────────────────
 
 if command -v op &>/dev/null; then
-  NPM_EMAIL=$(op item get "Nginx Proxy Manager" --fields label=username)
-  NPM_PASS=$(op item get "Nginx Proxy Manager" --fields label=password)
+  _line=$(op item get jrma5hnjb6de3l2kkul5ghuiri --fields label=username,label=password --reveal)
+  NPM_EMAIL="${_line%%,*}"
+  NPM_PASS="${_line#*,}"
 else
   read -rp "NPM admin email: " NPM_EMAIL
   read -rsp "NPM admin password: " NPM_PASS
