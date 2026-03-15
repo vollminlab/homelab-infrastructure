@@ -6,12 +6,18 @@ No private key files on disk.
 
 ## Prerequisites
 
-1. Install [1Password](https://1password.com/downloads/) and enable the SSH agent:
-   **Settings → Developer → Use the SSH agent**
-2. Add each host's SSH key to 1Password (or generate new ones there).
+1. Follow the official 1Password SSH agent setup guide for your OS:
+   **https://developer.1password.com/docs/ssh/agent/**
+   This covers enabling the agent, OS-specific service configuration, and biometric unlock.
+
+2. If any of your keys live outside the default Personal/Private vault, configure
+   `~/.config/1Password/ssh/agent.toml` to include the additional vaults.
+   See: https://developer.1password.com/docs/ssh/agent/advanced/
+
 3. Copy the SSH config for your OS (see below) to `~/.ssh/config`.
-4. Copy the public key files referenced in the config to `~/.ssh/`.
-   These are in `hosts/windows/ssh/` in this repo (safe to commit — public keys only).
+
+4. Copy the public key files from `hosts/windows/ssh/*.pub` to `~/.ssh/`.
+   (Safe to commit — public keys only. Private keys stay in 1Password.)
 
 ---
 
