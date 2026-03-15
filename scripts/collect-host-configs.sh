@@ -404,7 +404,7 @@ collect_udm() {
   # Pull current network config (symlink resolves to active versioned file).
   # Running as root — no sudo needed.
   local raw="$dest/udapi-net-cfg.json.raw"
-  ssh udm "cat /data/udapi-config/udapi-net-cfg.json" > "$raw"
+  ssh -n udm "cat /data/udapi-config/udapi-net-cfg.json" > "$raw"
 
   # Redact sensitive fields and pretty-print using Python.
   # Keys seen in config: password, secret. Also redact common UniFi WiFi keys.
