@@ -1,10 +1,11 @@
 # ==========================================================
-# Global: use the 1Password SSH agent (Windows named pipe)
+# Global defaults
+# The 1Password SSH agent is used automatically on Windows
+# via the default named pipe (no IdentityAgent needed).
 # See docs/ssh-setup.md for macOS/Linux agent paths.
 # ==========================================================
 Host *
-  IdentityAgent \\.\pipe\openssh-ssh-agent
-  IdentitiesOnly no
+  IdentitiesOnly yes
 
 # -----------------------
 # Homelab hosts (direct)
@@ -12,85 +13,71 @@ Host *
 Host GLaDOS
   HostName 192.168.110.173
   User scott
-  IdentitiesOnly yes
   IdentityFile ~/.ssh/GLaDOS-laptop.pub
 
 Host pihole1
   HostName 192.168.100.2
   User vollmin
-  IdentitiesOnly yes
   IdentityFile ~/.ssh/pihole1_id_rsa.pub
 
 Host pihole2
   HostName 192.168.100.3
   User vollmin
-  IdentitiesOnly yes
   IdentityFile ~/.ssh/pihole2_id_rsa.pub
 
 Host groupme01
   HostName groupme01.vollminlab.com
   User vollmin
-  IdentitiesOnly yes
   IdentityFile ~/.ssh/groupme01_id_rsa.pub
 
 Host nginx01
   HostName nginx01.vollminlab.com
   User vollmin
-  IdentitiesOnly yes
   IdentityFile ~/.ssh/nginx01_id_rsa.pub
 
 Host haproxy01
   HostName haproxy01.vollminlab.com
   User vollmin
-  IdentitiesOnly yes
   IdentityFile ~/.ssh/haproxy01_id_rsa.pub
 
 Host haproxy02
   HostName haproxy02.vollminlab.com
   User vollmin
-  IdentitiesOnly yes
   IdentityFile ~/.ssh/haproxy02_id_rsa.pub
 
 Host haproxydmz01
   HostName haproxydmz01.vollminlab.com
   User vollmin
-  IdentitiesOnly yes
   IdentityFile ~/.ssh/haproxydmz01_id_ed25519.pub
 
 Host haproxydmz02
   HostName haproxydmz02.vollminlab.com
   User vollmin
-  IdentitiesOnly yes
   IdentityFile ~/.ssh/haproxydmz02_id_ed25519.pub
 
 Host truenas
   HostName truenas.vollminlab.com
   User vollmin
-  IdentitiesOnly yes
   IdentityFile ~/.ssh/truenas_id_rsa.pub
 
 Host esxi01
   HostName esxi01.vollminlab.com
   User root
-  IdentitiesOnly yes
   IdentityFile ~/.ssh/esxi01_root_ed25519.pub
 
 Host esxi02
   HostName esxi02.vollminlab.com
   User root
-  IdentitiesOnly yes
   IdentityFile ~/.ssh/esxi02_root_ed25519.pub
 
 Host esxi03
   HostName esxi03.vollminlab.com
   User root
-  IdentitiesOnly yes
   IdentityFile ~/.ssh/esxi03_root_ed25519.pub
 
 Host udm
   HostName 192.168.1.1
   User root
-  IdentitiesOnly yes
   IdentityFile ~/.ssh/udm_se_id_ed25519.pub
 
 # -----------------------
@@ -99,54 +86,44 @@ Host udm
 Host k8scp01
   HostName k8scp01.vollminlab.com
   User vollmin
-  IdentitiesOnly yes
   IdentityFile ~/.ssh/k8scp01_id_rsa.pub
 
 Host k8scp02
   HostName k8scp02.vollminlab.com
   User vollmin
-  IdentitiesOnly yes
   IdentityFile ~/.ssh/k8scp02_id_rsa.pub
 
 Host k8scp03
   HostName k8scp03.vollminlab.com
   User vollmin
-  IdentitiesOnly yes
   IdentityFile ~/.ssh/k8scp03_id_rsa.pub
 
 Host k8sworker01
   HostName k8sworker01.vollminlab.com
   User vollmin
-  IdentitiesOnly yes
   IdentityFile ~/.ssh/k8sworker01_id_rsa.pub
 
 Host k8sworker02
   HostName k8sworker02.vollminlab.com
   User vollmin
-  IdentitiesOnly yes
   IdentityFile ~/.ssh/k8sworker02_id_rsa.pub
 
 Host k8sworker03
   HostName k8sworker03.vollminlab.com
   User vollmin
-  IdentitiesOnly yes
   IdentityFile ~/.ssh/k8sworker03_id_rsa.pub
 
 Host k8sworker04
   HostName k8sworker04.vollminlab.com
   User vollmin
-  IdentitiesOnly yes
   IdentityFile ~/.ssh/k8sworker04_id_rsa.pub
 
 Host k8sworker05
   HostName k8sworker05.vollminlab.com
   User vollmin
-  IdentitiesOnly yes
   IdentityFile ~/.ssh/k8sworker05_id_rsa.pub
 
 Host k8sworker06
   HostName k8sworker06.vollminlab.com
   User vollmin
-  IdentitiesOnly yes
   IdentityFile ~/.ssh/k8sworker06_id_ed25519.pub
-

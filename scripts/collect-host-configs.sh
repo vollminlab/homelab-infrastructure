@@ -393,6 +393,55 @@ done
 REMOTE
 }
 
+# ── UDM SE ────────────────────────────────────────────────────────────────────
+collect_udm() {
+  echo ""
+  echo "==> udm"
+
+  local dest="$HOSTS_DIR/udm"
+  mkdir -p "$dest"
+
+  # Pull current network config (symlink resolves to active versioned file).
+  # Running as root — no sudo needed.
+  local raw="$dest/udapi-net-cfg.json.raw"
+  ssh udm "cat /data/udapi-config/udapi-net-cfg.json" > "$raw"
+
+  # Redact sensitive fields and pretty-print using Python.
+  # Keys seen in config: password, secret. Also redact common UniFi WiFi keys.
+  local py_script='
+import sys, json
+
+REDACT = {"password","secret","x_passphrase","x_wpa_psk","x_password","private_key"}
+
+def redact(obj):
+    if isinstance(obj, dict):
+        return {k: "REDACTED" if k in REDACT else redact(v) for k, v in obj.items()}
+    if isinstance(obj, list):
+        return [redact(i) for i in obj]
+    return obj
+
+with open(sys.argv[1]) as f:
+    data = json.load(f)
+with open(sys.argv[2], "w") as f:
+    json.dump(redact(data), f, indent=2)
+    f.write("\n")
+'
+  local ok=false
+  for py in python3 python py; do
+    if command -v "$py" &>/dev/null 2>&1; then
+      "$py" -c "$py_script" "$raw" "$dest/udapi-net-cfg.json" 2>/dev/null && ok=true && break
+    fi
+  done
+
+  rm -f "$raw"
+
+  if $ok; then
+    echo "  pulled udapi-net-cfg.json (redacted)"
+  else
+    echo "  WARNING: Python not found — skipping UDM config (install Python and re-run)" >&2
+  fi
+}
+
 # ── Pi-hole sync verification ─────────────────────────────────────────────────
 verify_pihole_sync() {
   local p1="$HOSTS_DIR/pihole1"  p2="$HOSTS_DIR/pihole2"
@@ -428,7 +477,7 @@ verify_pihole_sync() {
 
 # ── Main ──────────────────────────────────────────────────────────────────────
 if [[ $# -eq 0 ]]; then
-  HOSTS=(pihole1 pihole2 groupme01 haproxy01 haproxy02 haproxydmz01 haproxydmz02 nginx01)
+  HOSTS=(pihole1 pihole2 groupme01 haproxy01 haproxy02 haproxydmz01 haproxydmz02 nginx01 udm)
 else
   HOSTS=("$@")
 fi
@@ -451,6 +500,9 @@ for host in "${HOSTS[@]}"; do
         ;;
       nginx01)
         collect_nginx01
+        ;;
+      udm)
+        collect_udm
         ;;
       *)
         collect_generic "$host"
