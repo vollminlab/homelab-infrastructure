@@ -1,0 +1,67 @@
+#!/usr/bin/env bash
+# collect-truenas-configs.sh
+#
+# Exports TrueNAS config via the REST API v2.0.
+# Saves JSON snapshots to hosts/truenas/.
+#
+# Run from a terminal with network access to truenas.vollminlab.com.
+# Usage: ./scripts/collect-truenas-configs.sh
+
+set -euo pipefail
+
+TRUENAS_URL="https://truenas.vollminlab.com"
+REPO="$(cd "$(dirname "$0")/.." && pwd)"
+OUT_DIR="$REPO/hosts/truenas"
+
+mkdir -p "$OUT_DIR"
+
+# ── Auth ───────────────────────────────────────────────────────────────────────
+
+if command -v op &>/dev/null; then
+  TRUENAS_KEY=$(op read "op://Homelab/truenas_api/password")
+else
+  read -rsp "TrueNAS API key: " TRUENAS_KEY
+  echo
+fi
+
+echo "==> Authenticating with TrueNAS at $TRUENAS_URL"
+
+if ! curl -sf -o /dev/null \
+    -H "Authorization: Bearer $TRUENAS_KEY" \
+    "$TRUENAS_URL/api/v2.0/system/info"; then
+  echo "ERROR: Authentication failed — check API key and that TrueNAS is reachable." >&2
+  exit 1
+fi
+
+echo "  authenticated"
+
+# ── Fetch ──────────────────────────────────────────────────────────────────────
+
+fetch() {
+  local endpoint=$1 outfile=$2
+  local dest="$OUT_DIR/$outfile"
+  curl -sf \
+    -H "Authorization: Bearer $TRUENAS_KEY" \
+    "$TRUENAS_URL/api/v2.0/$endpoint" > "$dest"
+  for py in python3 python py; do
+    if command -v "$py" &>/dev/null 2>&1; then
+      "$py" -m json.tool "$dest" > "$dest.tmp" 2>/dev/null && mv "$dest.tmp" "$dest" && break
+      rm -f "$dest.tmp"
+    fi
+  done
+  echo "  pulled $outfile ($(wc -c < "$dest") bytes)"
+}
+
+echo "==> Fetching configs"
+fetch "pool"                  pools.json
+fetch "pool/dataset"          datasets.json
+fetch "sharing/smb"           smb-shares.json
+fetch "sharing/nfs"           nfs-shares.json
+fetch "network/configuration" network-config.json
+fetch "service"               services.json
+fetch "system/general"        system-general.json
+fetch "cronjob"               cronjobs.json
+
+echo ""
+echo "Done. Review before committing:"
+echo "  git diff --stat hosts/truenas/"

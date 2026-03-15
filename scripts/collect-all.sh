@@ -31,6 +31,11 @@ echo ""
 echo "── Nginx Proxy Manager ──────────────────────"
 bash "$SCRIPTS/collect-npm-configs.sh"
 
+# ── TrueNAS ───────────────────────────────────────────────────────────────────
+echo ""
+echo "── TrueNAS ──────────────────────────────────"
+bash "$SCRIPTS/collect-truenas-configs.sh"
+
 # ── Summary ───────────────────────────────────────────────────────────────────
 echo ""
 echo "╔══════════════════════════════════════════╗"
