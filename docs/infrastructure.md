@@ -128,7 +128,8 @@ Traffic between zones follows a default-deny model. Custom rules are documented 
 | esxi02 | 192.168.151.3   | 192.168.153.3   | 192.168.154.3   | 192.168.154.6   | 8.0.3   | 24859861 |
 | esxi03 | 192.168.151.4   | 192.168.153.4   | 192.168.154.4   | 192.168.154.7   | 8.0.3   | 24859861 |
 
-NTP: pool.ntp.org. Physical hardware specs not tracked here — vSphere reports manufacturer as "Micro Computer (HK) Tech Limited", model "Venus Series".
+Hardware: Minisforum MS-01. NTP: pool.ntp.org.
+vSphere reports 6 CPUs (P-cores only) / 12 logical processors per host, 95.74 GB usable RAM (96 GB physical). E-cores not presented to the hypervisor.
 
 ### vCenter (VCHA)
 
