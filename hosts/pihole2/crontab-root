@@ -28,3 +28,5 @@
 # Restart Unbound
 10 01 15 */3 * service unbound restart
 
+*/15 * * * * /usr/local/bin/pihole-healthcheck.sh
+

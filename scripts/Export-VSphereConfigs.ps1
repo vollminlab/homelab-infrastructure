@@ -9,6 +9,9 @@
 
 $ErrorActionPreference = "Stop"
 
+# Suppress PowerCLI CEIP and update nag on every run.
+Set-PowerCLIConfiguration -ParticipateInCEIP $false -Confirm:$false -Scope Session 2>$null | Out-Null
+
 $VCENTER      = "vcenter.vollminlab.com"
 $VCENTER_USER = "vollmin@vsphere.local"
 $REPO         = Split-Path $PSScriptRoot -Parent
@@ -19,7 +22,9 @@ New-Item -ItemType Directory -Path $OUT_DIR -Force | Out-Null
 function Save-Json {
     param([string]$Name, [object]$Data)
     $path = Join-Path $OUT_DIR "$Name.json"
-    $Data | ConvertTo-Json -Depth 10 | Set-Content -Path $path -Encoding UTF8
+    $content = $Data | ConvertTo-Json -Depth 10
+    # Write with LF line endings (not CRLF) so git doesn't see spurious changes.
+    [System.IO.File]::WriteAllText($path, ($content -replace "`r`n", "`n") + "`n")
     $bytes = (Get-Item $path).Length
     Write-Host "  pulled $Name.json ($bytes bytes)"
 }

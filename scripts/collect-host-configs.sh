@@ -94,7 +94,7 @@ collect_pihole() {
   ssh "$host" "sudo bash -s" << 'REMOTE' | parse_remote "$host"
 set -euo pipefail
 
-SKIP='^(pihole-FTL|pihole-updateGravity|pihole-logrotate|ssh|cron|rsyslog|syslog|networking|getty|serial-getty|plymouth|avahi|wpa_supplicant|systemd-|dbus|apparmor|ufw|snapd|multipathd|iscsi|vmtoolsd|open-vm-tools)'
+SKIP='^(pihole-FTL|pihole-updateGravity|pihole-logrotate|ssh|cron|rsyslog|syslog|networking|getty|serial-getty|plymouth|display-manager|avahi|wpa_supplicant|systemd-|dbus|apparmor|ufw|snapd|multipathd|iscsi|vmtoolsd|open-vm-tools)'
 
 # emit <local_rel_path> <remote_abs_path>
 # Outputs the file wrapped in protocol delimiters; skips missing files.
@@ -300,7 +300,7 @@ collect_haproxy() {
   ssh "$host" bash << 'REMOTE' | parse_remote "$host"
 set -euo pipefail
 
-SKIP='^(ssh|cron|rsyslog|networking|getty|serial-getty|plymouth|avahi|wpa_supplicant|systemd-|dbus|apparmor|ufw|snapd|multipathd)'
+SKIP='^(ssh|cron|rsyslog|syslog|networking|getty|serial-getty|plymouth|avahi|wpa_supplicant|systemd-|dbus|apparmor|ufw|snapd|multipathd|iscsi|vmtoolsd|open-vm-tools)'
 
 emit() {
   local rel="$1" path="$2"
@@ -450,7 +450,8 @@ verify_pihole_sync() {
   echo ""
   echo "==> Verifying pihole1 vs pihole2 sync"
 
-  local skip="keepalived|nebula-sync"
+  # fstab excluded: different hardware means different PARTUUIDs — expected.
+  local skip="keepalived|nebula-sync|fstab"
   local drift=0
 
   while IFS= read -r -d '' f1; do

@@ -1,37 +1,37 @@
-[
-  {
-    "Name": "esxi01-local",
-    "Type": "VMFS",
-    "CapacityGB": 825.75,
-    "FreeSpaceGB": 824.33,
-    "FileSystemVersion": "6.82"
-  },
-  {
-    "Name": "esxi02-local",
-    "Type": "VMFS",
-    "CapacityGB": 825.75,
-    "FreeSpaceGB": 824.33,
-    "FileSystemVersion": "6.82"
-  },
-  {
-    "Name": "esxi03-local",
-    "Type": "VMFS",
-    "CapacityGB": 825.75,
-    "FreeSpaceGB": 824.33,
-    "FileSystemVersion": "6.82"
-  },
-  {
-    "Name": "vmstore1",
-    "Type": "VMFS",
-    "CapacityGB": 1433.5,
-    "FreeSpaceGB": 716.63,
-    "FileSystemVersion": "6.82"
-  },
-  {
-    "Name": "vmstore2",
-    "Type": "VMFS",
-    "CapacityGB": 1433.5,
-    "FreeSpaceGB": 826.39,
-    "FileSystemVersion": "6.82"
-  }
+﻿[
+    {
+        "Name":  "esxi01-local",
+        "Type":  "VMFS",
+        "CapacityGB":  825.75,
+        "FreeSpaceGB":  824.33,
+        "FileSystemVersion":  "6.82"
+    },
+    {
+        "Name":  "esxi02-local",
+        "Type":  "VMFS",
+        "CapacityGB":  825.75,
+        "FreeSpaceGB":  824.33,
+        "FileSystemVersion":  "6.82"
+    },
+    {
+        "Name":  "esxi03-local",
+        "Type":  "VMFS",
+        "CapacityGB":  825.75,
+        "FreeSpaceGB":  824.33,
+        "FileSystemVersion":  "6.82"
+    },
+    {
+        "Name":  "vmstore1",
+        "Type":  "VMFS",
+        "CapacityGB":  1433.5,
+        "FreeSpaceGB":  716.61,
+        "FileSystemVersion":  "6.82"
+    },
+    {
+        "Name":  "vmstore2",
+        "Type":  "VMFS",
+        "CapacityGB":  1433.5,
+        "FreeSpaceGB":  826.31,
+        "FileSystemVersion":  "6.82"
+    }
 ]

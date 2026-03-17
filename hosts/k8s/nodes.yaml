@@ -20,7 +20,7 @@ items:
       node-role.kubernetes.io/control-plane: ""
       node.kubernetes.io/exclude-from-external-load-balancers: ""
     name: k8scp01
-    resourceVersion: "310047311"
+    resourceVersion: "311078578"
     uid: 6326f417-a0f2-42fe-9610-f63f52b70223
   spec:
     podCIDR: 172.18.0.0/24
@@ -56,25 +56,25 @@ items:
       reason: CalicoIsUp
       status: "False"
       type: NetworkUnavailable
-    - lastHeartbeatTime: "2026-03-15T17:48:54Z"
+    - lastHeartbeatTime: "2026-03-17T03:23:53Z"
       lastTransitionTime: "2026-01-28T07:49:53Z"
       message: kubelet has sufficient memory available
       reason: KubeletHasSufficientMemory
       status: "False"
       type: MemoryPressure
-    - lastHeartbeatTime: "2026-03-15T17:48:54Z"
+    - lastHeartbeatTime: "2026-03-17T03:23:53Z"
       lastTransitionTime: "2026-01-28T07:49:53Z"
       message: kubelet has no disk pressure
       reason: KubeletHasNoDiskPressure
       status: "False"
       type: DiskPressure
-    - lastHeartbeatTime: "2026-03-15T17:48:54Z"
+    - lastHeartbeatTime: "2026-03-17T03:23:53Z"
       lastTransitionTime: "2026-01-28T07:49:53Z"
       message: kubelet has sufficient PID available
       reason: KubeletHasSufficientPID
       status: "False"
       type: PIDPressure
-    - lastHeartbeatTime: "2026-03-15T17:48:54Z"
+    - lastHeartbeatTime: "2026-03-17T03:23:53Z"
       lastTransitionTime: "2026-02-10T08:27:07Z"
       message: kubelet is posting ready status
       reason: KubeletReady
@@ -269,7 +269,7 @@ items:
       node-role.kubernetes.io/control-plane: ""
       node.kubernetes.io/exclude-from-external-load-balancers: ""
     name: k8scp02
-    resourceVersion: "310048116"
+    resourceVersion: "311076831"
     uid: 4dd6a918-38d2-496c-a43e-0099433734f9
   spec:
     podCIDR: 172.18.4.0/24
@@ -305,25 +305,25 @@ items:
       reason: CalicoIsUp
       status: "False"
       type: NetworkUnavailable
-    - lastHeartbeatTime: "2026-03-15T17:50:29Z"
+    - lastHeartbeatTime: "2026-03-17T03:20:16Z"
       lastTransitionTime: "2026-01-28T07:49:51Z"
       message: kubelet has sufficient memory available
       reason: KubeletHasSufficientMemory
       status: "False"
       type: MemoryPressure
-    - lastHeartbeatTime: "2026-03-15T17:50:29Z"
+    - lastHeartbeatTime: "2026-03-17T03:20:16Z"
       lastTransitionTime: "2026-01-28T07:49:51Z"
       message: kubelet has no disk pressure
       reason: KubeletHasNoDiskPressure
       status: "False"
       type: DiskPressure
-    - lastHeartbeatTime: "2026-03-15T17:50:29Z"
+    - lastHeartbeatTime: "2026-03-17T03:20:16Z"
       lastTransitionTime: "2026-01-28T07:49:51Z"
       message: kubelet has sufficient PID available
       reason: KubeletHasSufficientPID
       status: "False"
       type: PIDPressure
-    - lastHeartbeatTime: "2026-03-15T17:50:29Z"
+    - lastHeartbeatTime: "2026-03-17T03:20:16Z"
       lastTransitionTime: "2026-01-28T07:49:51Z"
       message: kubelet is posting ready status
       reason: KubeletReady
@@ -468,7 +468,7 @@ items:
       node-role.kubernetes.io/control-plane: ""
       node.kubernetes.io/exclude-from-external-load-balancers: ""
     name: k8scp03
-    resourceVersion: "310046284"
+    resourceVersion: "311077502"
     uid: 7de8195f-3efc-4204-a1e0-d20e62eebe50
   spec:
     podCIDR: 172.18.5.0/24
@@ -504,25 +504,25 @@ items:
       reason: CalicoIsUp
       status: "False"
       type: NetworkUnavailable
-    - lastHeartbeatTime: "2026-03-15T17:46:48Z"
+    - lastHeartbeatTime: "2026-03-17T03:21:39Z"
       lastTransitionTime: "2025-08-11T08:46:20Z"
       message: kubelet has sufficient memory available
       reason: KubeletHasSufficientMemory
       status: "False"
       type: MemoryPressure
-    - lastHeartbeatTime: "2026-03-15T17:46:48Z"
+    - lastHeartbeatTime: "2026-03-17T03:21:39Z"
       lastTransitionTime: "2025-08-11T08:46:20Z"
       message: kubelet has no disk pressure
       reason: KubeletHasNoDiskPressure
       status: "False"
       type: DiskPressure
-    - lastHeartbeatTime: "2026-03-15T17:46:48Z"
+    - lastHeartbeatTime: "2026-03-17T03:21:39Z"
       lastTransitionTime: "2025-08-11T08:46:20Z"
       message: kubelet has sufficient PID available
       reason: KubeletHasSufficientPID
       status: "False"
       type: PIDPressure
-    - lastHeartbeatTime: "2026-03-15T17:46:48Z"
+    - lastHeartbeatTime: "2026-03-17T03:21:39Z"
       lastTransitionTime: "2025-08-31T04:29:24Z"
       message: kubelet is posting ready status
       reason: KubeletReady
@@ -666,7 +666,7 @@ items:
       kubernetes.io/os: linux
       node-role.kubernetes.io/worker: worker
     name: k8sworker01
-    resourceVersion: "310047640"
+    resourceVersion: "311077452"
     uid: 42ccb9d3-c736-4dfb-9896-3aa8cb21c341
   spec:
     podCIDR: 172.18.1.0/24
@@ -699,25 +699,25 @@ items:
       reason: CalicoIsUp
       status: "False"
       type: NetworkUnavailable
-    - lastHeartbeatTime: "2026-03-15T17:49:36Z"
+    - lastHeartbeatTime: "2026-03-17T03:21:33Z"
       lastTransitionTime: "2026-01-28T07:49:54Z"
       message: kubelet has sufficient memory available
       reason: KubeletHasSufficientMemory
       status: "False"
       type: MemoryPressure
-    - lastHeartbeatTime: "2026-03-15T17:49:36Z"
+    - lastHeartbeatTime: "2026-03-17T03:21:33Z"
       lastTransitionTime: "2026-01-28T07:49:54Z"
       message: kubelet has no disk pressure
       reason: KubeletHasNoDiskPressure
       status: "False"
       type: DiskPressure
-    - lastHeartbeatTime: "2026-03-15T17:49:36Z"
+    - lastHeartbeatTime: "2026-03-17T03:21:33Z"
       lastTransitionTime: "2026-01-28T07:49:54Z"
       message: kubelet has sufficient PID available
       reason: KubeletHasSufficientPID
       status: "False"
       type: PIDPressure
-    - lastHeartbeatTime: "2026-03-15T17:49:36Z"
+    - lastHeartbeatTime: "2026-03-17T03:21:33Z"
       lastTransitionTime: "2026-01-28T07:49:54Z"
       message: kubelet is posting ready status
       reason: KubeletReady
@@ -889,7 +889,7 @@ items:
       kubernetes.io/os: linux
       node-role.kubernetes.io/worker: worker
     name: k8sworker02
-    resourceVersion: "310048015"
+    resourceVersion: "311076619"
     uid: bf9a16e5-d901-4f09-be71-3765c8d2524d
   spec:
     podCIDR: 172.18.2.0/24
@@ -922,25 +922,25 @@ items:
       reason: CalicoIsUp
       status: "False"
       type: NetworkUnavailable
-    - lastHeartbeatTime: "2026-03-15T17:50:20Z"
+    - lastHeartbeatTime: "2026-03-17T03:19:56Z"
       lastTransitionTime: "2026-01-28T07:49:52Z"
       message: kubelet has sufficient memory available
       reason: KubeletHasSufficientMemory
       status: "False"
       type: MemoryPressure
-    - lastHeartbeatTime: "2026-03-15T17:50:20Z"
+    - lastHeartbeatTime: "2026-03-17T03:19:56Z"
       lastTransitionTime: "2026-01-28T07:49:52Z"
       message: kubelet has no disk pressure
       reason: KubeletHasNoDiskPressure
       status: "False"
       type: DiskPressure
-    - lastHeartbeatTime: "2026-03-15T17:50:20Z"
+    - lastHeartbeatTime: "2026-03-17T03:19:56Z"
       lastTransitionTime: "2026-01-28T07:49:52Z"
       message: kubelet has sufficient PID available
       reason: KubeletHasSufficientPID
       status: "False"
       type: PIDPressure
-    - lastHeartbeatTime: "2026-03-15T17:50:20Z"
+    - lastHeartbeatTime: "2026-03-17T03:19:56Z"
       lastTransitionTime: "2026-01-28T07:49:52Z"
       message: kubelet is posting ready status
       reason: KubeletReady
@@ -1135,7 +1135,7 @@ items:
       kubernetes.io/os: linux
       node-role.kubernetes.io/worker: ""
     name: k8sworker03
-    resourceVersion: "310047579"
+    resourceVersion: "311078802"
     uid: 5085fc3d-7b7d-4ecd-8afe-3c4bcd3ae0d8
   spec:
     podCIDR: 172.18.3.0/24
@@ -1168,25 +1168,25 @@ items:
       reason: CalicoIsUp
       status: "False"
       type: NetworkUnavailable
-    - lastHeartbeatTime: "2026-03-15T17:49:29Z"
+    - lastHeartbeatTime: "2026-03-17T03:24:20Z"
       lastTransitionTime: "2026-01-28T07:49:54Z"
       message: kubelet has sufficient memory available
       reason: KubeletHasSufficientMemory
       status: "False"
       type: MemoryPressure
-    - lastHeartbeatTime: "2026-03-15T17:49:29Z"
+    - lastHeartbeatTime: "2026-03-17T03:24:20Z"
       lastTransitionTime: "2026-01-28T07:49:54Z"
       message: kubelet has no disk pressure
       reason: KubeletHasNoDiskPressure
       status: "False"
       type: DiskPressure
-    - lastHeartbeatTime: "2026-03-15T17:49:29Z"
+    - lastHeartbeatTime: "2026-03-17T03:24:20Z"
       lastTransitionTime: "2026-01-28T07:49:54Z"
       message: kubelet has sufficient PID available
       reason: KubeletHasSufficientPID
       status: "False"
       type: PIDPressure
-    - lastHeartbeatTime: "2026-03-15T17:49:29Z"
+    - lastHeartbeatTime: "2026-03-17T03:24:20Z"
       lastTransitionTime: "2026-01-28T07:49:54Z"
       message: kubelet is posting ready status
       reason: KubeletReady
@@ -1378,7 +1378,7 @@ items:
       kubernetes.io/os: linux
       node-role.kubernetes.io/worker: worker
     name: k8sworker04
-    resourceVersion: "310048246"
+    resourceVersion: "311076698"
     uid: ca5e54ac-5716-4292-95e6-4d264b2ed5c6
   spec:
     podCIDR: 172.18.6.0/24
@@ -1411,25 +1411,25 @@ items:
       reason: CalicoIsUp
       status: "False"
       type: NetworkUnavailable
-    - lastHeartbeatTime: "2026-03-15T17:50:44Z"
+    - lastHeartbeatTime: "2026-03-17T03:20:03Z"
       lastTransitionTime: "2026-01-28T07:50:03Z"
       message: kubelet has sufficient memory available
       reason: KubeletHasSufficientMemory
       status: "False"
       type: MemoryPressure
-    - lastHeartbeatTime: "2026-03-15T17:50:44Z"
+    - lastHeartbeatTime: "2026-03-17T03:20:03Z"
       lastTransitionTime: "2026-01-28T07:50:03Z"
       message: kubelet has no disk pressure
       reason: KubeletHasNoDiskPressure
       status: "False"
       type: DiskPressure
-    - lastHeartbeatTime: "2026-03-15T17:50:44Z"
+    - lastHeartbeatTime: "2026-03-17T03:20:03Z"
       lastTransitionTime: "2026-01-28T07:50:03Z"
       message: kubelet has sufficient PID available
       reason: KubeletHasSufficientPID
       status: "False"
       type: PIDPressure
-    - lastHeartbeatTime: "2026-03-15T17:50:44Z"
+    - lastHeartbeatTime: "2026-03-17T03:20:03Z"
       lastTransitionTime: "2026-01-28T07:50:03Z"
       message: kubelet is posting ready status
       reason: KubeletReady
@@ -1648,7 +1648,7 @@ items:
       node-role.kubernetes.io/worker: ""
       role: dmz
     name: k8sworker05
-    resourceVersion: "310046995"
+    resourceVersion: "311078158"
     uid: b21cba75-d7c0-46ea-85dc-afca31dc963b
   spec:
     podCIDR: 172.18.7.0/24
@@ -1685,25 +1685,25 @@ items:
       reason: CalicoIsUp
       status: "False"
       type: NetworkUnavailable
-    - lastHeartbeatTime: "2026-03-15T17:48:16Z"
+    - lastHeartbeatTime: "2026-03-17T03:23:01Z"
       lastTransitionTime: "2026-01-28T07:49:50Z"
       message: kubelet has sufficient memory available
       reason: KubeletHasSufficientMemory
       status: "False"
       type: MemoryPressure
-    - lastHeartbeatTime: "2026-03-15T17:48:16Z"
+    - lastHeartbeatTime: "2026-03-17T03:23:01Z"
       lastTransitionTime: "2026-01-28T07:49:50Z"
       message: kubelet has no disk pressure
       reason: KubeletHasNoDiskPressure
       status: "False"
       type: DiskPressure
-    - lastHeartbeatTime: "2026-03-15T17:48:16Z"
+    - lastHeartbeatTime: "2026-03-17T03:23:01Z"
       lastTransitionTime: "2026-01-28T07:49:50Z"
       message: kubelet has sufficient PID available
       reason: KubeletHasSufficientPID
       status: "False"
       type: PIDPressure
-    - lastHeartbeatTime: "2026-03-15T17:48:16Z"
+    - lastHeartbeatTime: "2026-03-17T03:23:01Z"
       lastTransitionTime: "2026-01-28T07:49:50Z"
       message: kubelet is posting ready status
       reason: KubeletReady
@@ -1827,7 +1827,7 @@ items:
       node-role.kubernetes.io/worker: "true"
       role: dmz
     name: k8sworker06
-    resourceVersion: "310047227"
+    resourceVersion: "311078445"
     uid: b1794226-e7b5-4776-8f4e-234566df595f
   spec:
     podCIDR: 172.18.8.0/24
@@ -1864,25 +1864,25 @@ items:
       reason: CalicoIsUp
       status: "False"
       type: NetworkUnavailable
-    - lastHeartbeatTime: "2026-03-15T17:48:45Z"
+    - lastHeartbeatTime: "2026-03-17T03:23:37Z"
       lastTransitionTime: "2026-01-28T07:51:08Z"
       message: kubelet has sufficient memory available
       reason: KubeletHasSufficientMemory
       status: "False"
       type: MemoryPressure
-    - lastHeartbeatTime: "2026-03-15T17:48:45Z"
+    - lastHeartbeatTime: "2026-03-17T03:23:37Z"
       lastTransitionTime: "2026-01-28T07:51:08Z"
       message: kubelet has no disk pressure
       reason: KubeletHasNoDiskPressure
       status: "False"
       type: DiskPressure
-    - lastHeartbeatTime: "2026-03-15T17:48:45Z"
+    - lastHeartbeatTime: "2026-03-17T03:23:37Z"
       lastTransitionTime: "2026-01-28T07:51:08Z"
       message: kubelet has sufficient PID available
       reason: KubeletHasSufficientPID
       status: "False"
       type: PIDPressure
-    - lastHeartbeatTime: "2026-03-15T17:48:45Z"
+    - lastHeartbeatTime: "2026-03-17T03:23:37Z"
       lastTransitionTime: "2026-01-28T07:51:08Z"
       message: kubelet is posting ready status
       reason: KubeletReady

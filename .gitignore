@@ -4,3 +4,6 @@
 
 # Allow redacted env snapshots pulled by collect-host-configs.sh
 !*-flask-api.env
+
+# Claude Code memory (local only)
+.claude/
