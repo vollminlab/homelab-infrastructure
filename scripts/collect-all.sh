@@ -41,6 +41,11 @@ echo ""
 echo "── Kubernetes ───────────────────────────────"
 bash "$SCRIPTS/collect-k8s-configs.sh"
 
+# ── vSphere ───────────────────────────────────────────────────────────────────
+echo ""
+echo "── vSphere ──────────────────────────────────"
+powershell.exe -ExecutionPolicy Bypass -File "$SCRIPTS/Export-VSphereConfigs.ps1"
+
 # ── Summary ───────────────────────────────────────────────────────────────────
 echo ""
 echo "╔══════════════════════════════════════════╗"
