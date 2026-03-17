@@ -1,4 +1,4 @@
-﻿{
+{
     "Name":  "vollminlab-ESXi-Cluster",
     "HAEnabled":  true,
     "HAAdmissionControlEnabled":  true,

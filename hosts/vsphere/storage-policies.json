@@ -1,4 +1,4 @@
-﻿[
+[
     {
         "Name":  "Host-local PMem Default Storage Policy",
         "Description":  "Storage policy used as default for Host-local PMem datastores"

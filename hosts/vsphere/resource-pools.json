@@ -1,4 +1,4 @@
-﻿{
+{
     "Name":  "Resources",
     "Parent":  "vollminlab-ESXi-Cluster",
     "CpuSharesLevel":  3,

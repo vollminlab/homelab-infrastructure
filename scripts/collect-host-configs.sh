@@ -422,7 +422,7 @@ def redact(obj):
 
 with open(sys.argv[1]) as f:
     data = json.load(f)
-with open(sys.argv[2], "w") as f:
+with open(sys.argv[2], "w", newline="\n") as f:
     json.dump(redact(data), f, indent=2)
     f.write("\n")
 '

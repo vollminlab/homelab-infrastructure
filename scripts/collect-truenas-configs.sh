@@ -43,10 +43,10 @@ fetch() {
   curl -sf \
     -H "Authorization: Bearer $TRUENAS_KEY" \
     "$TRUENAS_URL/api/v2.0/$endpoint" > "$dest"
+  # Pretty-print in-place with LF line endings (json.tool uses OS default = CRLF on Windows)
   for py in python3 python py; do
     if command -v "$py" &>/dev/null 2>&1; then
-      "$py" -m json.tool "$dest" > "$dest.tmp" 2>/dev/null && mv "$dest.tmp" "$dest" && break
-      rm -f "$dest.tmp"
+      "$py" -c "import sys,json; d=json.load(open(sys.argv[1])); open(sys.argv[1],'w',newline='\n').write(json.dumps(d,indent=2)+'\n')" "$dest" 2>/dev/null && break
     fi
   done
   echo "  pulled $outfile ($(wc -c < "$dest") bytes)"

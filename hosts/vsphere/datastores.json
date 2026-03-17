@@ -1,4 +1,4 @@
-﻿[
+[
     {
         "Name":  "esxi01-local",
         "Type":  "VMFS",
@@ -31,7 +31,7 @@
         "Name":  "vmstore2",
         "Type":  "VMFS",
         "CapacityGB":  1433.5,
-        "FreeSpaceGB":  826.31,
+        "FreeSpaceGB":  826.30,
         "FileSystemVersion":  "6.82"
     }
 ]
