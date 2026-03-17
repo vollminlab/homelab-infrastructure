@@ -9,12 +9,19 @@
 
 $ErrorActionPreference = "Stop"
 
+# Import PowerCLI explicitly (required when running with -NoProfile).
+# Add the user-level module path that -NoProfile may omit.
+$userModules = Join-Path ([Environment]::GetFolderPath('MyDocuments')) 'PowerShell\Modules'
+if ($env:PSModulePath -notlike "*$userModules*") {
+    $env:PSModulePath = "$userModules;$env:PSModulePath"
+}
+Import-Module VMware.VimAutomation.Core -ErrorAction Stop -WarningAction SilentlyContinue
+
 # Suppress PowerCLI CEIP and update nag on every run.
 Set-PowerCLIConfiguration -ParticipateInCEIP $false -Confirm:$false -Scope Session 2>$null | Out-Null
 
-$VCENTER      = "vcenter.vollminlab.com"
-$VCENTER_USER = "vollmin@vsphere.local"
-$REPO         = Split-Path $PSScriptRoot -Parent
+$VCENTER = "vcenter.vollminlab.com"
+$REPO    = Split-Path $PSScriptRoot -Parent
 $OUT_DIR      = Join-Path $REPO "hosts\vsphere"
 
 New-Item -ItemType Directory -Path $OUT_DIR -Force | Out-Null
@@ -34,24 +41,28 @@ if ($global:DefaultVIServer -and $global:DefaultVIServer.IsConnected) {
     Write-Host "==> vCenter: $($global:DefaultVIServer.Name) (existing session)"
 } else {
     Write-Host "==> Connecting to vCenter at $VCENTER"
-    # Try op CLI for credentials; fall back to interactive prompt
-    $connected = $false
-    if (Get-Command op -ErrorAction SilentlyContinue) {
-        try {
-            $line   = op item get fa37l7fomndpbk5r6g7bkzgewa --fields label=username,label=password --reveal
-            $opUser = $line.Split(',')[0].Trim()
-            $opPass = $line.Substring($line.IndexOf(',') + 1).Trim()
-            $cred   = New-Object PSCredential(
-                $opUser,
-                (ConvertTo-SecureString $opPass -AsPlainText -Force)
-            )
-            Connect-VIServer -Server $VCENTER -Credential $cred | Out-Null
-            $connected = $true
-        } catch {}
+
+    # Locate op — check PATH first, then the default install location.
+    $opCmd = Get-Command op -ErrorAction SilentlyContinue
+    if (-not $opCmd) {
+        $opDefault = "$env:LOCALAPPDATA\1Password\app\8\op.exe"
+        if (Test-Path $opDefault) { $opCmd = $opDefault }
     }
-    if (-not $connected) {
-        Connect-VIServer -Server $VCENTER -User $VCENTER_USER | Out-Null
+
+    if (-not $opCmd) {
+        Write-Error "op CLI not found. Install 1Password CLI or connect to vCenter manually."
+        exit 1
     }
+
+    Write-Host "  fetching credentials from 1Password..."
+    $line   = & $opCmd item get fa37l7fomndpbk5r6g7bkzgewa --fields label=username,label=password --reveal
+    $opUser = $line.Split(',')[0].Trim()
+    $opPass = $line.Substring($line.IndexOf(',') + 1).Trim()
+    $cred   = New-Object PSCredential(
+        $opUser,
+        (ConvertTo-SecureString $opPass -AsPlainText -Force)
+    )
+    Connect-VIServer -Server $VCENTER -Credential $cred | Out-Null
     Write-Host "  connected"
 }
 
@@ -66,8 +77,7 @@ Save-Json "datacenter" (
 # ── Cluster ───────────────────────────────────────────────────────────────────
 Save-Json "cluster" (
     Get-Cluster | ForEach-Object {
-        $ha  = $_.ExtensionData.Configuration.DasConfig
-        $drs = $_.ExtensionData.Configuration.DrsConfig
+        $ha = $_.ExtensionData.Configuration.DasConfig
         [PSCustomObject]@{
             Name                      = $_.Name
             HAEnabled                 = $_.HAEnabled
