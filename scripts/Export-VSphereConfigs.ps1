@@ -29,21 +29,22 @@ if ($global:DefaultVIServer -and $global:DefaultVIServer.IsConnected) {
     Write-Host "==> vCenter: $($global:DefaultVIServer.Name) (existing session)"
 } else {
     Write-Host "==> Connecting to vCenter at $VCENTER"
-    # Try op CLI for password; fall back to interactive prompt
-    $vcPassword = $null
+    # Try op CLI for credentials; fall back to interactive prompt
+    $connected = $false
     if (Get-Command op -ErrorAction SilentlyContinue) {
         try {
-            $opItem = op item get "vcenter" --fields label=password --reveal 2>$null
-            if ($opItem -and $opItem -notmatch "^\[use") { $vcPassword = $opItem.Trim() }
+            $line   = op item get fa37l7fomndpbk5r6g7bkzgewa --fields label=username,label=password --reveal
+            $opUser = $line.Split(',')[0].Trim()
+            $opPass = $line.Substring($line.IndexOf(',') + 1).Trim()
+            $cred   = New-Object PSCredential(
+                $opUser,
+                (ConvertTo-SecureString $opPass -AsPlainText -Force)
+            )
+            Connect-VIServer -Server $VCENTER -Credential $cred | Out-Null
+            $connected = $true
         } catch {}
     }
-    if ($vcPassword) {
-        $cred = New-Object PSCredential(
-            $VCENTER_USER,
-            (ConvertTo-SecureString $vcPassword -AsPlainText -Force)
-        )
-        Connect-VIServer -Server $VCENTER -Credential $cred | Out-Null
-    } else {
+    if (-not $connected) {
         Connect-VIServer -Server $VCENTER -User $VCENTER_USER | Out-Null
     }
     Write-Host "  connected"
