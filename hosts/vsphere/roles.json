@@ -1,0 +1,777 @@
+[
+  {
+    "Name": "applmgmtSvcRole",
+    "PrivilegeList": [
+      "Extension.Update",
+      "System.Anonymous",
+      "System.Read",
+      "System.View"
+    ]
+  },
+  {
+    "Name": "AutoUpdateUser",
+    "PrivilegeList": [
+      "Global.LogEvent",
+      "System.Anonymous",
+      "System.Read",
+      "System.View"
+    ]
+  },
+  {
+    "Name": "CNS-SUPERVISOR-DATASTORE",
+    "PrivilegeList": [
+      "Datastore.AllocateSpace",
+      "Datastore.FileManagement",
+      "System.Anonymous",
+      "System.Read",
+      "System.View"
+    ]
+  },
+  {
+    "Name": "CNS-SUPERVISOR-HOST-CONFIG-STORAGE-AND-CNS-VM",
+    "PrivilegeList": [
+      "Host.Config.Storage",
+      "Resource.ColdMigrate",
+      "Resource.HotMigrate",
+      "System.Anonymous",
+      "System.Read",
+      "System.View",
+      "VirtualMachine.Config.AddExistingDisk",
+      "VirtualMachine.Config.AddRemoveDevice",
+      "VirtualMachine.Config.RemoveDisk"
+    ]
+  },
+  {
+    "Name": "CNS-SUPERVISOR-SEARCH-AND-SPBM",
+    "PrivilegeList": [
+      "Cns.Searchable",
+      "StorageProfile.View",
+      "System.Anonymous",
+      "System.Read",
+      "System.View"
+    ]
+  },
+  {
+    "Name": "com.vmware.Content.Admin",
+    "PrivilegeList": [
+      "ContentLibrary.AddCertToTrustStore",
+      "ContentLibrary.AddLibraryItem",
+      "ContentLibrary.AddSubscription",
+      "ContentLibrary.CheckInTemplate",
+      "ContentLibrary.CheckOutTemplate",
+      "ContentLibrary.CreateLocalLibrary",
+      "ContentLibrary.CreateSubscribedLibrary",
+      "ContentLibrary.DeleteCertFromTrustStore",
+      "ContentLibrary.DeleteLibraryItem",
+      "ContentLibrary.DeleteLocalLibrary",
+      "ContentLibrary.DeleteSubscribedLibrary",
+      "ContentLibrary.DeleteSubscription",
+      "ContentLibrary.DownloadSession",
+      "ContentLibrary.EvictLibraryItem",
+      "ContentLibrary.EvictSubscribedLibrary",
+      "ContentLibrary.GetConfiguration",
+      "ContentLibrary.ManageRegistry",
+      "ContentLibrary.ManageRegistryProject",
+      "ContentLibrary.ProbeSubscription",
+      "ContentLibrary.PublishLibrary",
+      "ContentLibrary.PublishLibraryItem",
+      "ContentLibrary.ReadStorage",
+      "ContentLibrary.SyncLibrary",
+      "ContentLibrary.SyncLibraryItem",
+      "ContentLibrary.TypeIntrospection",
+      "ContentLibrary.UpdateConfiguration",
+      "ContentLibrary.UpdateLibrary",
+      "ContentLibrary.UpdateLibraryItem",
+      "ContentLibrary.UpdateLocalLibrary",
+      "ContentLibrary.UpdateSession",
+      "ContentLibrary.UpdateSubscribedLibrary",
+      "ContentLibrary.UpdateSubscription",
+      "System.Anonymous",
+      "System.Read",
+      "System.View"
+    ]
+  },
+  {
+    "Name": "com.vmware.Content.Registry.Admin",
+    "PrivilegeList": [
+      "ContentLibrary.ManageRegistry",
+      "ContentLibrary.ManageRegistryProject",
+      "System.Anonymous",
+      "System.Read",
+      "System.View"
+    ]
+  },
+  {
+    "Name": "DatastoreConsumer",
+    "PrivilegeList": [
+      "Datastore.AllocateSpace",
+      "System.Anonymous",
+      "System.Read",
+      "System.View"
+    ]
+  },
+  {
+    "Name": "InventoryService.Tagging.TaggingAdmin",
+    "PrivilegeList": [
+      "InventoryService.Tagging.AttachTag",
+      "InventoryService.Tagging.CreateCategory",
+      "InventoryService.Tagging.CreateTag",
+      "InventoryService.Tagging.DeleteCategory",
+      "InventoryService.Tagging.DeleteTag",
+      "InventoryService.Tagging.EditCategory",
+      "InventoryService.Tagging.EditTag",
+      "InventoryService.Tagging.ModifyUsedByForCategory",
+      "InventoryService.Tagging.ModifyUsedByForTag",
+      "InventoryService.Tagging.ObjectAttachable",
+      "System.Anonymous",
+      "System.Read",
+      "System.View"
+    ]
+  },
+  {
+    "Name": "NamespacesQueryRole",
+    "PrivilegeList": [
+      "Namespaces.ListAccess",
+      "System.Anonymous",
+      "System.Read",
+      "System.View"
+    ]
+  },
+  {
+    "Name": "NetOperatorController",
+    "PrivilegeList": [
+      "Network.Assign",
+      "System.Anonymous",
+      "System.Read",
+      "System.View"
+    ]
+  },
+  {
+    "Name": "NetworkConsumer",
+    "PrivilegeList": [
+      "Network.Assign",
+      "System.Anonymous",
+      "System.Read",
+      "System.View"
+    ]
+  },
+  {
+    "Name": "NSOperatorController",
+    "PrivilegeList": [
+      "Namespaces.Configure",
+      "System.Anonymous",
+      "System.Read",
+      "System.View"
+    ]
+  },
+  {
+    "Name": "NsxAdministrator",
+    "PrivilegeList": [
+      "Nsx.ModifyAll",
+      "System.Anonymous",
+      "System.Read",
+      "System.View"
+    ]
+  },
+  {
+    "Name": "NsxAuditor",
+    "PrivilegeList": [
+      "Nsx.Read",
+      "System.Anonymous",
+      "System.Read",
+      "System.View"
+    ]
+  },
+  {
+    "Name": "NsxViAdministrator",
+    "PrivilegeList": [
+      "Nsx.Manage",
+      "System.Anonymous",
+      "System.Read",
+      "System.View"
+    ]
+  },
+  {
+    "Name": "ObservabilityVapiSvcRole",
+    "PrivilegeList": [
+      "System.Anonymous",
+      "System.Read",
+      "System.View"
+    ]
+  },
+  {
+    "Name": "PerfchartsSvcRole",
+    "PrivilegeList": [
+      "System.Anonymous",
+      "System.Read",
+      "System.View"
+    ]
+  },
+  {
+    "Name": "PodVmLifeCycleManager",
+    "PrivilegeList": [
+      "Cns.Searchable",
+      "Datastore.AllocateSpace",
+      "Datastore.FileManagement",
+      "EAM.Modify",
+      "Host.Config.Storage",
+      "Network.Assign",
+      "Resource.AssignVMToPool",
+      "Resource.ColdMigrate",
+      "StorageProfile.View",
+      "System.Anonymous",
+      "System.Read",
+      "System.View",
+      "VirtualMachine.Config.AddExistingDisk",
+      "VirtualMachine.Config.AddNewDisk",
+      "VirtualMachine.Config.AddRemoveDevice",
+      "VirtualMachine.Config.RemoveDisk",
+      "VirtualMachine.Config.Settings",
+      "VirtualMachine.Inventory.Create",
+      "VirtualMachine.Inventory.Delete"
+    ]
+  },
+  {
+    "Name": "ResourcePoolAdministrator",
+    "PrivilegeList": [
+      "Alarm.Create",
+      "Alarm.Delete",
+      "Alarm.Edit",
+      "Authorization.ModifyPermissions",
+      "Datastore.Browse",
+      "Folder.Create",
+      "Folder.Delete",
+      "Folder.Move",
+      "Folder.Rename",
+      "Global.CancelTask",
+      "Global.LogEvent",
+      "Global.SetCustomField",
+      "Resource.AssignVMToPool",
+      "Resource.ColdMigrate",
+      "Resource.CreatePool",
+      "Resource.DeletePool",
+      "Resource.EditPool",
+      "Resource.HotMigrate",
+      "Resource.MovePool",
+      "Resource.QueryVMotion",
+      "Resource.RenamePool",
+      "ScheduledTask.Create",
+      "ScheduledTask.Delete",
+      "ScheduledTask.Edit",
+      "ScheduledTask.Run",
+      "System.Anonymous",
+      "System.Read",
+      "System.View",
+      "VirtualMachine.Config.AddExistingDisk",
+      "VirtualMachine.Config.AddNewDisk",
+      "VirtualMachine.Config.AddRemoveDevice",
+      "VirtualMachine.Config.AdvancedConfig",
+      "VirtualMachine.Config.CPUCount",
+      "VirtualMachine.Config.DiskLease",
+      "VirtualMachine.Config.EditDevice",
+      "VirtualMachine.Config.Memory",
+      "VirtualMachine.Config.RawDevice",
+      "VirtualMachine.Config.RemoveDisk",
+      "VirtualMachine.Config.Rename",
+      "VirtualMachine.Config.ResetGuestInfo",
+      "VirtualMachine.Config.Resource",
+      "VirtualMachine.Config.Settings",
+      "VirtualMachine.Config.UpgradeVirtualHardware",
+      "VirtualMachine.Interact.AnswerQuestion",
+      "VirtualMachine.Interact.ConsoleInteract",
+      "VirtualMachine.Interact.DeviceConnection",
+      "VirtualMachine.Interact.PowerOff",
+      "VirtualMachine.Interact.PowerOn",
+      "VirtualMachine.Interact.Reset",
+      "VirtualMachine.Interact.SetCDMedia",
+      "VirtualMachine.Interact.SetFloppyMedia",
+      "VirtualMachine.Interact.Suspend",
+      "VirtualMachine.Interact.ToolsInstall",
+      "VirtualMachine.Inventory.Create",
+      "VirtualMachine.Inventory.CreateFromExisting",
+      "VirtualMachine.Inventory.Delete",
+      "VirtualMachine.Inventory.Move",
+      "VirtualMachine.Inventory.Register",
+      "VirtualMachine.Inventory.Unregister",
+      "VirtualMachine.Provisioning.Clone",
+      "VirtualMachine.Provisioning.CloneTemplate",
+      "VirtualMachine.Provisioning.CreateTemplateFromVM",
+      "VirtualMachine.Provisioning.Customize",
+      "VirtualMachine.Provisioning.DeployTemplate",
+      "VirtualMachine.Provisioning.DiskRandomAccess",
+      "VirtualMachine.Provisioning.DiskRandomRead",
+      "VirtualMachine.Provisioning.GetVmFiles",
+      "VirtualMachine.Provisioning.MarkAsTemplate",
+      "VirtualMachine.Provisioning.MarkAsVM",
+      "VirtualMachine.Provisioning.ModifyCustSpecs",
+      "VirtualMachine.Provisioning.PutVmFiles",
+      "VirtualMachine.Provisioning.ReadCustSpecs",
+      "VirtualMachine.State.CreateSnapshot",
+      "VirtualMachine.State.RemoveSnapshot",
+      "VirtualMachine.State.RenameSnapshot",
+      "VirtualMachine.State.RevertToSnapshot"
+    ]
+  },
+  {
+    "Name": "SupervisorServiceCluster",
+    "PrivilegeList": [
+      "Host.Inventory.EditCluster",
+      "Namespaces.Configure",
+      "System.Anonymous",
+      "System.Read",
+      "System.View"
+    ]
+  },
+  {
+    "Name": "SupervisorServiceGlobal",
+    "PrivilegeList": [
+      "CertificateAuthority.Manage",
+      "System.Anonymous",
+      "System.Read",
+      "System.View"
+    ]
+  },
+  {
+    "Name": "SupervisorServiceRootFolder",
+    "PrivilegeList": [
+      "StorageProfile.Update",
+      "StorageProfile.View",
+      "System.Anonymous",
+      "System.Read",
+      "System.View"
+    ]
+  },
+  {
+    "Name": "SyncUsers",
+    "PrivilegeList": [
+      "CertificateManagement.Manage",
+      "HLM.Create",
+      "HLM.Manage",
+      "IntercomNamespace.Read",
+      "IntercomNamespace.Write",
+      "InventoryService.Tagging.AttachTag",
+      "InventoryService.Tagging.CreateCategory",
+      "InventoryService.Tagging.CreateTag",
+      "InventoryService.Tagging.DeleteCategory",
+      "InventoryService.Tagging.DeleteTag",
+      "InventoryService.Tagging.EditCategory",
+      "InventoryService.Tagging.EditTag",
+      "InventoryService.Tagging.ModifyUsedByForCategory",
+      "InventoryService.Tagging.ModifyUsedByForTag",
+      "ReplicationService.Administer",
+      "SettingsStore.Manage",
+      "System.Anonymous",
+      "System.Read",
+      "System.View",
+      "Trust.Manage"
+    ]
+  },
+  {
+    "Name": "TopologysvcUser",
+    "PrivilegeList": [
+      "Global.LogEvent",
+      "System.Anonymous",
+      "System.Read",
+      "System.View"
+    ]
+  },
+  {
+    "Name": "vCLSAdmin",
+    "PrivilegeList": [
+      "Cryptographer.Access",
+      "Cryptographer.AddDisk",
+      "Cryptographer.Clone",
+      "Cryptographer.Decrypt",
+      "Cryptographer.Encrypt",
+      "Cryptographer.EncryptNew",
+      "Cryptographer.ManageEncryptionPolicy",
+      "Cryptographer.ManageKeys",
+      "Cryptographer.ManageKeyServers",
+      "Cryptographer.Migrate",
+      "Cryptographer.ReadKeyServersInfo",
+      "Cryptographer.Recrypt",
+      "Cryptographer.RegisterHost",
+      "Cryptographer.RegisterVM",
+      "Global.Settings",
+      "InventoryService.Tagging.ObjectAttachable",
+      "Resource.ColdMigrate",
+      "Resource.HotMigrate",
+      "System.Anonymous",
+      "System.Read",
+      "System.View",
+      "VirtualMachine.Config.Settings",
+      "VirtualMachine.GuestOperations.Execute",
+      "VirtualMachine.GuestOperations.Query",
+      "VirtualMachine.Interact.ConsoleInteract",
+      "VirtualMachine.Interact.PowerOff"
+    ]
+  },
+  {
+    "Name": "VirtualMachineConsoleUser",
+    "PrivilegeList": [
+      "System.Anonymous",
+      "System.Read",
+      "System.View",
+      "VirtualMachine.Interact.AnswerQuestion",
+      "VirtualMachine.Interact.ConsoleInteract",
+      "VirtualMachine.Interact.DeviceConnection",
+      "VirtualMachine.Interact.PowerOff",
+      "VirtualMachine.Interact.PowerOn",
+      "VirtualMachine.Interact.Reset",
+      "VirtualMachine.Interact.SetCDMedia",
+      "VirtualMachine.Interact.SetFloppyMedia",
+      "VirtualMachine.Interact.Suspend",
+      "VirtualMachine.Interact.ToolsInstall"
+    ]
+  },
+  {
+    "Name": "VirtualMachinePowerUser",
+    "PrivilegeList": [
+      "Datastore.Browse",
+      "Global.CancelTask",
+      "ScheduledTask.Create",
+      "ScheduledTask.Delete",
+      "ScheduledTask.Edit",
+      "ScheduledTask.Run",
+      "System.Anonymous",
+      "System.Read",
+      "System.View",
+      "VirtualMachine.Config.AddExistingDisk",
+      "VirtualMachine.Config.AddNewDisk",
+      "VirtualMachine.Config.AddRemoveDevice",
+      "VirtualMachine.Config.AdvancedConfig",
+      "VirtualMachine.Config.CPUCount",
+      "VirtualMachine.Config.DiskLease",
+      "VirtualMachine.Config.EditDevice",
+      "VirtualMachine.Config.Memory",
+      "VirtualMachine.Config.RemoveDisk",
+      "VirtualMachine.Config.Rename",
+      "VirtualMachine.Config.ResetGuestInfo",
+      "VirtualMachine.Config.Resource",
+      "VirtualMachine.Config.Settings",
+      "VirtualMachine.Config.UpgradeVirtualHardware",
+      "VirtualMachine.Interact.AnswerQuestion",
+      "VirtualMachine.Interact.ConsoleInteract",
+      "VirtualMachine.Interact.DeviceConnection",
+      "VirtualMachine.Interact.GuestControl",
+      "VirtualMachine.Interact.PowerOff",
+      "VirtualMachine.Interact.PowerOn",
+      "VirtualMachine.Interact.Reset",
+      "VirtualMachine.Interact.SetCDMedia",
+      "VirtualMachine.Interact.SetFloppyMedia",
+      "VirtualMachine.Interact.Suspend",
+      "VirtualMachine.Interact.ToolsInstall",
+      "VirtualMachine.State.CreateSnapshot",
+      "VirtualMachine.State.RemoveSnapshot",
+      "VirtualMachine.State.RenameSnapshot",
+      "VirtualMachine.State.RevertToSnapshot"
+    ]
+  },
+  {
+    "Name": "VirtualMachineUser",
+    "PrivilegeList": [
+      "Global.CancelTask",
+      "ScheduledTask.Create",
+      "ScheduledTask.Delete",
+      "ScheduledTask.Edit",
+      "ScheduledTask.Run",
+      "System.Anonymous",
+      "System.Read",
+      "System.View",
+      "VirtualMachine.Interact.AnswerQuestion",
+      "VirtualMachine.Interact.ConsoleInteract",
+      "VirtualMachine.Interact.DeviceConnection",
+      "VirtualMachine.Interact.PowerOff",
+      "VirtualMachine.Interact.PowerOn",
+      "VirtualMachine.Interact.Reset",
+      "VirtualMachine.Interact.SetCDMedia",
+      "VirtualMachine.Interact.SetFloppyMedia",
+      "VirtualMachine.Interact.Suspend",
+      "VirtualMachine.Interact.ToolsInstall"
+    ]
+  },
+  {
+    "Name": "VMImageServiceGlobal",
+    "PrivilegeList": [
+      "ContentLibrary.AddLibraryItem",
+      "ContentLibrary.DeleteLibraryItem",
+      "ContentLibrary.UpdateSession",
+      "System.Anonymous",
+      "System.Read",
+      "System.View"
+    ]
+  },
+  {
+    "Name": "VMOperatorController",
+    "PrivilegeList": [
+      "Cryptographer.Access",
+      "Cryptographer.AddDisk",
+      "Cryptographer.Clone",
+      "Cryptographer.Encrypt",
+      "Cryptographer.EncryptNew",
+      "Cryptographer.Migrate",
+      "Cryptographer.Recrypt",
+      "Datastore.AllocateSpace",
+      "Folder.Create",
+      "Folder.Delete",
+      "InventoryService.Tagging.AttachTag",
+      "InventoryService.Tagging.ObjectAttachable",
+      "Network.Assign",
+      "Resource.ApplyRecommendation",
+      "Resource.AssignVAppToPool",
+      "Resource.AssignVMToPool",
+      "Resource.ColdMigrate",
+      "Resource.CreatePool",
+      "Resource.DeletePool",
+      "Resource.EditPool",
+      "Resource.HotMigrate",
+      "Resource.MovePool",
+      "Resource.QueryVMotion",
+      "Resource.RenamePool",
+      "System.Anonymous",
+      "System.Read",
+      "System.View",
+      "VApp.ApplicationConfig",
+      "VApp.AssignResourcePool",
+      "VApp.AssignVApp",
+      "VApp.AssignVM",
+      "VApp.Clone",
+      "VApp.Create",
+      "VApp.Delete",
+      "VApp.Export",
+      "VApp.ExtractOvfEnvironment",
+      "VApp.Import",
+      "VApp.InstanceConfig",
+      "VApp.ManagedByConfig",
+      "VApp.Move",
+      "VApp.PowerOff",
+      "VApp.PowerOn",
+      "VApp.Rename",
+      "VApp.ResourceConfig",
+      "VApp.Suspend",
+      "VApp.Unregister",
+      "VirtualMachine.Config.AddExistingDisk",
+      "VirtualMachine.Config.AddNewDisk",
+      "VirtualMachine.Config.AddRemoveDevice",
+      "VirtualMachine.Config.AdvancedConfig",
+      "VirtualMachine.Config.Annotation",
+      "VirtualMachine.Config.ChangeTracking",
+      "VirtualMachine.Config.CPUCount",
+      "VirtualMachine.Config.DiskExtend",
+      "VirtualMachine.Config.DiskLease",
+      "VirtualMachine.Config.EditDevice",
+      "VirtualMachine.Config.HostUSBDevice",
+      "VirtualMachine.Config.ManagedBy",
+      "VirtualMachine.Config.Memory",
+      "VirtualMachine.Config.MksControl",
+      "VirtualMachine.Config.QueryFTCompatibility",
+      "VirtualMachine.Config.QueryUnownedFiles",
+      "VirtualMachine.Config.RawDevice",
+      "VirtualMachine.Config.ReloadFromPath",
+      "VirtualMachine.Config.RemoveDisk",
+      "VirtualMachine.Config.Rename",
+      "VirtualMachine.Config.ResetGuestInfo",
+      "VirtualMachine.Config.Resource",
+      "VirtualMachine.Config.Settings",
+      "VirtualMachine.Config.SwapPlacement",
+      "VirtualMachine.Config.UpgradeVirtualHardware",
+      "VirtualMachine.GuestOperations.Execute",
+      "VirtualMachine.GuestOperations.Modify",
+      "VirtualMachine.GuestOperations.ModifyAliases",
+      "VirtualMachine.GuestOperations.Query",
+      "VirtualMachine.GuestOperations.QueryAliases",
+      "VirtualMachine.Hbr.ConfigureReplication",
+      "VirtualMachine.Hbr.MonitorReplication",
+      "VirtualMachine.Hbr.ReplicaManagement",
+      "VirtualMachine.Interact.AnswerQuestion",
+      "VirtualMachine.Interact.Backup",
+      "VirtualMachine.Interact.ConsoleInteract",
+      "VirtualMachine.Interact.CreateScreenshot",
+      "VirtualMachine.Interact.DefragmentAllDisks",
+      "VirtualMachine.Interact.DeviceConnection",
+      "VirtualMachine.Interact.DnD",
+      "VirtualMachine.Interact.GuestControl",
+      "VirtualMachine.Interact.Pause",
+      "VirtualMachine.Interact.PowerOff",
+      "VirtualMachine.Interact.PowerOn",
+      "VirtualMachine.Interact.PutUsbScanCodes",
+      "VirtualMachine.Interact.Reset",
+      "VirtualMachine.Interact.SESparseMaintenance",
+      "VirtualMachine.Interact.SetCDMedia",
+      "VirtualMachine.Interact.SetFloppyMedia",
+      "VirtualMachine.Interact.Suspend",
+      "VirtualMachine.Interact.SuspendToMemory",
+      "VirtualMachine.Interact.ToolsInstall",
+      "VirtualMachine.Inventory.Create",
+      "VirtualMachine.Inventory.CreateFromExisting",
+      "VirtualMachine.Inventory.Delete",
+      "VirtualMachine.Inventory.Move",
+      "VirtualMachine.Inventory.Register",
+      "VirtualMachine.Inventory.Unregister",
+      "VirtualMachine.Namespace.Event",
+      "VirtualMachine.Namespace.EventNotify",
+      "VirtualMachine.Namespace.Management",
+      "VirtualMachine.Namespace.ModifyContent",
+      "VirtualMachine.Namespace.Query",
+      "VirtualMachine.Namespace.ReadContent",
+      "VirtualMachine.Provisioning.Clone",
+      "VirtualMachine.Provisioning.CloneTemplate",
+      "VirtualMachine.Provisioning.CreateTemplateFromVM",
+      "VirtualMachine.Provisioning.Customize",
+      "VirtualMachine.Provisioning.DeployTemplate",
+      "VirtualMachine.Provisioning.DiskRandomAccess",
+      "VirtualMachine.Provisioning.DiskRandomRead",
+      "VirtualMachine.Provisioning.FileRandomAccess",
+      "VirtualMachine.Provisioning.GetVmFiles",
+      "VirtualMachine.Provisioning.MarkAsTemplate",
+      "VirtualMachine.Provisioning.MarkAsVM",
+      "VirtualMachine.Provisioning.ModifyCustSpecs",
+      "VirtualMachine.Provisioning.PromoteDisks",
+      "VirtualMachine.Provisioning.PutVmFiles",
+      "VirtualMachine.Provisioning.ReadCustSpecs",
+      "VirtualMachine.State.CreateSnapshot",
+      "VirtualMachine.State.RemoveSnapshot",
+      "VirtualMachine.State.RenameSnapshot",
+      "VirtualMachine.State.RevertToSnapshot"
+    ]
+  },
+  {
+    "Name": "VMOperatorControllerGlobal",
+    "PrivilegeList": [
+      "ContentLibrary.AddLibraryItem",
+      "ContentLibrary.CheckOutTemplate",
+      "ContentLibrary.DownloadSession",
+      "ContentLibrary.SyncLibrary",
+      "ContentLibrary.SyncLibraryItem",
+      "ContentLibrary.UpdateLibraryItem",
+      "InventoryService.Tagging.AttachTag",
+      "InventoryService.Tagging.ObjectAttachable",
+      "System.Anonymous",
+      "System.Read",
+      "System.View"
+    ]
+  },
+  {
+    "Name": "VMServicesAdministrator",
+    "PrivilegeList": [
+      "Namespaces.Configure",
+      "Namespaces.Manage",
+      "System.Anonymous",
+      "System.Read",
+      "System.View",
+      "VirtualMachineClasses.Manage"
+    ]
+  },
+  {
+    "Name": "VMwareConsolidatedBackupUser",
+    "PrivilegeList": [
+      "System.Anonymous",
+      "System.Read",
+      "System.View",
+      "VirtualMachine.Config.DiskLease",
+      "VirtualMachine.Provisioning.DiskRandomRead",
+      "VirtualMachine.Provisioning.GetVmFiles",
+      "VirtualMachine.State.CreateSnapshot",
+      "VirtualMachine.State.RemoveSnapshot"
+    ]
+  },
+  {
+    "Name": "VsmSvcRole",
+    "PrivilegeList": [
+      "Extension.Update",
+      "Sessions.TerminateSession",
+      "System.Anonymous",
+      "System.Read",
+      "System.View",
+      "VApp.ApplicationConfig"
+    ]
+  },
+  {
+    "Name": "vSphere Client Solution User",
+    "PrivilegeList": [
+      "Extension.Register",
+      "Extension.Unregister",
+      "Extension.Update",
+      "Global.LogEvent",
+      "Global.Proxy",
+      "IntercomNamespace.Read",
+      "ServiceAccount.Administer",
+      "System.Anonymous",
+      "System.Read",
+      "System.View",
+      "Task.Create",
+      "Task.Update",
+      "VcIdentityProviders.Read"
+    ]
+  },
+  {
+    "Name": "vSphereKubernetesManager",
+    "PrivilegeList": [
+      "ContentLibrary.ManageClusterRegistryResource",
+      "Cryptographer.AddDisk",
+      "Cryptographer.Clone",
+      "Cryptographer.Encrypt",
+      "Cryptographer.EncryptNew",
+      "Cryptographer.Migrate",
+      "Cryptographer.Recrypt",
+      "Datastore.AllocateSpace",
+      "Resource.AssignVMToPool",
+      "System.Anonymous",
+      "System.Read",
+      "System.View",
+      "VirtualMachine.Config.AddNewDisk",
+      "VirtualMachine.Config.AddRemoveDevice",
+      "VirtualMachine.Config.EditDevice",
+      "VirtualMachine.Interact.DeviceConnection",
+      "VirtualMachine.Interact.PowerOff",
+      "VirtualMachine.Interact.PowerOn",
+      "VirtualMachine.Inventory.Create",
+      "VirtualMachine.Inventory.Delete"
+    ]
+  },
+  {
+    "Name": "vStatsAdmin",
+    "PrivilegeList": [
+      "System.Anonymous",
+      "System.Read",
+      "System.View",
+      "vStats.CollectAny",
+      "vStats.QueryAny",
+      "vStats.Settings"
+    ]
+  },
+  {
+    "Name": "vStatsUser",
+    "PrivilegeList": [
+      "System.Anonymous",
+      "System.Read",
+      "System.View",
+      "vStats.CollectAny",
+      "vStats.QueryAny"
+    ]
+  },
+  {
+    "Name": "WorkloadStorageManagement",
+    "PrivilegeList": [
+      "Cns.Searchable",
+      "Datastore.AllocateSpace",
+      "Datastore.FileManagement",
+      "EAM.Modify",
+      "Host.Config.Storage",
+      "Resource.AssignVMToPool",
+      "Resource.ColdMigrate",
+      "Resource.HotMigrate",
+      "StorageProfile.View",
+      "System.Anonymous",
+      "System.Read",
+      "System.View",
+      "VirtualMachine.Config.AddExistingDisk",
+      "VirtualMachine.Config.AddNewDisk",
+      "VirtualMachine.Config.AddRemoveDevice",
+      "VirtualMachine.Config.RemoveDisk",
+      "VirtualMachine.Config.Settings",
+      "VirtualMachine.Inventory.Create",
+      "VirtualMachine.Inventory.Delete"
+    ]
+  }
+]

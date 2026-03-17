@@ -1,0 +1,18 @@
+{
+  "Name": "DSwitch0",
+  "NumPorts": 77,
+  "NumUplinkPorts": 2,
+  "Version": "8.0.3",
+  "Mtu": 9000,
+  "LinkDiscoveryProtocol": 0,
+  "LinkDiscoveryProtocolOperation": 2,
+  "Hosts": [
+    "esxi01.vollminlab.com",
+    "esxi02.vollminlab.com",
+    "esxi03.vollminlab.com"
+  ],
+  "UplinkNames": [
+    "Uplink 1",
+    "Uplink 2"
+  ]
+}

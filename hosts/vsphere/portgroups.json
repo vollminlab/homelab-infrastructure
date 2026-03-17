@@ -1,0 +1,50 @@
+[
+  {
+    "Name": "151-DPG-Management",
+    "VlanConfiguration": "VLAN 151",
+    "NumPorts": 11,
+    "PortBinding": 0
+  },
+  {
+    "Name": "152-DPG-GuestNet",
+    "VlanConfiguration": "VLAN 152",
+    "NumPorts": 19,
+    "PortBinding": 0
+  },
+  {
+    "Name": "153-DPG-vMotion",
+    "VlanConfiguration": "VLAN 153",
+    "NumPorts": 11,
+    "PortBinding": 0
+  },
+  {
+    "Name": "154-DPG-iSCSI-1",
+    "VlanConfiguration": "VLAN 154",
+    "NumPorts": 11,
+    "PortBinding": 0
+  },
+  {
+    "Name": "154-DPG-iSCSI-2",
+    "VlanConfiguration": "VLAN 154",
+    "NumPorts": 8,
+    "PortBinding": 0
+  },
+  {
+    "Name": "155-DPG-VCHA",
+    "VlanConfiguration": "VLAN 155",
+    "NumPorts": 3,
+    "PortBinding": 0
+  },
+  {
+    "Name": "160-DPG-DMZ",
+    "VlanConfiguration": "VLAN 160",
+    "NumPorts": 8,
+    "PortBinding": 0
+  },
+  {
+    "Name": "DSwitch0-DVUplinks",
+    "VlanConfiguration": "VLAN Trunk [0-4094]",
+    "NumPorts": 6,
+    "PortBinding": 0
+  }
+]
