@@ -211,15 +211,16 @@ Save-Json "resource-pools" (
 Save-Json "vms" (
     Get-VM | Sort-Object Name | ForEach-Object {
         $vm = $_
+        $guest = $vm | Get-VMGuest
         [PSCustomObject]@{
             Name       = $vm.Name
             GuestId    = $vm.GuestId
             NumCpu     = $vm.NumCpu
             MemoryGB   = $vm.MemoryGB
             PowerState = $vm.PowerState
-            Host       = $vm.VMHost.Name
             Folder     = $vm.Folder.Name
             Notes      = $vm.Notes
+            IPs        = $guest.IPAddress
             Disks      = ($vm | Get-HardDisk | ForEach-Object {
                 [PSCustomObject]@{
                     Name          = $_.Name
