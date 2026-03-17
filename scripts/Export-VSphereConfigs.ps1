@@ -228,6 +228,97 @@ Save-Json "vms" (
     }
 )
 
+# ── Host vmkernel Adapters ────────────────────────────────────────────────────
+Save-Json "host-vmkernel" (
+    Get-VMHost | Sort-Object Name | ForEach-Object {
+        $h = $_
+        [PSCustomObject]@{
+            Host     = $h.Name
+            Adapters = Get-VMHostNetworkAdapter -VMHost $h -VMKernel | ForEach-Object {
+                [PSCustomObject]@{
+                    Name            = $_.Name
+                    IP              = $_.IP
+                    SubnetMask      = $_.SubnetMask
+                    Mac             = $_.Mac
+                    PortGroupName   = $_.PortGroupName
+                    VMotionEnabled  = $_.VMotionEnabled
+                    ManagementTrafficEnabled = $_.ManagementTrafficEnabled
+                    FaultToleranceLoggingEnabled = $_.FaultToleranceLoggingEnabled
+                    VsanTrafficEnabled = $_.VsanTrafficEnabled
+                }
+            }
+        }
+    }
+)
+
+# ── DRS Rules ─────────────────────────────────────────────────────────────────
+Save-Json "drs-rules" (
+    Get-Cluster | ForEach-Object {
+        $cl = $_
+        [PSCustomObject]@{
+            Cluster = $cl.Name
+            Rules   = Get-DrsRule -Cluster $cl | ForEach-Object {
+                [PSCustomObject]@{
+                    Name    = $_.Name
+                    Type    = $_.Type
+                    Enabled = $_.Enabled
+                    VMs     = $_.VMIds | ForEach-Object {
+                        (Get-VM -Id $_ -ErrorAction SilentlyContinue).Name
+                    }
+                }
+            }
+        }
+    }
+)
+
+# ── VM Templates ──────────────────────────────────────────────────────────────
+Save-Json "templates" (
+    Get-Template | Sort-Object Name | ForEach-Object {
+        [PSCustomObject]@{
+            Name     = $_.Name
+            GuestId  = $_.GuestId
+            NumCpu   = $_.NumCpu
+            MemoryGB = $_.MemoryGB
+            Folder   = $_.Folder.Name
+        }
+    }
+)
+
+# ── Content Libraries ─────────────────────────────────────────────────────────
+Save-Json "content-libraries" (
+    Get-ContentLibrary -ErrorAction SilentlyContinue | ForEach-Object {
+        [PSCustomObject]@{
+            Name        = $_.Name
+            Description = $_.Description
+            Type        = $_.Type
+            Datastore   = $_.Datastore.Name
+        }
+    }
+)
+
+# ── Storage Policies ──────────────────────────────────────────────────────────
+Save-Json "storage-policies" (
+    Get-SpbmStoragePolicy -ErrorAction SilentlyContinue | Sort-Object Name |
+    Where-Object { $_.AnyOfRuleSets -or $_.Description } | ForEach-Object {
+        [PSCustomObject]@{
+            Name        = $_.Name
+            Description = $_.Description
+        }
+    }
+)
+
+# ── Datastore Clusters ────────────────────────────────────────────────────────
+Save-Json "datastore-clusters" (
+    Get-DatastoreCluster -ErrorAction SilentlyContinue | ForEach-Object {
+        [PSCustomObject]@{
+            Name        = $_.Name
+            CapacityGB  = [math]::Round($_.CapacityGB, 2)
+            FreeSpaceGB = [math]::Round($_.FreeSpaceGB, 2)
+            Datastores  = ($_ | Get-Datastore | Sort-Object Name).Name
+        }
+    }
+)
+
 # ── Roles ─────────────────────────────────────────────────────────────────────
 Save-Json "roles" (
     Get-VIRole | Sort-Object Name | Where-Object { -not $_.IsSystem } | ForEach-Object {

@@ -1,0 +1,16 @@
+[
+  {
+    "Name": "ubuntu-template",
+    "GuestId": null,
+    "NumCpu": null,
+    "MemoryGB": null,
+    "Folder": null
+  },
+  {
+    "Name": "ubuntu-template-old",
+    "GuestId": null,
+    "NumCpu": null,
+    "MemoryGB": null,
+    "Folder": null
+  }
+]

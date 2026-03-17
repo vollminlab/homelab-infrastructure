@@ -1,7 +1,7 @@
 # Pi-hole configuration file (v6.1)
 # Encoding: UTF-8
 # This file is managed by pihole-FTL
-# Last updated on 2026-03-14 14:00:01 EDT
+# Last updated on 2026-03-16 22:57:40 EDT
 
 [dns]
   # Array of upstream DNS servers used by Pi-hole
@@ -724,7 +724,7 @@
   #
   # Possible values are:
   #     comma-separated list of <[ip_address:]port>
-  port = "80o,443os,[::]:80o,[::]:443" ### CHANGED, default = "80o,443os,[::]:80o,[::]:443os"
+  port = "80o,443os,[::]:80o,[::]:443os"
 
   # Maximum number of worker threads allowed.
   # The Pi-hole web server handles each incoming connection in a separate thread.
@@ -867,7 +867,7 @@
     max_sessions = 16
 
     # Should FTL prettify the API output (add extra spaces, newlines and indentation)?
-    prettyJSON = false
+    prettyJSON = true ### CHANGED, default = false
 
     # API password hash
     #
@@ -902,7 +902,7 @@
     # to modify settings, e.g., the upstream DNS servers, DHCP server settings, or
     # changing passwords. This setting should only be enabled if really needed and only if
     # you trust the applications using the application password.
-    app_sudo = true ### CHANGED, default = false
+    app_sudo = false
 
     # Should FTL create a temporary CLI password? This password is stored in clear in
     # /etc/pihole and can be used by the CLI (pihole ...  commands) to authenticate
@@ -1263,7 +1263,7 @@
   all = false
 
 # Configuration statistics:
-# 156 total entries out of which 141 entries are default
-# --> 15 entries are modified
+# 156 total entries out of which 142 entries are default
+# --> 14 entries are modified
 
 
