@@ -135,11 +135,11 @@ vSphere reports 6 CPUs (P-cores only) / 12 logical processors per host, 95.74 GB
 
 Three-node vCenter HA cluster — active, passive, witness — one per ESXi host. Management NIC on VLAN 151, VCHA heartbeat NIC on VLAN 155.
 
-| VM               | Role    | Network  |
-|------------------|---------|----------|
-| vcenter          | Active  | 151, 155 |
-| vcenter-Passive  | Passive | 151, 155 |
-| vcenter-Witness  | Witness | 151, 155 |
+| VM               | Role    | Management IP   | VCHA IP       |
+|------------------|---------|-----------------|---------------|
+| vcenter          | Active  | (see vCSA UI)   | 192.168.155.2 |
+| vcenter-Passive  | Passive | 192.168.151.5   | 192.168.155.3 |
+| vcenter-Witness  | Witness | —               | 192.168.155.4 |
 
 ### Cluster
 
@@ -205,7 +205,7 @@ VM host placement is not tracked here — DRS manages placement dynamically.
 | haproxydmz01 | 2    | 2 GB | 50 GB  | vmstore2  | DMZ      | 192.168.160.2   |
 | haproxydmz02 | 2    | 2 GB | 50 GB  | vmstore2  | DMZ      | 192.168.160.3   |
 | nginx01      | 1    | 2 GB | 50 GB  | vmstore1  | GuestNet | 192.168.152.2   |
-| groupme01    | 1    | 2 GB | 50 GB  | vmstore1  | GuestNet | see vms.json    |
+| groupme01    | 1    | 2 GB | 50 GB  | vmstore1  | GuestNet | 192.168.152.17  |
 
 ---
 

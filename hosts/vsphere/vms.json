@@ -5,9 +5,12 @@
         "NumCpu":  1,
         "MemoryGB":  2,
         "PowerState":  1,
-        "Host":  "esxi01.vollminlab.com",
         "Folder":  "Linux VMs",
         "Notes":  "",
+        "IPs":  [
+                    "192.168.152.17",
+                    "fe80::250:56ff:fe98:a51b"
+                ],
         "Disks":  {
                       "Name":  "Hard disk 1",
                       "CapacityGB":  50,
@@ -31,9 +34,13 @@
         "NumCpu":  2,
         "MemoryGB":  2,
         "PowerState":  1,
-        "Host":  "esxi02.vollminlab.com",
         "Folder":  "Linux VMs",
         "Notes":  "",
+        "IPs":  [
+                    "192.168.152.5",
+                    "192.168.152.7",
+                    "fe80::250:56ff:fe98:1b15"
+                ],
         "Disks":  {
                       "Name":  "Hard disk 1",
                       "CapacityGB":  20,
@@ -57,9 +64,12 @@
         "NumCpu":  2,
         "MemoryGB":  2,
         "PowerState":  1,
-        "Host":  "esxi01.vollminlab.com",
         "Folder":  "Linux VMs",
         "Notes":  "",
+        "IPs":  [
+                    "192.168.152.6",
+                    "fe80::250:56ff:fe98:2a3a"
+                ],
         "Disks":  {
                       "Name":  "Hard disk 1",
                       "CapacityGB":  20,
@@ -83,9 +93,13 @@
         "NumCpu":  2,
         "MemoryGB":  2,
         "PowerState":  1,
-        "Host":  "esxi01.vollminlab.com",
         "Folder":  "Linux DMZ VMs",
         "Notes":  "",
+        "IPs":  [
+                    "192.168.160.2",
+                    "192.168.160.4",
+                    "fe80::250:56ff:fe98:e2ac"
+                ],
         "Disks":  {
                       "Name":  "Hard disk 1",
                       "CapacityGB":  50,
@@ -109,9 +123,12 @@
         "NumCpu":  2,
         "MemoryGB":  2,
         "PowerState":  1,
-        "Host":  "esxi02.vollminlab.com",
         "Folder":  "Linux DMZ VMs",
         "Notes":  "",
+        "IPs":  [
+                    "192.168.160.3",
+                    "fe80::250:56ff:fe98:9748"
+                ],
         "Disks":  {
                       "Name":  "Hard disk 1",
                       "CapacityGB":  50,
@@ -135,9 +152,13 @@
         "NumCpu":  4,
         "MemoryGB":  8,
         "PowerState":  1,
-        "Host":  "esxi01.vollminlab.com",
         "Folder":  "k8s Cluster VMs",
         "Notes":  "",
+        "IPs":  [
+                    "192.168.152.8",
+                    "fe80::250:56ff:fe98:c84b",
+                    "172.18.173.195"
+                ],
         "Disks":  {
                       "Name":  "Hard disk 1",
                       "CapacityGB":  50,
@@ -161,9 +182,13 @@
         "NumCpu":  4,
         "MemoryGB":  8,
         "PowerState":  1,
-        "Host":  "esxi02.vollminlab.com",
         "Folder":  "k8s Cluster VMs",
         "Notes":  "",
+        "IPs":  [
+                    "192.168.152.9",
+                    "fe80::250:56ff:fe98:5e96",
+                    "172.18.30.128"
+                ],
         "Disks":  {
                       "Name":  "Hard disk 1",
                       "CapacityGB":  50,
@@ -187,9 +212,13 @@
         "NumCpu":  4,
         "MemoryGB":  8,
         "PowerState":  1,
-        "Host":  "esxi03.vollminlab.com",
         "Folder":  "k8s Cluster VMs",
         "Notes":  "",
+        "IPs":  [
+                    "192.168.152.10",
+                    "fe80::250:56ff:fe98:a87b",
+                    "172.18.14.64"
+                ],
         "Disks":  {
                       "Name":  "Hard disk 1",
                       "CapacityGB":  50,
@@ -213,9 +242,13 @@
         "NumCpu":  4,
         "MemoryGB":  8,
         "PowerState":  1,
-        "Host":  "esxi03.vollminlab.com",
         "Folder":  "k8s Cluster VMs",
         "Notes":  "",
+        "IPs":  [
+                    "192.168.152.11",
+                    "fe80::250:56ff:fe98:f1ad",
+                    "172.18.218.5"
+                ],
         "Disks":  {
                       "Name":  "Hard disk 1",
                       "CapacityGB":  50,
@@ -239,9 +272,13 @@
         "NumCpu":  4,
         "MemoryGB":  8,
         "PowerState":  1,
-        "Host":  "esxi03.vollminlab.com",
         "Folder":  "k8s Cluster VMs",
         "Notes":  "",
+        "IPs":  [
+                    "192.168.152.12",
+                    "fe80::250:56ff:fe98:e2c7",
+                    "172.18.145.6"
+                ],
         "Disks":  {
                       "Name":  "Hard disk 1",
                       "CapacityGB":  50,
@@ -265,9 +302,13 @@
         "NumCpu":  4,
         "MemoryGB":  8,
         "PowerState":  1,
-        "Host":  "esxi02.vollminlab.com",
         "Folder":  "k8s Cluster VMs",
         "Notes":  "",
+        "IPs":  [
+                    "192.168.152.13",
+                    "fe80::250:56ff:fe98:fb47",
+                    "172.18.53.133"
+                ],
         "Disks":  {
                       "Name":  "Hard disk 1",
                       "CapacityGB":  50,
@@ -291,9 +332,13 @@
         "NumCpu":  4,
         "MemoryGB":  8,
         "PowerState":  1,
-        "Host":  "esxi03.vollminlab.com",
         "Folder":  "k8s Cluster VMs",
         "Notes":  "",
+        "IPs":  [
+                    "192.168.152.14",
+                    "fe80::250:56ff:fe98:20ab",
+                    "172.18.26.65"
+                ],
         "Disks":  {
                       "Name":  "Hard disk 1",
                       "CapacityGB":  50,
@@ -317,9 +362,13 @@
         "NumCpu":  8,
         "MemoryGB":  32,
         "PowerState":  1,
-        "Host":  "esxi02.vollminlab.com",
         "Folder":  "k8s Cluster VMs",
         "Notes":  "",
+        "IPs":  [
+                    "192.168.152.15",
+                    "fe80::250:56ff:fe98:1458",
+                    "172.18.33.128"
+                ],
         "Disks":  {
                       "Name":  "Hard disk 1",
                       "CapacityGB":  100,
@@ -343,9 +392,13 @@
         "NumCpu":  8,
         "MemoryGB":  32,
         "PowerState":  1,
-        "Host":  "esxi01.vollminlab.com",
         "Folder":  "k8s Cluster VMs",
         "Notes":  "",
+        "IPs":  [
+                    "192.168.152.16",
+                    "fe80::250:56ff:fe98:2028",
+                    "172.18.52.0"
+                ],
         "Disks":  {
                       "Name":  "Hard disk 1",
                       "CapacityGB":  100,
@@ -369,9 +422,14 @@
         "NumCpu":  1,
         "MemoryGB":  2,
         "PowerState":  1,
-        "Host":  "esxi02.vollminlab.com",
         "Folder":  "Linux VMs",
         "Notes":  "",
+        "IPs":  [
+                    "192.168.152.2",
+                    "fe80::250:56ff:fe98:fa4a",
+                    "172.18.0.1",
+                    "fe80::42:48ff:fe9e:80c7"
+                ],
         "Disks":  {
                       "Name":  "Hard disk 1",
                       "CapacityGB":  50,
@@ -395,9 +453,11 @@
         "NumCpu":  4,
         "MemoryGB":  21,
         "PowerState":  1,
-        "Host":  "esxi01.vollminlab.com",
         "Folder":  "vCenter",
         "Notes":  "VMware vCenter Server Appliance",
+        "IPs":  [
+                    "192.168.155.2"
+                ],
         "Disks":  [
                       {
                           "Name":  "Hard disk 1",
@@ -528,9 +588,13 @@
         "NumCpu":  4,
         "MemoryGB":  21,
         "PowerState":  1,
-        "Host":  "esxi03.vollminlab.com",
         "Folder":  "vCenter",
         "Notes":  "VMware vCenter Server Appliance",
+        "IPs":  [
+                    "192.168.151.5",
+                    "192.168.155.3",
+                    "fe80::250:56ff:fe98:5703"
+                ],
         "Disks":  [
                       {
                           "Name":  "Hard disk 1",
@@ -661,9 +725,11 @@
         "NumCpu":  1,
         "MemoryGB":  1,
         "PowerState":  1,
-        "Host":  "esxi02.vollminlab.com",
         "Folder":  "vCenter",
         "Notes":  "VMware vCenter Server Appliance",
+        "IPs":  [
+                    "192.168.155.4"
+                ],
         "Disks":  [
                       {
                           "Name":  "Hard disk 1",
