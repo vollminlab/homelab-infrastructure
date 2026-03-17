@@ -1,82 +1,82 @@
 {
+  "id": 1,
+  "language": "en",
+  "kbdmap": "us",
+  "timezone": "America/New_York",
+  "wizardshown": false,
+  "usage_collection": true,
+  "ds_auth": false,
+  "ui_address": [
+    "0.0.0.0"
+  ],
+  "ui_v6address": [
+    "::"
+  ],
+  "ui_allowlist": [],
+  "ui_port": 80,
+  "ui_httpsport": 443,
+  "ui_httpsredirect": false,
+  "ui_httpsprotocols": [
+    "TLSv1.2",
+    "TLSv1.3"
+  ],
+  "ui_x_frame_options": "SAMEORIGIN",
+  "ui_consolemsg": false,
+  "ui_certificate": {
     "id": 1,
-    "language": "en",
-    "kbdmap": "us",
-    "timezone": "America/New_York",
-    "wizardshown": false,
-    "usage_collection": true,
-    "ds_auth": false,
-    "ui_address": [
-        "0.0.0.0"
+    "type": 8,
+    "name": "freenas_default",
+    "certificate": "-----BEGIN CERTIFICATE-----\nMIIDrTCCApWgAwIBAgIEKdaa4TANBgkqhkiG9w0BAQsFADCBgDELMAkGA1UEBhMC\nVVMxEjAQBgNVBAoMCWlYc3lzdGVtczESMBAGA1UEAwwJbG9jYWxob3N0MSEwHwYJ\nKoZIhvcNAQkBFhJpbmZvQGl4c3lzdGVtcy5jb20xEjAQBgNVBAgMCVRlbm5lc3Nl\nZTESMBAGA1UEBwwJTWFyeXZpbGxlMB4XDTI1MTIxOTE0MDU1NloXDTI3MDEyMDE0\nMDU1NlowgYAxCzAJBgNVBAYTAlVTMRIwEAYDVQQKDAlpWHN5c3RlbXMxEjAQBgNV\nBAMMCWxvY2FsaG9zdDEhMB8GCSqGSIb3DQEJARYSaW5mb0BpeHN5c3RlbXMuY29t\nMRIwEAYDVQQIDAlUZW5uZXNzZWUxEjAQBgNVBAcMCU1hcnl2aWxsZTCCASIwDQYJ\nKoZIhvcNAQEBBQADggEPADCCAQoCggEBAMapIUqbBkxqZKfVyNJvEH3QQ1Lg9fNn\ndm+3wyKrcsLvH9pDlxUbH057Ur3Xd9dBRa9Lh2yc2yDUYynDgMhdzjLJ/P6+bMTo\nWXH8adk7Qi+RCobdBYSAOEiBzQE5Jr3b0kbVUbC+mJinmQAHurL9fCi6uvs27RPc\nCfhXIPtrq8kwL/hBbvT8E1KHMiIp//p2QIQPPJ7MtUw9pqM+A8kNAcq7N87FHi0s\n8NOahpQKgtOg/jiGQzS9FFLU1RY3DL/12oeg8mNYiKwWEKCECsBxCvKXSOqIrWIt\nEWwY4Sj3XXTstUNXAFBbjnybe6VeIZve6RYEgwy7EkSkeuYZq9XAWP0CAwEAAaMt\nMCswFAYDVR0RBA0wC4IJbG9jYWxob3N0MBMGA1UdJQQMMAoGCCsGAQUFBwMBMA0G\nCSqGSIb3DQEBCwUAA4IBAQAN7O85+1eyaORS8Q1jgcKvAzFGahO7eMZbSNuKNU7z\ncKAzOHUTWXrh9q0m/c6hkbm84LevmB+NsN1UyyI0oGN3wYb/ecQzGmoVwzUGlrW9\nh/UkXLhrRHDsYBrjQtjckxrJk27Lpko5lv60UlNV0x0mGJZ/bUI/eb7Al606yMxg\nfeBDEcvnDpn6CVP8k5p2LNiUPslvWlQp2p8EUPIMC/j38bG+bMuIsxs8AqEAtbur\n5upmqXYx+cjJdcxQ9ji6QRIfE90WLwM7jvgVD95An2glIjHZ+8zWlrvz8abdpOg+\nN0UOrooKNTi6mfiJSgxlLNrxdVvbeGgK0mfY9kPoZ5gQ\n-----END CERTIFICATE-----\n",
+    "privatekey": "-----BEGIN PRIVATE KEY-----\nMIIEvQIBADANBgkqhkiG9w0BAQEFAASCBKcwggSjAgEAAoIBAQDGqSFKmwZMamSn\n1cjSbxB90ENS4PXzZ3Zvt8Miq3LC7x/aQ5cVGx9Oe1K913fXQUWvS4dsnNsg1GMp\nw4DIXc4yyfz+vmzE6Flx/GnZO0IvkQqG3QWEgDhIgc0BOSa929JG1VGwvpiYp5kA\nB7qy/Xwourr7Nu0T3An4VyD7a6vJMC/4QW70/BNShzIiKf/6dkCEDzyezLVMPaaj\nPgPJDQHKuzfOxR4tLPDTmoaUCoLToP44hkM0vRRS1NUWNwy/9dqHoPJjWIisFhCg\nhArAcQryl0jqiK1iLRFsGOEo91107LVDVwBQW458m3ulXiGb3ukWBIMMuxJEpHrm\nGavVwFj9AgMBAAECggEAA2Hv2GaUAlIxcMfrpgGeyJkvin8qwrIc2OwfwMsJbcHV\nPR8pRxCcYb3TmEiUmJOTm56am15/BgEUOWO1y/qzIqmVkfv0SfEhhaUAuNRJzv1P\nIAVnLTQNsw8+Sj/R3rgoPzRJ+XYccmFpDoITLvU/FEoDb3i0gOyeUtctZLNsTCjA\nR8p5m1CjfGcysXsV3n9eoWVc5WZ07sYHBNzyDO+/IicF/lnhxmhPGJO4uewAJ5r6\nnJeAiKrE0rTNEjALPCNy5i7ivrguGDWvcCsggEKNPJ7JhKoo7vP5pVRW6w+qBJVI\nQk/9xVfGOK9kpjE7hdFPCSk32cIFYQiiWQovlV9FlQKBgQD4/rIrF90bmbVdHUYP\nA4LB5W9Jvolj05i84cVe/bo4SqKTkkEeWWPPyUeeS1NTdJxA1HfvL+mgGYln0gdg\nVvVEayRADX8gGmEe3MHWYnZ0J5p7kZLUCc/01HqBaiRLRE+DnF+lwtKpengo4FeW\nZFzFL9vesVAZYou/ldpvwxGQqwKBgQDMP+sRFYahu7i6OdVu9RYoXOl/fAE4xOur\nycoN6w3yb4RbHtkOrDsVQ7GPYP59Va8RWkrj2QpgFFFdvstMHdpKikxOjfiGIATp\nfQVE5egyzj6pvFhB9RL5x2qfZ6qtFtnSIXdzBgE1C3Q0QDJgThSdvMFNImzgyD8O\n5RCfaJFM9wKBgGvlenFgCuk95zBtUgGJhOzeriXnkgOXGpWmw+9QxZRFC0QlWWB8\nXdsZnpZCj94XJuqU50/XlEZTKo65nYaqx+eZAgFbl93icHl+MeTjj+7vhmrLfzOw\n+NNgC6Huy8Ft3YLrjSr4TG8yacVUyb+ax/SOs5lBfrMxV9tyZVCO2Bq3AoGATZFk\nu2s6YwfAwvCdzvLDBHcssh6s9BtNCUOsOZbwCAcz88sGUd003wGDWFlUrNKyltt8\nn4VYvF5a/EguOu0HbtGQ4zBllsJoOyggrSbHBSxwfdOqjPn+x99k7b7YAb4w4O2W\nyJcaNEPyULmkqBBfIfyCSMHvKXrC/+wcYP28WMcCgYEA1nsOzfB3OlMx+/NEDTj5\ngN7Gm2izaS7b4FmlitGk1rCiyOI3w9xS/iCgOyWS/kSMWXQiEw//2esmL1iyFCvs\nzDy+PASfuxVli+H84g1t/KVuWMGH118A3xlnY6NIDQU5UOx0h0YdLzHxPj8LD4iD\n/xNkootD6r9hGpvF5Dt0E5M=\n-----END PRIVATE KEY-----\n",
+    "CSR": null,
+    "revoked_date": null,
+    "add_to_trusted_store": false,
+    "signedby": null,
+    "root_path": "/etc/certificates",
+    "certificate_path": "/etc/certificates/freenas_default.crt",
+    "privatekey_path": "/etc/certificates/freenas_default.key",
+    "csr_path": "/etc/certificates/freenas_default.csr",
+    "cert_type": "CERTIFICATE",
+    "revoked": false,
+    "can_be_revoked": false,
+    "internal": "NO",
+    "CA_type_existing": false,
+    "CA_type_internal": false,
+    "CA_type_intermediate": false,
+    "cert_type_existing": true,
+    "cert_type_internal": false,
+    "cert_type_CSR": false,
+    "issuer": "external",
+    "chain_list": [
+      "-----BEGIN CERTIFICATE-----\nMIIDrTCCApWgAwIBAgIEKdaa4TANBgkqhkiG9w0BAQsFADCBgDELMAkGA1UEBhMC\nVVMxEjAQBgNVBAoMCWlYc3lzdGVtczESMBAGA1UEAwwJbG9jYWxob3N0MSEwHwYJ\nKoZIhvcNAQkBFhJpbmZvQGl4c3lzdGVtcy5jb20xEjAQBgNVBAgMCVRlbm5lc3Nl\nZTESMBAGA1UEBwwJTWFyeXZpbGxlMB4XDTI1MTIxOTE0MDU1NloXDTI3MDEyMDE0\nMDU1NlowgYAxCzAJBgNVBAYTAlVTMRIwEAYDVQQKDAlpWHN5c3RlbXMxEjAQBgNV\nBAMMCWxvY2FsaG9zdDEhMB8GCSqGSIb3DQEJARYSaW5mb0BpeHN5c3RlbXMuY29t\nMRIwEAYDVQQIDAlUZW5uZXNzZWUxEjAQBgNVBAcMCU1hcnl2aWxsZTCCASIwDQYJ\nKoZIhvcNAQEBBQADggEPADCCAQoCggEBAMapIUqbBkxqZKfVyNJvEH3QQ1Lg9fNn\ndm+3wyKrcsLvH9pDlxUbH057Ur3Xd9dBRa9Lh2yc2yDUYynDgMhdzjLJ/P6+bMTo\nWXH8adk7Qi+RCobdBYSAOEiBzQE5Jr3b0kbVUbC+mJinmQAHurL9fCi6uvs27RPc\nCfhXIPtrq8kwL/hBbvT8E1KHMiIp//p2QIQPPJ7MtUw9pqM+A8kNAcq7N87FHi0s\n8NOahpQKgtOg/jiGQzS9FFLU1RY3DL/12oeg8mNYiKwWEKCECsBxCvKXSOqIrWIt\nEWwY4Sj3XXTstUNXAFBbjnybe6VeIZve6RYEgwy7EkSkeuYZq9XAWP0CAwEAAaMt\nMCswFAYDVR0RBA0wC4IJbG9jYWxob3N0MBMGA1UdJQQMMAoGCCsGAQUFBwMBMA0G\nCSqGSIb3DQEBCwUAA4IBAQAN7O85+1eyaORS8Q1jgcKvAzFGahO7eMZbSNuKNU7z\ncKAzOHUTWXrh9q0m/c6hkbm84LevmB+NsN1UyyI0oGN3wYb/ecQzGmoVwzUGlrW9\nh/UkXLhrRHDsYBrjQtjckxrJk27Lpko5lv60UlNV0x0mGJZ/bUI/eb7Al606yMxg\nfeBDEcvnDpn6CVP8k5p2LNiUPslvWlQp2p8EUPIMC/j38bG+bMuIsxs8AqEAtbur\n5upmqXYx+cjJdcxQ9ji6QRIfE90WLwM7jvgVD95An2glIjHZ+8zWlrvz8abdpOg+\nN0UOrooKNTi6mfiJSgxlLNrxdVvbeGgK0mfY9kPoZ5gQ\n-----END CERTIFICATE-----\n"
     ],
-    "ui_v6address": [
-        "::"
+    "key_length": 2048,
+    "key_type": "RSA",
+    "country": "US",
+    "state": "Tennessee",
+    "city": "Maryville",
+    "organization": "iXsystems",
+    "organizational_unit": null,
+    "common": "localhost",
+    "san": [
+      "DNS:localhost"
     ],
-    "ui_allowlist": [],
-    "ui_port": 80,
-    "ui_httpsport": 443,
-    "ui_httpsredirect": false,
-    "ui_httpsprotocols": [
-        "TLSv1.2",
-        "TLSv1.3"
-    ],
-    "ui_x_frame_options": "SAMEORIGIN",
-    "ui_consolemsg": false,
-    "ui_certificate": {
-        "id": 1,
-        "type": 8,
-        "name": "freenas_default",
-        "certificate": "-----BEGIN CERTIFICATE-----\nMIIDrTCCApWgAwIBAgIEKdaa4TANBgkqhkiG9w0BAQsFADCBgDELMAkGA1UEBhMC\nVVMxEjAQBgNVBAoMCWlYc3lzdGVtczESMBAGA1UEAwwJbG9jYWxob3N0MSEwHwYJ\nKoZIhvcNAQkBFhJpbmZvQGl4c3lzdGVtcy5jb20xEjAQBgNVBAgMCVRlbm5lc3Nl\nZTESMBAGA1UEBwwJTWFyeXZpbGxlMB4XDTI1MTIxOTE0MDU1NloXDTI3MDEyMDE0\nMDU1NlowgYAxCzAJBgNVBAYTAlVTMRIwEAYDVQQKDAlpWHN5c3RlbXMxEjAQBgNV\nBAMMCWxvY2FsaG9zdDEhMB8GCSqGSIb3DQEJARYSaW5mb0BpeHN5c3RlbXMuY29t\nMRIwEAYDVQQIDAlUZW5uZXNzZWUxEjAQBgNVBAcMCU1hcnl2aWxsZTCCASIwDQYJ\nKoZIhvcNAQEBBQADggEPADCCAQoCggEBAMapIUqbBkxqZKfVyNJvEH3QQ1Lg9fNn\ndm+3wyKrcsLvH9pDlxUbH057Ur3Xd9dBRa9Lh2yc2yDUYynDgMhdzjLJ/P6+bMTo\nWXH8adk7Qi+RCobdBYSAOEiBzQE5Jr3b0kbVUbC+mJinmQAHurL9fCi6uvs27RPc\nCfhXIPtrq8kwL/hBbvT8E1KHMiIp//p2QIQPPJ7MtUw9pqM+A8kNAcq7N87FHi0s\n8NOahpQKgtOg/jiGQzS9FFLU1RY3DL/12oeg8mNYiKwWEKCECsBxCvKXSOqIrWIt\nEWwY4Sj3XXTstUNXAFBbjnybe6VeIZve6RYEgwy7EkSkeuYZq9XAWP0CAwEAAaMt\nMCswFAYDVR0RBA0wC4IJbG9jYWxob3N0MBMGA1UdJQQMMAoGCCsGAQUFBwMBMA0G\nCSqGSIb3DQEBCwUAA4IBAQAN7O85+1eyaORS8Q1jgcKvAzFGahO7eMZbSNuKNU7z\ncKAzOHUTWXrh9q0m/c6hkbm84LevmB+NsN1UyyI0oGN3wYb/ecQzGmoVwzUGlrW9\nh/UkXLhrRHDsYBrjQtjckxrJk27Lpko5lv60UlNV0x0mGJZ/bUI/eb7Al606yMxg\nfeBDEcvnDpn6CVP8k5p2LNiUPslvWlQp2p8EUPIMC/j38bG+bMuIsxs8AqEAtbur\n5upmqXYx+cjJdcxQ9ji6QRIfE90WLwM7jvgVD95An2glIjHZ+8zWlrvz8abdpOg+\nN0UOrooKNTi6mfiJSgxlLNrxdVvbeGgK0mfY9kPoZ5gQ\n-----END CERTIFICATE-----\n",
-        "privatekey": "-----BEGIN PRIVATE KEY-----\nMIIEvQIBADANBgkqhkiG9w0BAQEFAASCBKcwggSjAgEAAoIBAQDGqSFKmwZMamSn\n1cjSbxB90ENS4PXzZ3Zvt8Miq3LC7x/aQ5cVGx9Oe1K913fXQUWvS4dsnNsg1GMp\nw4DIXc4yyfz+vmzE6Flx/GnZO0IvkQqG3QWEgDhIgc0BOSa929JG1VGwvpiYp5kA\nB7qy/Xwourr7Nu0T3An4VyD7a6vJMC/4QW70/BNShzIiKf/6dkCEDzyezLVMPaaj\nPgPJDQHKuzfOxR4tLPDTmoaUCoLToP44hkM0vRRS1NUWNwy/9dqHoPJjWIisFhCg\nhArAcQryl0jqiK1iLRFsGOEo91107LVDVwBQW458m3ulXiGb3ukWBIMMuxJEpHrm\nGavVwFj9AgMBAAECggEAA2Hv2GaUAlIxcMfrpgGeyJkvin8qwrIc2OwfwMsJbcHV\nPR8pRxCcYb3TmEiUmJOTm56am15/BgEUOWO1y/qzIqmVkfv0SfEhhaUAuNRJzv1P\nIAVnLTQNsw8+Sj/R3rgoPzRJ+XYccmFpDoITLvU/FEoDb3i0gOyeUtctZLNsTCjA\nR8p5m1CjfGcysXsV3n9eoWVc5WZ07sYHBNzyDO+/IicF/lnhxmhPGJO4uewAJ5r6\nnJeAiKrE0rTNEjALPCNy5i7ivrguGDWvcCsggEKNPJ7JhKoo7vP5pVRW6w+qBJVI\nQk/9xVfGOK9kpjE7hdFPCSk32cIFYQiiWQovlV9FlQKBgQD4/rIrF90bmbVdHUYP\nA4LB5W9Jvolj05i84cVe/bo4SqKTkkEeWWPPyUeeS1NTdJxA1HfvL+mgGYln0gdg\nVvVEayRADX8gGmEe3MHWYnZ0J5p7kZLUCc/01HqBaiRLRE+DnF+lwtKpengo4FeW\nZFzFL9vesVAZYou/ldpvwxGQqwKBgQDMP+sRFYahu7i6OdVu9RYoXOl/fAE4xOur\nycoN6w3yb4RbHtkOrDsVQ7GPYP59Va8RWkrj2QpgFFFdvstMHdpKikxOjfiGIATp\nfQVE5egyzj6pvFhB9RL5x2qfZ6qtFtnSIXdzBgE1C3Q0QDJgThSdvMFNImzgyD8O\n5RCfaJFM9wKBgGvlenFgCuk95zBtUgGJhOzeriXnkgOXGpWmw+9QxZRFC0QlWWB8\nXdsZnpZCj94XJuqU50/XlEZTKo65nYaqx+eZAgFbl93icHl+MeTjj+7vhmrLfzOw\n+NNgC6Huy8Ft3YLrjSr4TG8yacVUyb+ax/SOs5lBfrMxV9tyZVCO2Bq3AoGATZFk\nu2s6YwfAwvCdzvLDBHcssh6s9BtNCUOsOZbwCAcz88sGUd003wGDWFlUrNKyltt8\nn4VYvF5a/EguOu0HbtGQ4zBllsJoOyggrSbHBSxwfdOqjPn+x99k7b7YAb4w4O2W\nyJcaNEPyULmkqBBfIfyCSMHvKXrC/+wcYP28WMcCgYEA1nsOzfB3OlMx+/NEDTj5\ngN7Gm2izaS7b4FmlitGk1rCiyOI3w9xS/iCgOyWS/kSMWXQiEw//2esmL1iyFCvs\nzDy+PASfuxVli+H84g1t/KVuWMGH118A3xlnY6NIDQU5UOx0h0YdLzHxPj8LD4iD\n/xNkootD6r9hGpvF5Dt0E5M=\n-----END PRIVATE KEY-----\n",
-        "CSR": null,
-        "revoked_date": null,
-        "add_to_trusted_store": false,
-        "signedby": null,
-        "root_path": "/etc/certificates",
-        "certificate_path": "/etc/certificates/freenas_default.crt",
-        "privatekey_path": "/etc/certificates/freenas_default.key",
-        "csr_path": "/etc/certificates/freenas_default.csr",
-        "cert_type": "CERTIFICATE",
-        "revoked": false,
-        "can_be_revoked": false,
-        "internal": "NO",
-        "CA_type_existing": false,
-        "CA_type_internal": false,
-        "CA_type_intermediate": false,
-        "cert_type_existing": true,
-        "cert_type_internal": false,
-        "cert_type_CSR": false,
-        "issuer": "external",
-        "chain_list": [
-            "-----BEGIN CERTIFICATE-----\nMIIDrTCCApWgAwIBAgIEKdaa4TANBgkqhkiG9w0BAQsFADCBgDELMAkGA1UEBhMC\nVVMxEjAQBgNVBAoMCWlYc3lzdGVtczESMBAGA1UEAwwJbG9jYWxob3N0MSEwHwYJ\nKoZIhvcNAQkBFhJpbmZvQGl4c3lzdGVtcy5jb20xEjAQBgNVBAgMCVRlbm5lc3Nl\nZTESMBAGA1UEBwwJTWFyeXZpbGxlMB4XDTI1MTIxOTE0MDU1NloXDTI3MDEyMDE0\nMDU1NlowgYAxCzAJBgNVBAYTAlVTMRIwEAYDVQQKDAlpWHN5c3RlbXMxEjAQBgNV\nBAMMCWxvY2FsaG9zdDEhMB8GCSqGSIb3DQEJARYSaW5mb0BpeHN5c3RlbXMuY29t\nMRIwEAYDVQQIDAlUZW5uZXNzZWUxEjAQBgNVBAcMCU1hcnl2aWxsZTCCASIwDQYJ\nKoZIhvcNAQEBBQADggEPADCCAQoCggEBAMapIUqbBkxqZKfVyNJvEH3QQ1Lg9fNn\ndm+3wyKrcsLvH9pDlxUbH057Ur3Xd9dBRa9Lh2yc2yDUYynDgMhdzjLJ/P6+bMTo\nWXH8adk7Qi+RCobdBYSAOEiBzQE5Jr3b0kbVUbC+mJinmQAHurL9fCi6uvs27RPc\nCfhXIPtrq8kwL/hBbvT8E1KHMiIp//p2QIQPPJ7MtUw9pqM+A8kNAcq7N87FHi0s\n8NOahpQKgtOg/jiGQzS9FFLU1RY3DL/12oeg8mNYiKwWEKCECsBxCvKXSOqIrWIt\nEWwY4Sj3XXTstUNXAFBbjnybe6VeIZve6RYEgwy7EkSkeuYZq9XAWP0CAwEAAaMt\nMCswFAYDVR0RBA0wC4IJbG9jYWxob3N0MBMGA1UdJQQMMAoGCCsGAQUFBwMBMA0G\nCSqGSIb3DQEBCwUAA4IBAQAN7O85+1eyaORS8Q1jgcKvAzFGahO7eMZbSNuKNU7z\ncKAzOHUTWXrh9q0m/c6hkbm84LevmB+NsN1UyyI0oGN3wYb/ecQzGmoVwzUGlrW9\nh/UkXLhrRHDsYBrjQtjckxrJk27Lpko5lv60UlNV0x0mGJZ/bUI/eb7Al606yMxg\nfeBDEcvnDpn6CVP8k5p2LNiUPslvWlQp2p8EUPIMC/j38bG+bMuIsxs8AqEAtbur\n5upmqXYx+cjJdcxQ9ji6QRIfE90WLwM7jvgVD95An2glIjHZ+8zWlrvz8abdpOg+\nN0UOrooKNTi6mfiJSgxlLNrxdVvbeGgK0mfY9kPoZ5gQ\n-----END CERTIFICATE-----\n"
-        ],
-        "key_length": 2048,
-        "key_type": "RSA",
-        "country": "US",
-        "state": "Tennessee",
-        "city": "Maryville",
-        "organization": "iXsystems",
-        "organizational_unit": null,
-        "common": "localhost",
-        "san": [
-            "DNS:localhost"
-        ],
-        "email": "info@ixsystems.com",
-        "DN": "/C=US/O=iXsystems/CN=localhost/emailAddress=info@ixsystems.com/ST=Tennessee/L=Maryville/subjectAltName=DNS:localhost",
-        "subject_name_hash": 3193428416,
-        "extensions": {
-            "SubjectAltName": "DNS:localhost",
-            "ExtendedKeyUsage": "TLS Web Server Authentication"
-        },
-        "digest_algorithm": "SHA256",
-        "lifetime": 397,
-        "from": "Fri Dec 19 09:05:56 2025",
-        "until": "Wed Jan 20 09:05:56 2027",
-        "serial": 701930209,
-        "chain": false,
-        "fingerprint": "DE:7E:7C:98:29:4B:FA:74:D7:FF:72:CA:4E:D1:25:D1:03:1A:B2:5E",
-        "expired": false,
-        "parsed": true
+    "email": "info@ixsystems.com",
+    "DN": "/C=US/O=iXsystems/CN=localhost/emailAddress=info@ixsystems.com/ST=Tennessee/L=Maryville/subjectAltName=DNS:localhost",
+    "subject_name_hash": 3193428416,
+    "extensions": {
+      "SubjectAltName": "DNS:localhost",
+      "ExtendedKeyUsage": "TLS Web Server Authentication"
     },
-    "usage_collection_is_set": false
+    "digest_algorithm": "SHA256",
+    "lifetime": 397,
+    "from": "Fri Dec 19 09:05:56 2025",
+    "until": "Wed Jan 20 09:05:56 2027",
+    "serial": 701930209,
+    "chain": false,
+    "fingerprint": "DE:7E:7C:98:29:4B:FA:74:D7:FF:72:CA:4E:D1:25:D1:03:1A:B2:5E",
+    "expired": false,
+    "parsed": true
+  },
+  "usage_collection_is_set": false
 }

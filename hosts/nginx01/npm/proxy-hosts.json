@@ -1,373 +1,373 @@
 [
-    {
-        "id": 13,
-        "created_on": "2025-04-23T03:51:58.000Z",
-        "modified_on": "2025-04-29T03:13:02.000Z",
-        "owner_user_id": 1,
-        "domain_names": [
-            "haproxy.vollminlab.com"
-        ],
+  {
+    "id": 13,
+    "created_on": "2025-04-23T03:51:58.000Z",
+    "modified_on": "2025-04-29T03:13:02.000Z",
+    "owner_user_id": 1,
+    "domain_names": [
+      "haproxy.vollminlab.com"
+    ],
+    "forward_host": "192.168.152.7",
+    "forward_port": 8404,
+    "access_list_id": 0,
+    "certificate_id": 3,
+    "ssl_forced": true,
+    "caching_enabled": true,
+    "block_exploits": true,
+    "advanced_config": "location / {\r\n    return 301 https://$host/stats;\r\n}",
+    "meta": {
+      "letsencrypt_agree": false,
+      "dns_challenge": false,
+      "nginx_online": true,
+      "nginx_err": null
+    },
+    "allow_websocket_upgrade": true,
+    "http2_support": true,
+    "forward_scheme": "http",
+    "enabled": true,
+    "locations": [
+      {
+        "path": "/stats",
+        "advanced_config": "",
+        "forward_scheme": "http",
         "forward_host": "192.168.152.7",
-        "forward_port": 8404,
-        "access_list_id": 0,
-        "certificate_id": 3,
-        "ssl_forced": true,
-        "caching_enabled": true,
-        "block_exploits": true,
-        "advanced_config": "location / {\r\n    return 301 https://$host/stats;\r\n}",
-        "meta": {
-            "letsencrypt_agree": false,
-            "dns_challenge": false,
-            "nginx_online": true,
-            "nginx_err": null
-        },
-        "allow_websocket_upgrade": true,
-        "http2_support": true,
-        "forward_scheme": "http",
-        "enabled": true,
-        "locations": [
-            {
-                "path": "/stats",
-                "advanced_config": "",
-                "forward_scheme": "http",
-                "forward_host": "192.168.152.7",
-                "forward_port": 8404
-            }
-        ],
-        "hsts_enabled": false,
-        "hsts_subdomains": false,
-        "certificate": {
-            "id": 3,
-            "created_on": "2025-01-16T05:15:57.000Z",
-            "modified_on": "2026-03-12T02:27:20.000Z",
-            "owner_user_id": 1,
-            "is_deleted": false,
-            "provider": "letsencrypt",
-            "nice_name": "*.vollminlab.com",
-            "domain_names": [
-                "*.vollminlab.com"
-            ],
-            "expires_on": "2026-06-10T01:28:47.000Z",
-            "meta": {}
-        },
-        "owner": {
-            "id": 1,
-            "created_on": "2025-01-16T01:45:40.000Z",
-            "modified_on": "2025-01-16T01:47:17.000Z",
-            "is_disabled": false,
-            "email": "scottvollmin@gmail.com",
-            "name": "vollmin",
-            "nickname": "vollmin",
-            "avatar": "//www.gravatar.com/avatar/38f3c2725afeab0be5c5088d2ab268fd?default=mm",
-            "roles": [
-                "admin"
-            ]
-        },
-        "access_list": null
+        "forward_port": 8404
+      }
+    ],
+    "hsts_enabled": false,
+    "hsts_subdomains": false,
+    "certificate": {
+      "id": 3,
+      "created_on": "2025-01-16T05:15:57.000Z",
+      "modified_on": "2026-03-12T02:27:20.000Z",
+      "owner_user_id": 1,
+      "is_deleted": false,
+      "provider": "letsencrypt",
+      "nice_name": "*.vollminlab.com",
+      "domain_names": [
+        "*.vollminlab.com"
+      ],
+      "expires_on": "2026-06-10T01:28:47.000Z",
+      "meta": {}
     },
-    {
-        "id": 7,
-        "created_on": "2025-01-16T06:04:59.000Z",
-        "modified_on": "2025-01-16T06:05:00.000Z",
-        "owner_user_id": 1,
-        "domain_names": [
-            "npm.vollminlab.com"
-        ],
-        "forward_host": "192.168.152.2",
-        "forward_port": 81,
-        "access_list_id": 0,
-        "certificate_id": 3,
-        "ssl_forced": true,
-        "caching_enabled": true,
-        "block_exploits": true,
+    "owner": {
+      "id": 1,
+      "created_on": "2025-01-16T01:45:40.000Z",
+      "modified_on": "2025-01-16T01:47:17.000Z",
+      "is_disabled": false,
+      "email": "scottvollmin@gmail.com",
+      "name": "vollmin",
+      "nickname": "vollmin",
+      "avatar": "//www.gravatar.com/avatar/38f3c2725afeab0be5c5088d2ab268fd?default=mm",
+      "roles": [
+        "admin"
+      ]
+    },
+    "access_list": null
+  },
+  {
+    "id": 7,
+    "created_on": "2025-01-16T06:04:59.000Z",
+    "modified_on": "2025-01-16T06:05:00.000Z",
+    "owner_user_id": 1,
+    "domain_names": [
+      "npm.vollminlab.com"
+    ],
+    "forward_host": "192.168.152.2",
+    "forward_port": 81,
+    "access_list_id": 0,
+    "certificate_id": 3,
+    "ssl_forced": true,
+    "caching_enabled": true,
+    "block_exploits": true,
+    "advanced_config": "",
+    "meta": {
+      "letsencrypt_agree": false,
+      "dns_challenge": false,
+      "nginx_online": true,
+      "nginx_err": null
+    },
+    "allow_websocket_upgrade": true,
+    "http2_support": true,
+    "forward_scheme": "http",
+    "enabled": true,
+    "locations": [],
+    "hsts_enabled": false,
+    "hsts_subdomains": false,
+    "certificate": {
+      "id": 3,
+      "created_on": "2025-01-16T05:15:57.000Z",
+      "modified_on": "2026-03-12T02:27:20.000Z",
+      "owner_user_id": 1,
+      "is_deleted": false,
+      "provider": "letsencrypt",
+      "nice_name": "*.vollminlab.com",
+      "domain_names": [
+        "*.vollminlab.com"
+      ],
+      "expires_on": "2026-06-10T01:28:47.000Z",
+      "meta": {}
+    },
+    "owner": {
+      "id": 1,
+      "created_on": "2025-01-16T01:45:40.000Z",
+      "modified_on": "2025-01-16T01:47:17.000Z",
+      "is_disabled": false,
+      "email": "scottvollmin@gmail.com",
+      "name": "vollmin",
+      "nickname": "vollmin",
+      "avatar": "//www.gravatar.com/avatar/38f3c2725afeab0be5c5088d2ab268fd?default=mm",
+      "roles": [
+        "admin"
+      ]
+    },
+    "access_list": null
+  },
+  {
+    "id": 8,
+    "created_on": "2025-01-16T06:10:24.000Z",
+    "modified_on": "2025-05-01T03:44:23.000Z",
+    "owner_user_id": 1,
+    "domain_names": [
+      "pihole.vollminlab.com"
+    ],
+    "forward_host": "192.168.100.4",
+    "forward_port": 80,
+    "access_list_id": 0,
+    "certificate_id": 3,
+    "ssl_forced": true,
+    "caching_enabled": true,
+    "block_exploits": true,
+    "advanced_config": "location / {\r\n    return 301 https://$host/admin;\r\n}",
+    "meta": {
+      "letsencrypt_agree": false,
+      "dns_challenge": false,
+      "nginx_online": true,
+      "nginx_err": null
+    },
+    "allow_websocket_upgrade": true,
+    "http2_support": true,
+    "forward_scheme": "http",
+    "enabled": true,
+    "locations": [
+      {
+        "path": "/admin",
         "advanced_config": "",
-        "meta": {
-            "letsencrypt_agree": false,
-            "dns_challenge": false,
-            "nginx_online": true,
-            "nginx_err": null
-        },
-        "allow_websocket_upgrade": true,
-        "http2_support": true,
         "forward_scheme": "http",
-        "enabled": true,
-        "locations": [],
-        "hsts_enabled": false,
-        "hsts_subdomains": false,
-        "certificate": {
-            "id": 3,
-            "created_on": "2025-01-16T05:15:57.000Z",
-            "modified_on": "2026-03-12T02:27:20.000Z",
-            "owner_user_id": 1,
-            "is_deleted": false,
-            "provider": "letsencrypt",
-            "nice_name": "*.vollminlab.com",
-            "domain_names": [
-                "*.vollminlab.com"
-            ],
-            "expires_on": "2026-06-10T01:28:47.000Z",
-            "meta": {}
-        },
-        "owner": {
-            "id": 1,
-            "created_on": "2025-01-16T01:45:40.000Z",
-            "modified_on": "2025-01-16T01:47:17.000Z",
-            "is_disabled": false,
-            "email": "scottvollmin@gmail.com",
-            "name": "vollmin",
-            "nickname": "vollmin",
-            "avatar": "//www.gravatar.com/avatar/38f3c2725afeab0be5c5088d2ab268fd?default=mm",
-            "roles": [
-                "admin"
-            ]
-        },
-        "access_list": null
-    },
-    {
-        "id": 8,
-        "created_on": "2025-01-16T06:10:24.000Z",
-        "modified_on": "2025-05-01T03:44:23.000Z",
-        "owner_user_id": 1,
-        "domain_names": [
-            "pihole.vollminlab.com"
-        ],
         "forward_host": "192.168.100.4",
-        "forward_port": 80,
-        "access_list_id": 0,
-        "certificate_id": 3,
-        "ssl_forced": true,
-        "caching_enabled": true,
-        "block_exploits": true,
-        "advanced_config": "location / {\r\n    return 301 https://$host/admin;\r\n}",
-        "meta": {
-            "letsencrypt_agree": false,
-            "dns_challenge": false,
-            "nginx_online": true,
-            "nginx_err": null
-        },
-        "allow_websocket_upgrade": true,
-        "http2_support": true,
-        "forward_scheme": "http",
-        "enabled": true,
-        "locations": [
-            {
-                "path": "/admin",
-                "advanced_config": "",
-                "forward_scheme": "http",
-                "forward_host": "192.168.100.4",
-                "forward_port": 80
-            },
-            {
-                "path": "/api",
-                "advanced_config": "",
-                "forward_scheme": "http",
-                "forward_host": "192.168.100.4",
-                "forward_port": 80
-            }
-        ],
-        "hsts_enabled": false,
-        "hsts_subdomains": false,
-        "certificate": {
-            "id": 3,
-            "created_on": "2025-01-16T05:15:57.000Z",
-            "modified_on": "2026-03-12T02:27:20.000Z",
-            "owner_user_id": 1,
-            "is_deleted": false,
-            "provider": "letsencrypt",
-            "nice_name": "*.vollminlab.com",
-            "domain_names": [
-                "*.vollminlab.com"
-            ],
-            "expires_on": "2026-06-10T01:28:47.000Z",
-            "meta": {}
-        },
-        "owner": {
-            "id": 1,
-            "created_on": "2025-01-16T01:45:40.000Z",
-            "modified_on": "2025-01-16T01:47:17.000Z",
-            "is_disabled": false,
-            "email": "scottvollmin@gmail.com",
-            "name": "vollmin",
-            "nickname": "vollmin",
-            "avatar": "//www.gravatar.com/avatar/38f3c2725afeab0be5c5088d2ab268fd?default=mm",
-            "roles": [
-                "admin"
-            ]
-        },
-        "access_list": null
-    },
-    {
-        "id": 4,
-        "created_on": "2025-01-16T05:17:18.000Z",
-        "modified_on": "2025-01-27T17:52:39.000Z",
-        "owner_user_id": 1,
-        "domain_names": [
-            "plex.vollminlab.com"
-        ],
-        "forward_host": "192.168.150.2",
-        "forward_port": 32400,
-        "access_list_id": 0,
-        "certificate_id": 3,
-        "ssl_forced": true,
-        "caching_enabled": true,
-        "block_exploits": true,
+        "forward_port": 80
+      },
+      {
+        "path": "/api",
         "advanced_config": "",
-        "meta": {
-            "letsencrypt_agree": false,
-            "dns_challenge": false,
-            "nginx_online": true,
-            "nginx_err": null
-        },
-        "allow_websocket_upgrade": true,
-        "http2_support": true,
         "forward_scheme": "http",
-        "enabled": true,
-        "locations": [],
-        "hsts_enabled": false,
-        "hsts_subdomains": false,
-        "certificate": {
-            "id": 3,
-            "created_on": "2025-01-16T05:15:57.000Z",
-            "modified_on": "2026-03-12T02:27:20.000Z",
-            "owner_user_id": 1,
-            "is_deleted": false,
-            "provider": "letsencrypt",
-            "nice_name": "*.vollminlab.com",
-            "domain_names": [
-                "*.vollminlab.com"
-            ],
-            "expires_on": "2026-06-10T01:28:47.000Z",
-            "meta": {}
-        },
-        "owner": {
-            "id": 1,
-            "created_on": "2025-01-16T01:45:40.000Z",
-            "modified_on": "2025-01-16T01:47:17.000Z",
-            "is_disabled": false,
-            "email": "scottvollmin@gmail.com",
-            "name": "vollmin",
-            "nickname": "vollmin",
-            "avatar": "//www.gravatar.com/avatar/38f3c2725afeab0be5c5088d2ab268fd?default=mm",
-            "roles": [
-                "admin"
-            ]
-        },
-        "access_list": null
+        "forward_host": "192.168.100.4",
+        "forward_port": 80
+      }
+    ],
+    "hsts_enabled": false,
+    "hsts_subdomains": false,
+    "certificate": {
+      "id": 3,
+      "created_on": "2025-01-16T05:15:57.000Z",
+      "modified_on": "2026-03-12T02:27:20.000Z",
+      "owner_user_id": 1,
+      "is_deleted": false,
+      "provider": "letsencrypt",
+      "nice_name": "*.vollminlab.com",
+      "domain_names": [
+        "*.vollminlab.com"
+      ],
+      "expires_on": "2026-06-10T01:28:47.000Z",
+      "meta": {}
     },
-    {
-        "id": 6,
-        "created_on": "2025-01-16T05:28:58.000Z",
-        "modified_on": "2025-01-16T05:28:58.000Z",
-        "owner_user_id": 1,
-        "domain_names": [
-            "truenas.vollminlab.com"
-        ],
-        "forward_host": "192.168.150.2",
-        "forward_port": 80,
-        "access_list_id": 0,
-        "certificate_id": 3,
-        "ssl_forced": true,
-        "caching_enabled": true,
-        "block_exploits": true,
-        "advanced_config": "",
-        "meta": {
-            "letsencrypt_agree": false,
-            "dns_challenge": false,
-            "nginx_online": true,
-            "nginx_err": null
-        },
-        "allow_websocket_upgrade": true,
-        "http2_support": true,
-        "forward_scheme": "http",
-        "enabled": true,
-        "locations": [],
-        "hsts_enabled": false,
-        "hsts_subdomains": false,
-        "certificate": {
-            "id": 3,
-            "created_on": "2025-01-16T05:15:57.000Z",
-            "modified_on": "2026-03-12T02:27:20.000Z",
-            "owner_user_id": 1,
-            "is_deleted": false,
-            "provider": "letsencrypt",
-            "nice_name": "*.vollminlab.com",
-            "domain_names": [
-                "*.vollminlab.com"
-            ],
-            "expires_on": "2026-06-10T01:28:47.000Z",
-            "meta": {}
-        },
-        "owner": {
-            "id": 1,
-            "created_on": "2025-01-16T01:45:40.000Z",
-            "modified_on": "2025-01-16T01:47:17.000Z",
-            "is_disabled": false,
-            "email": "scottvollmin@gmail.com",
-            "name": "vollmin",
-            "nickname": "vollmin",
-            "avatar": "//www.gravatar.com/avatar/38f3c2725afeab0be5c5088d2ab268fd?default=mm",
-            "roles": [
-                "admin"
-            ]
-        },
-        "access_list": null
+    "owner": {
+      "id": 1,
+      "created_on": "2025-01-16T01:45:40.000Z",
+      "modified_on": "2025-01-16T01:47:17.000Z",
+      "is_disabled": false,
+      "email": "scottvollmin@gmail.com",
+      "name": "vollmin",
+      "nickname": "vollmin",
+      "avatar": "//www.gravatar.com/avatar/38f3c2725afeab0be5c5088d2ab268fd?default=mm",
+      "roles": [
+        "admin"
+      ]
     },
-    {
-        "id": 9,
-        "created_on": "2025-01-16T06:14:16.000Z",
-        "modified_on": "2025-01-16T12:02:50.000Z",
-        "owner_user_id": 1,
-        "domain_names": [
-            "udm.vollminlab.com"
-        ],
-        "forward_host": "192.168.1.1",
-        "forward_port": 443,
-        "access_list_id": 0,
-        "certificate_id": 3,
-        "ssl_forced": true,
-        "caching_enabled": true,
-        "block_exploits": true,
-        "advanced_config": "",
-        "meta": {
-            "letsencrypt_agree": false,
-            "dns_challenge": false,
-            "nginx_online": true,
-            "nginx_err": null
-        },
-        "allow_websocket_upgrade": true,
-        "http2_support": true,
-        "forward_scheme": "https",
-        "enabled": true,
-        "locations": [],
-        "hsts_enabled": false,
-        "hsts_subdomains": false,
-        "certificate": {
-            "id": 3,
-            "created_on": "2025-01-16T05:15:57.000Z",
-            "modified_on": "2026-03-12T02:27:20.000Z",
-            "owner_user_id": 1,
-            "is_deleted": false,
-            "provider": "letsencrypt",
-            "nice_name": "*.vollminlab.com",
-            "domain_names": [
-                "*.vollminlab.com"
-            ],
-            "expires_on": "2026-06-10T01:28:47.000Z",
-            "meta": {}
-        },
-        "owner": {
-            "id": 1,
-            "created_on": "2025-01-16T01:45:40.000Z",
-            "modified_on": "2025-01-16T01:47:17.000Z",
-            "is_disabled": false,
-            "email": "scottvollmin@gmail.com",
-            "name": "vollmin",
-            "nickname": "vollmin",
-            "avatar": "//www.gravatar.com/avatar/38f3c2725afeab0be5c5088d2ab268fd?default=mm",
-            "roles": [
-                "admin"
-            ]
-        },
-        "access_list": null
-    }
+    "access_list": null
+  },
+  {
+    "id": 4,
+    "created_on": "2025-01-16T05:17:18.000Z",
+    "modified_on": "2025-01-27T17:52:39.000Z",
+    "owner_user_id": 1,
+    "domain_names": [
+      "plex.vollminlab.com"
+    ],
+    "forward_host": "192.168.150.2",
+    "forward_port": 32400,
+    "access_list_id": 0,
+    "certificate_id": 3,
+    "ssl_forced": true,
+    "caching_enabled": true,
+    "block_exploits": true,
+    "advanced_config": "",
+    "meta": {
+      "letsencrypt_agree": false,
+      "dns_challenge": false,
+      "nginx_online": true,
+      "nginx_err": null
+    },
+    "allow_websocket_upgrade": true,
+    "http2_support": true,
+    "forward_scheme": "http",
+    "enabled": true,
+    "locations": [],
+    "hsts_enabled": false,
+    "hsts_subdomains": false,
+    "certificate": {
+      "id": 3,
+      "created_on": "2025-01-16T05:15:57.000Z",
+      "modified_on": "2026-03-12T02:27:20.000Z",
+      "owner_user_id": 1,
+      "is_deleted": false,
+      "provider": "letsencrypt",
+      "nice_name": "*.vollminlab.com",
+      "domain_names": [
+        "*.vollminlab.com"
+      ],
+      "expires_on": "2026-06-10T01:28:47.000Z",
+      "meta": {}
+    },
+    "owner": {
+      "id": 1,
+      "created_on": "2025-01-16T01:45:40.000Z",
+      "modified_on": "2025-01-16T01:47:17.000Z",
+      "is_disabled": false,
+      "email": "scottvollmin@gmail.com",
+      "name": "vollmin",
+      "nickname": "vollmin",
+      "avatar": "//www.gravatar.com/avatar/38f3c2725afeab0be5c5088d2ab268fd?default=mm",
+      "roles": [
+        "admin"
+      ]
+    },
+    "access_list": null
+  },
+  {
+    "id": 6,
+    "created_on": "2025-01-16T05:28:58.000Z",
+    "modified_on": "2025-01-16T05:28:58.000Z",
+    "owner_user_id": 1,
+    "domain_names": [
+      "truenas.vollminlab.com"
+    ],
+    "forward_host": "192.168.150.2",
+    "forward_port": 80,
+    "access_list_id": 0,
+    "certificate_id": 3,
+    "ssl_forced": true,
+    "caching_enabled": true,
+    "block_exploits": true,
+    "advanced_config": "",
+    "meta": {
+      "letsencrypt_agree": false,
+      "dns_challenge": false,
+      "nginx_online": true,
+      "nginx_err": null
+    },
+    "allow_websocket_upgrade": true,
+    "http2_support": true,
+    "forward_scheme": "http",
+    "enabled": true,
+    "locations": [],
+    "hsts_enabled": false,
+    "hsts_subdomains": false,
+    "certificate": {
+      "id": 3,
+      "created_on": "2025-01-16T05:15:57.000Z",
+      "modified_on": "2026-03-12T02:27:20.000Z",
+      "owner_user_id": 1,
+      "is_deleted": false,
+      "provider": "letsencrypt",
+      "nice_name": "*.vollminlab.com",
+      "domain_names": [
+        "*.vollminlab.com"
+      ],
+      "expires_on": "2026-06-10T01:28:47.000Z",
+      "meta": {}
+    },
+    "owner": {
+      "id": 1,
+      "created_on": "2025-01-16T01:45:40.000Z",
+      "modified_on": "2025-01-16T01:47:17.000Z",
+      "is_disabled": false,
+      "email": "scottvollmin@gmail.com",
+      "name": "vollmin",
+      "nickname": "vollmin",
+      "avatar": "//www.gravatar.com/avatar/38f3c2725afeab0be5c5088d2ab268fd?default=mm",
+      "roles": [
+        "admin"
+      ]
+    },
+    "access_list": null
+  },
+  {
+    "id": 9,
+    "created_on": "2025-01-16T06:14:16.000Z",
+    "modified_on": "2025-01-16T12:02:50.000Z",
+    "owner_user_id": 1,
+    "domain_names": [
+      "udm.vollminlab.com"
+    ],
+    "forward_host": "192.168.1.1",
+    "forward_port": 443,
+    "access_list_id": 0,
+    "certificate_id": 3,
+    "ssl_forced": true,
+    "caching_enabled": true,
+    "block_exploits": true,
+    "advanced_config": "",
+    "meta": {
+      "letsencrypt_agree": false,
+      "dns_challenge": false,
+      "nginx_online": true,
+      "nginx_err": null
+    },
+    "allow_websocket_upgrade": true,
+    "http2_support": true,
+    "forward_scheme": "https",
+    "enabled": true,
+    "locations": [],
+    "hsts_enabled": false,
+    "hsts_subdomains": false,
+    "certificate": {
+      "id": 3,
+      "created_on": "2025-01-16T05:15:57.000Z",
+      "modified_on": "2026-03-12T02:27:20.000Z",
+      "owner_user_id": 1,
+      "is_deleted": false,
+      "provider": "letsencrypt",
+      "nice_name": "*.vollminlab.com",
+      "domain_names": [
+        "*.vollminlab.com"
+      ],
+      "expires_on": "2026-06-10T01:28:47.000Z",
+      "meta": {}
+    },
+    "owner": {
+      "id": 1,
+      "created_on": "2025-01-16T01:45:40.000Z",
+      "modified_on": "2025-01-16T01:47:17.000Z",
+      "is_disabled": false,
+      "email": "scottvollmin@gmail.com",
+      "name": "vollmin",
+      "nickname": "vollmin",
+      "avatar": "//www.gravatar.com/avatar/38f3c2725afeab0be5c5088d2ab268fd?default=mm",
+      "roles": [
+        "admin"
+      ]
+    },
+    "access_list": null
+  }
 ]
