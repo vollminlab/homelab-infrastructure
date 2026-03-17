@@ -135,11 +135,13 @@ vSphere reports 6 CPUs (P-cores only) / 12 logical processors per host, 95.74 GB
 
 Three-node vCenter HA cluster — active, passive, witness — one per ESXi host. Management NIC on VLAN 151, VCHA heartbeat NIC on VLAN 155.
 
-| VM               | Role    | Management IP   | VCHA IP       |
-|------------------|---------|-----------------|---------------|
-| vcenter          | Active  | (see vCSA UI)   | 192.168.155.2 |
-| vcenter-Passive  | Passive | 192.168.151.5   | 192.168.155.3 |
-| vcenter-Witness  | Witness | —               | 192.168.155.4 |
+`vcenter.vollminlab.com` resolves to `192.168.151.5` (confirmed via DNS). VM names in vSphere reflect initial roles and may not reflect current active/passive state after a failover.
+
+| VM               | Management IP  | VCHA IP        |
+|------------------|----------------|----------------|
+| vcenter          | 192.168.151.x  | 192.168.155.2  |
+| vcenter-Passive  | 192.168.151.5  | 192.168.155.3  |
+| vcenter-Witness  | —              | 192.168.155.4  |
 
 ### Cluster
 
