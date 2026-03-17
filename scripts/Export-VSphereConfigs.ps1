@@ -1,16 +1,11 @@
 #!/usr/bin/env pwsh
-# collect-vsphere-configs.ps1
+# Export-VSphereConfigs.ps1
 #
 # Exports vSphere/vCenter infrastructure configuration via PowerCLI.
 # Requires VMware.PowerCLI to be installed.
+# Reuses an existing vCenter session if one is active; otherwise connects.
 #
-# Usage:
-#   .\scripts\collect-vsphere-configs.ps1              # prompts for password
-#   .\scripts\collect-vsphere-configs.ps1 -SkipConnect # reuse existing session
-
-param(
-    [switch]$SkipConnect
-)
+# Usage: .\scripts\Export-VSphereConfigs.ps1
 
 $ErrorActionPreference = "Stop"
 
@@ -30,8 +25,9 @@ function Save-Json {
 }
 
 # ── Connection ────────────────────────────────────────────────────────────────
-if (-not $SkipConnect -and
-    (-not $global:DefaultVIServer -or -not $global:DefaultVIServer.IsConnected)) {
+if ($global:DefaultVIServer -and $global:DefaultVIServer.IsConnected) {
+    Write-Host "==> vCenter: $($global:DefaultVIServer.Name) (existing session)"
+} else {
     Write-Host "==> Connecting to vCenter at $VCENTER"
     # Try op CLI for password; fall back to interactive prompt
     $vcPassword = $null
@@ -50,8 +46,7 @@ if (-not $SkipConnect -and
     } else {
         Connect-VIServer -Server $VCENTER -User $VCENTER_USER | Out-Null
     }
-} else {
-    Write-Host "==> vCenter: $($global:DefaultVIServer.Name)"
+    Write-Host "  connected"
 }
 
 Write-Host ""
