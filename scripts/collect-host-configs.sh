@@ -460,9 +460,12 @@ verify_pihole_sync() {
     if [[ ! -f "$f2" ]]; then
       echo "  MISSING on pihole2: $rel"
       drift=1
-    elif ! diff -q "$f1" "$f2" >/dev/null 2>&1; then
+    elif ! diff -q \
+        <(grep -vE '^\s*#.*Last updated|app_pwhash' "$f1") \
+        <(grep -vE '^\s*#.*Last updated|app_pwhash' "$f2") \
+        >/dev/null 2>&1; then
       echo "  DRIFT: $rel"
-      diff --unified=2 "$f1" "$f2" | sed 's/^/    /'
+      diff --unified=2 "$f1" "$f2" | grep -vE '^\s*[+-].*Last updated|^\s*[+-].*app_pwhash' | sed 's/^/    /' || true
       drift=1
     fi
   done < <(find "$p1" -type f -print0)
