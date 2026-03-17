@@ -23,6 +23,7 @@ Source of truth for all infrastructure configuration. Configs are collected from
 | 154  | VMWStorage    | 192.168.154.0/24     | Server | iSCSI storage                      |
 | 155  | VMWVCHA       | 192.168.155.0/28     | /13    | vCenter HA heartbeat               |
 | 160  | DMZ           | 192.168.160.0/24     | /101   | Internet-facing proxy VMs          |
+| —    | WireGuard VPN | 192.168.200.0/24     | —      | Tunnel-only, not a UDM VLAN        |
 
 ### WiFi SSIDs
 
@@ -39,6 +40,19 @@ Source of truth for all infrastructure configuration. Configs are collected from
 | haproxydmz-VIP-HTTP   | TCP   | 80            | 192.168.160.4:80        |
 | haproxydmz-VIP-HTTPS  | TCP   | 443           | 192.168.160.4:443       |
 | Minecraft External    | TCP   | 25565         | 192.168.160.4:25565     |
+
+### WireGuard VPN
+
+- Server name: `vpn.vollminlab.com`, port `51821/UDP`
+- Tunnel subnet: `192.168.200.0/24` (UDM server: `.200.1`)
+- MSS clamping to PMTU: enabled
+
+| Peer name  | Tunnel IP       |
+|------------|-----------------|
+| vollminxps | 192.168.200.2   |
+| SViphone   | 192.168.200.3   |
+
+Firewall: VPN peers get full LAN access (`VPN_LAN: Allow All`), DNS forced through Pihole (external DNS rejected via `VPN_WAN`).
 
 ### Firewall Policy Summary
 
@@ -116,6 +130,30 @@ Traffic between zones follows a default-deny model. Custom rules are documented 
 | 01:10 on 15th, */3mo | Restart Unbound                             |
 | Every 15 minutes    | `pihole-healthcheck.sh` (FTL status, disk, NTP) |
 
+**Local DNS A records** (from `pihole.toml`, managed on pihole1, synced to pihole2):
+
+| Hostname                        | IP / Notes               |
+|---------------------------------|--------------------------|
+| pihole1.vollminlab.com          | 192.168.100.2            |
+| pihole2.vollminlab.com          | 192.168.100.3            |
+| esxi01–03.vollminlab.com        | 192.168.151.2–4          |
+| vcenter.vollminlab.com          | 192.168.151.5            |
+| haproxy01/02.vollminlab.com     | 192.168.152.5/6          |
+| haproxyvip.vollminlab.com       | 192.168.152.7            |
+| haproxydmz01/02.vollminlab.com  | 192.168.160.2/3          |
+| haproxydmzvip.vollminlab.com    | 192.168.160.4            |
+| nginx01 / npm.vollminlab.com    | 192.168.152.2            |
+| truenas.vollminlab.com          | 192.168.150.2            |
+| iscsi.vollminlab.com            | 192.168.150.2            |
+| k8scp01–03.vollminlab.com       | 192.168.152.8–10         |
+| k8sworker01–06.vollminlab.com   | 192.168.152.11–16        |
+| k8sapi.vollminlab.com           | 192.168.152.7 (HAProxy VIP) |
+| groupme01.vollminlab.com        | 192.168.152.17           |
+| plex.vollminlab.com             | 192.168.150.2            |
+| (+ app records)                 | sabnzbd, radarr, sonarr, overseerr, prowlarr, bazarr, tautulli, longhorn, prometheus, grafana, portainer, bookstack, homepage, capacitor, policyreporter |
+
+Full list in `hosts/pihole1/configs/pihole/pihole.toml`.
+
 ---
 
 ## Virtualization (vSphere)
@@ -149,6 +187,14 @@ Three-node vCenter HA cluster — active, passive, witness — one per ESXi host
 - HA: enabled, failover level 1, admission control enabled
 - DRS: enabled, partially automated (level 1)
 - EVC: not configured
+
+**DRS Separation Rules** (must-run-on-separate-hosts):
+
+| Rule                  | VMs                                    |
+|-----------------------|----------------------------------------|
+| vCenter HA nodes      | vcenter, vcenter-Passive, vcenter-Witness |
+| HAProxy internal pair | haproxy01, haproxy02                   |
+| K8s control plane     | k8scp01, k8scp02, k8scp03             |
 
 ### Distributed vSwitch
 

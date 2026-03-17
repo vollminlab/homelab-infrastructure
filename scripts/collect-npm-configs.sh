@@ -49,10 +49,24 @@ fetch() {
   local dest="$OUT_DIR/$outfile"
   # Write raw first so we always have something even if formatting fails
   curl -sf "$NPM_URL/api/$endpoint" -H "Authorization: Bearer $TOKEN" > "$dest"
-  # Pretty-print in-place with LF line endings (json.tool uses OS default = CRLF on Windows)
+  # Pretty-print in-place with LF line endings; redact secrets in meta fields
   for py in python3 python py; do
     if command -v "$py" &>/dev/null 2>&1; then
-      "$py" -c "import sys,json; d=json.load(open(sys.argv[1])); open(sys.argv[1],'w',newline='\n').write(json.dumps(d,indent=2)+'\n')" "$dest" 2>/dev/null && break
+      "$py" -c "
+import sys, json, re
+
+REDACT_KEYS = {'dns_provider_credentials', 'letsencrypt_email'}
+
+def redact(obj):
+    if isinstance(obj, dict):
+        return {k: 'REDACTED' if k in REDACT_KEYS else redact(v) for k, v in obj.items()}
+    if isinstance(obj, list):
+        return [redact(i) for i in obj]
+    return obj
+
+d = json.load(open(sys.argv[1]))
+open(sys.argv[1], 'w', newline='\n').write(json.dumps(redact(d), indent=2) + '\n')
+" "$dest" 2>/dev/null && break
     fi
   done
   echo "  pulled $outfile ($(wc -c < "$dest") bytes)"

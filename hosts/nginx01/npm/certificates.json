@@ -11,10 +11,10 @@
     ],
     "expires_on": "2026-06-10T01:28:47.000Z",
     "meta": {
-      "letsencrypt_email": "scottvollmin@gmail.com",
+      "letsencrypt_email": "REDACTED",
       "dns_challenge": true,
       "dns_provider": "cloudflare",
-      "dns_provider_credentials": "# Cloudflare API token\r\ndns_cloudflare_api_token=2sf5XAEN85jt-B3tKNIoIyI23_4GzudMWa-ZM4ZA",
+      "dns_provider_credentials": "REDACTED",
       "letsencrypt_agree": true
     }
   }
