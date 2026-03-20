@@ -150,6 +150,8 @@ Traffic between zones follows a default-deny model. Custom rules are documented 
 | k8sapi.vollminlab.com           | 192.168.152.7 (HAProxy VIP) |
 | groupme01.vollminlab.com        | 192.168.152.17           |
 | plex.vollminlab.com             | 192.168.150.2            |
+| go.vollminlab.com               | 192.168.152.7 (HAProxy VIP) — Shlink short URL domain |
+| shlink.vollminlab.com           | 192.168.152.7 (HAProxy VIP) — Shlink web UI |
 | (+ app records)                 | sabnzbd, radarr, sonarr, overseerr, prowlarr, bazarr, tautulli, longhorn, prometheus, grafana, portainer, bookstack, homepage, capacitor, policyreporter |
 
 Full list in `hosts/pihole1/configs/pihole/pihole.toml`.
@@ -263,7 +265,7 @@ VM host placement is not tracked here — DRS manages placement dynamically.
 - Control plane endpoint: `192.168.152.7:6443` (HAProxy VIP)
 - Pod subnet: `172.18.0.0/16`
 - Service subnet: `10.96.0.0/12`
-- etcd: local at `/var/lib/etcd`
+- etcd: stacked, 3 members (k8scp01–03), local at `/var/lib/etcd` — see [etcd.md](etcd.md)
 - API server encryption: enabled
 - CNI: Calico v3.29.1
 - GitOps: Flux (repo: `k8s-vollminlab-cluster`)
@@ -408,5 +410,5 @@ All secrets stored in **1Password** (Homelab vault), retrieved at runtime via `o
 - **HAProxy:** Stateless — restore from `haproxy.cfg` + `keepalived.conf` in this repo.
 - **NPM:** Restore via docker-compose + import proxy config from `hosts/nginx01/npm/`.
 - **TrueNAS:** Pool layout and share config in this repo. Pools depend on physical disk layout.
-- **Kubernetes:** Flux repo re-bootstraps all workloads. Sealed Secrets sealing key backup documented in `k8s-vollminlab-cluster` bootstrap dir.
+- **Kubernetes:** Flux repo re-bootstraps all workloads. Sealed Secrets sealing key backup documented in `k8s-vollminlab-cluster` bootstrap dir. etcd backup/restore and member replacement procedures in [etcd.md](etcd.md). API server encryption key (`enc.yaml`) must be restored from 1Password before API server starts on a rebuilt control plane node.
 - **vSphere:** Full config snapshot in `hosts/vsphere/`. vCSA file-based backup target: `/mnt/pool_0/vcenter_backups` on TrueNAS (NFS, accessible from 192.168.151.0/24).
