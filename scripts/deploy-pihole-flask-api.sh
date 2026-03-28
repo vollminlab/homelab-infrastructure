@@ -2,11 +2,11 @@
 # deploy-pihole-flask-api.sh
 #
 # Pull the latest pihole-flask-api on both Pi-hole hosts and restart the service.
-# Optionally adds DNS CNAME records via the Flask API.
+# Optionally adds DNS A records via the Flask API.
 #
 # Usage:
 #   bash deploy-pihole-flask-api.sh           # deploy only
-#   bash deploy-pihole-flask-api.sh --dns     # deploy + add CNAME records
+#   bash deploy-pihole-flask-api.sh --dns     # deploy + add A records
 #
 # Requirements:
 #   - System32 OpenSSH in PATH (for 1Password agent on Windows Git Bash)
@@ -42,35 +42,41 @@ for host in "${HOSTS[@]}"; do
   echo "    $host: $SERVICE is $status"
 done
 
-# ── DNS CNAME records (optional) ─────────────────────────────────────────────
+# ── DNS A records (optional) ──────────────────────────────────────────────────
+# All cluster app subdomains point to 192.168.152.244 (ingress-nginx MetalLB VIP).
+# Records must be added to BOTH Pi-holes directly — do not rely on nebula-sync.
 
 if [[ "$ADD_DNS" == "true" ]]; then
   echo ""
-  echo "==> Adding DNS CNAME records via pihole-flask-api"
+  echo "==> Adding DNS A records via pihole-flask-api"
 
   # Fetch API key from 1Password
   API_KEY=$(op read "op://Homelab/recordimporter-api-token/password")
-  API_BASE="http://192.168.100.2:5001"
-  TARGET="haproxyvip.vollminlab.com"
+  PIHOLE_HOSTS=("http://192.168.100.2:5001" "http://192.168.100.3:5001")
+  INGRESS_IP="192.168.152.244"
 
-  CNAMES=(
+  # Cluster app subdomains served via ingress-nginx
+  RECORDS=(
     "go.vollminlab.com"
     "shlink.vollminlab.com"
   )
 
-  for domain in "${CNAMES[@]}"; do
-    echo "    Adding CNAME: $domain → $TARGET"
-    response=$(curl -s -o /dev/null -w "%{http_code}" -X POST "$API_BASE/add-cname-record" \
-      -H "Content-Type: application/json" \
-      -H "Authorization: Bearer $API_KEY" \
-      -d "{\"domain\": \"$domain\", \"target\": \"$TARGET\"}")
-    if [[ "$response" == "200" ]]; then
-      echo "    ✓ $domain added"
-    elif [[ "$response" == "409" ]]; then
-      echo "    ~ $domain already exists (skipped)"
-    else
-      echo "    ✗ $domain failed (HTTP $response)"
-    fi
+  for api_base in "${PIHOLE_HOSTS[@]}"; do
+    echo "  -- $api_base"
+    for domain in "${RECORDS[@]}"; do
+      echo "    Adding A: $domain → $INGRESS_IP"
+      response=$(curl -s -o /dev/null -w "%{http_code}" -X POST "$api_base/add-a-record" \
+        -H "Content-Type: application/json" \
+        -H "Authorization: Bearer $API_KEY" \
+        -d "{\"domain\": \"$domain\", \"ip\": \"$INGRESS_IP\"}")
+      if [[ "$response" == "200" ]]; then
+        echo "    ✓ $domain added"
+      elif [[ "$response" == "409" ]]; then
+        echo "    ~ $domain already exists (skipped)"
+      else
+        echo "    ✗ $domain failed (HTTP $response)"
+      fi
+    done
   done
 fi
 
