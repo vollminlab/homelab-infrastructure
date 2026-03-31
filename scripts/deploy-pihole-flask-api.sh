@@ -51,7 +51,7 @@ if [[ "$ADD_DNS" == "true" ]]; then
   echo "==> Adding DNS A records via pihole-flask-api"
 
   # Fetch API key from 1Password
-  API_KEY=$(op read "op://Homelab/recordimporter-api-token/password")
+  API_KEY=$(op read "op://Homelab/Recordimporter/credential")
   PIHOLE_HOSTS=("http://192.168.100.2:5001" "http://192.168.100.3:5001")
   INGRESS_IP="192.168.152.244"
 
