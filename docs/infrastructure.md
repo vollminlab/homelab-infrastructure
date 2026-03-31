@@ -150,11 +150,14 @@ Traffic between zones follows a default-deny model. Custom rules are documented 
 | k8sapi.vollminlab.com           | 192.168.152.7 (HAProxy VIP) |
 | groupme01.vollminlab.com        | 192.168.152.17           |
 | plex.vollminlab.com             | 192.168.150.2            |
-| go.vollminlab.com               | 192.168.152.7 (HAProxy VIP) — Shlink short URL domain |
-| shlink.vollminlab.com           | 192.168.152.7 (HAProxy VIP) — Shlink web UI |
-| (+ app records)                 | sabnzbd, radarr, sonarr, overseerr, prowlarr, bazarr, tautulli, longhorn, prometheus, grafana, portainer, bookstack, homepage, capacitor, policyreporter |
+| go.vollminlab.com               | 192.168.152.244 (ingress-nginx) — Shlink short URL domain |
+| vl.vollminlab.com               | 192.168.152.244 (ingress-nginx) — Shlink short URL domain |
+| shlink.vollminlab.com           | 192.168.152.244 (ingress-nginx) — Shlink web UI |
+| (+ app records)                 | sabnzbd, radarr, sonarr, overseerr, prowlarr, bazarr, tautulli, longhorn, prometheus, grafana, portainer, bookstack, homepage, capacitor, policyreporter, shlink |
 
 Full list in `hosts/pihole1/configs/pihole/pihole.toml`.
+
+**Note:** `vollm.in` is an externally-registered domain used as a Shlink short link base. It resolves via public DNS (Let's Encrypt cert) and is not a Pi-hole record. Short links are accessible as `vollm.in/<slug>`, `go.vollminlab.com/<slug>`, and `vl.vollminlab.com/<slug>`.
 
 ---
 

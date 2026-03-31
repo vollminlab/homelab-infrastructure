@@ -32,7 +32,7 @@ All records are A records. Three categories:
 | Category | Type | Target | Examples |
 |----------|------|--------|---------|
 | Machine hostnames | A | Own IP | pihole1/2, esxi01-03, k8sworker01-06, haproxy01/02 |
-| Cluster app subdomains | A | `192.168.152.244` (ingress-nginx) | homepage, radarr, shlink, go |
+| Cluster app subdomains | A | `192.168.152.244` (ingress-nginx) | homepage, radarr, shlink, go, vl |
 | NPM-proxied infra | A | `192.168.152.2` (Nginx Proxy Manager) | pihole, plex, truenas, udm, vcenter, haproxy (stats) |
 | Externally-accessible DMZ | CNAME | `dynamic.vollminlab.com` → public WAN IP | bluemap |
 
