@@ -1,0 +1,62 @@
+[
+    {
+        "Host":  "esxi01.vollminlab.com",
+        "Adapters":  {
+                         "Device":  "vmhba64",
+                         "IScsiName":  "iqn.1998-01.com.vmware:esxi01.vollminlab.com:1490800307:64",
+                         "Model":  "iSCSI Software Adapter",
+                         "Targets":  [
+                                         {
+                                             "Address":  "iscsi.vollminlab.com",
+                                             "Port":  3260,
+                                             "Type":  1
+                                         },
+                                         {
+                                             "Address":  "192.168.150.2",
+                                             "Port":  3260,
+                                             "Type":  0
+                                         }
+                                     ]
+                     }
+    },
+    {
+        "Host":  "esxi02.vollminlab.com",
+        "Adapters":  {
+                         "Device":  "vmhba64",
+                         "IScsiName":  "iqn.1998-01.com.vmware:esxi02.vollminlab.com:1523591277:64",
+                         "Model":  "iSCSI Software Adapter",
+                         "Targets":  [
+                                         {
+                                             "Address":  "iscsi.vollminlab.com",
+                                             "Port":  3260,
+                                             "Type":  1
+                                         },
+                                         {
+                                             "Address":  "192.168.150.2",
+                                             "Port":  3260,
+                                             "Type":  0
+                                         }
+                                     ]
+                     }
+    },
+    {
+        "Host":  "esxi03.vollminlab.com",
+        "Adapters":  {
+                         "Device":  "vmhba64",
+                         "IScsiName":  "iqn.1998-01.com.vmware:esxi03.vollminlab.com:56590064:64",
+                         "Model":  "iSCSI Software Adapter",
+                         "Targets":  [
+                                         {
+                                             "Address":  "iscsi.vollminlab.com",
+                                             "Port":  3260,
+                                             "Type":  1
+                                         },
+                                         {
+                                             "Address":  "192.168.150.2",
+                                             "Port":  3260,
+                                             "Type":  0
+                                         }
+                                     ]
+                     }
+    }
+]

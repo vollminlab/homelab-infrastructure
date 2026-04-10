@@ -1,0 +1,10 @@
+{
+    "Name":  "Resources",
+    "Parent":  "vollminlab-ESXi-Cluster",
+    "CpuSharesLevel":  3,
+    "CpuReservationMHz":  40261,
+    "CpuLimitMHz":  40261,
+    "MemSharesLevel":  3,
+    "MemReservationGB":  263.98,
+    "MemLimitGB":  263.98
+}

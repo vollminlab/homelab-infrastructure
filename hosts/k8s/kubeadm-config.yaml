@@ -1,0 +1,41 @@
+apiVersion: v1
+data:
+  ClusterConfiguration: |
+    apiServer:
+      extraArgs:
+      - name: encryption-provider-config
+        value: /etc/kubernetes/enc/enc.yaml
+      extraVolumes:
+      - hostPath: /etc/kubernetes/enc
+        mountPath: /etc/kubernetes/enc
+        name: enc
+        pathType: DirectoryOrCreate
+        readOnly: true
+    apiVersion: kubeadm.k8s.io/v1beta4
+    caCertificateValidityPeriod: 87600h0m0s
+    certificateValidityPeriod: 8760h0m0s
+    certificatesDir: /etc/kubernetes/pki
+    clusterName: kubernetes
+    controllerManager: {}
+    dns: {}
+    encryptionAlgorithm: RSA-2048
+    etcd:
+      local:
+        dataDir: /var/lib/etcd
+    imageRepository: registry.k8s.io
+    kind: ClusterConfiguration
+    kubernetesVersion: v1.32.3
+    controlPlaneEndpoint: 192.168.152.7:6443
+    networking:
+      dnsDomain: cluster.local
+      podSubnet: 172.18.0.0/16
+      serviceSubnet: 10.96.0.0/12
+    proxy: {}
+    scheduler: {}
+kind: ConfigMap
+metadata:
+  creationTimestamp: "2025-01-18T05:40:36Z"
+  name: kubeadm-config
+  namespace: kube-system
+  resourceVersion: "30030321"
+  uid: bb3fe47e-db91-47e3-a69b-6529648ca1c8

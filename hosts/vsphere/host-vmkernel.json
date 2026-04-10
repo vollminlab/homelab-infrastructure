@@ -1,0 +1,149 @@
+[
+    {
+        "Host":  "esxi01.vollminlab.com",
+        "Adapters":  [
+                         {
+                             "Name":  "vmk0",
+                             "IP":  "192.168.151.2",
+                             "SubnetMask":  "255.255.255.0",
+                             "Mac":  "58:47:ca:7a:53:bc",
+                             "PortGroupName":  "151-DPG-Management",
+                             "VMotionEnabled":  false,
+                             "ManagementTrafficEnabled":  true,
+                             "FaultToleranceLoggingEnabled":  false,
+                             "VsanTrafficEnabled":  false
+                         },
+                         {
+                             "Name":  "vmk2",
+                             "IP":  "192.168.154.2",
+                             "SubnetMask":  "255.255.255.0",
+                             "Mac":  "00:50:56:68:0a:20",
+                             "PortGroupName":  "154-DPG-iSCSI-1",
+                             "VMotionEnabled":  false,
+                             "ManagementTrafficEnabled":  false,
+                             "FaultToleranceLoggingEnabled":  false,
+                             "VsanTrafficEnabled":  false
+                         },
+                         {
+                             "Name":  "vmk3",
+                             "IP":  "192.168.154.5",
+                             "SubnetMask":  "255.255.255.0",
+                             "Mac":  "00:50:56:61:46:b4",
+                             "PortGroupName":  "154-DPG-iSCSI-2",
+                             "VMotionEnabled":  false,
+                             "ManagementTrafficEnabled":  false,
+                             "FaultToleranceLoggingEnabled":  false,
+                             "VsanTrafficEnabled":  false
+                         },
+                         {
+                             "Name":  "vmk1",
+                             "IP":  "192.168.153.2",
+                             "SubnetMask":  "255.255.255.0",
+                             "Mac":  "00:50:56:65:be:90",
+                             "PortGroupName":  "153-DPG-vMotion",
+                             "VMotionEnabled":  true,
+                             "ManagementTrafficEnabled":  false,
+                             "FaultToleranceLoggingEnabled":  false,
+                             "VsanTrafficEnabled":  false
+                         }
+                     ]
+    },
+    {
+        "Host":  "esxi02.vollminlab.com",
+        "Adapters":  [
+                         {
+                             "Name":  "vmk0",
+                             "IP":  "192.168.151.3",
+                             "SubnetMask":  "255.255.255.0",
+                             "Mac":  "58:47:ca:7a:50:e4",
+                             "PortGroupName":  "151-DPG-Management",
+                             "VMotionEnabled":  false,
+                             "ManagementTrafficEnabled":  true,
+                             "FaultToleranceLoggingEnabled":  false,
+                             "VsanTrafficEnabled":  false
+                         },
+                         {
+                             "Name":  "vmk2",
+                             "IP":  "192.168.154.3",
+                             "SubnetMask":  "255.255.255.0",
+                             "Mac":  "00:50:56:6c:d6:61",
+                             "PortGroupName":  "154-DPG-iSCSI-1",
+                             "VMotionEnabled":  false,
+                             "ManagementTrafficEnabled":  false,
+                             "FaultToleranceLoggingEnabled":  false,
+                             "VsanTrafficEnabled":  false
+                         },
+                         {
+                             "Name":  "vmk3",
+                             "IP":  "192.168.154.6",
+                             "SubnetMask":  "255.255.255.0",
+                             "Mac":  "00:50:56:6b:dd:e5",
+                             "PortGroupName":  "154-DPG-iSCSI-2",
+                             "VMotionEnabled":  false,
+                             "ManagementTrafficEnabled":  false,
+                             "FaultToleranceLoggingEnabled":  false,
+                             "VsanTrafficEnabled":  false
+                         },
+                         {
+                             "Name":  "vmk1",
+                             "IP":  "192.168.153.3",
+                             "SubnetMask":  "255.255.255.0",
+                             "Mac":  "00:50:56:66:cb:9b",
+                             "PortGroupName":  "153-DPG-vMotion",
+                             "VMotionEnabled":  true,
+                             "ManagementTrafficEnabled":  false,
+                             "FaultToleranceLoggingEnabled":  false,
+                             "VsanTrafficEnabled":  false
+                         }
+                     ]
+    },
+    {
+        "Host":  "esxi03.vollminlab.com",
+        "Adapters":  [
+                         {
+                             "Name":  "vmk0",
+                             "IP":  "192.168.151.4",
+                             "SubnetMask":  "255.255.255.0",
+                             "Mac":  "58:47:ca:79:24:d6",
+                             "PortGroupName":  "151-DPG-Management",
+                             "VMotionEnabled":  false,
+                             "ManagementTrafficEnabled":  true,
+                             "FaultToleranceLoggingEnabled":  false,
+                             "VsanTrafficEnabled":  false
+                         },
+                         {
+                             "Name":  "vmk2",
+                             "IP":  "192.168.154.4",
+                             "SubnetMask":  "255.255.255.0",
+                             "Mac":  "00:50:56:65:8d:ae",
+                             "PortGroupName":  "154-DPG-iSCSI-1",
+                             "VMotionEnabled":  false,
+                             "ManagementTrafficEnabled":  false,
+                             "FaultToleranceLoggingEnabled":  false,
+                             "VsanTrafficEnabled":  false
+                         },
+                         {
+                             "Name":  "vmk3",
+                             "IP":  "192.168.154.7",
+                             "SubnetMask":  "255.255.255.0",
+                             "Mac":  "00:50:56:68:90:be",
+                             "PortGroupName":  "154-DPG-iSCSI-2",
+                             "VMotionEnabled":  false,
+                             "ManagementTrafficEnabled":  false,
+                             "FaultToleranceLoggingEnabled":  false,
+                             "VsanTrafficEnabled":  false
+                         },
+                         {
+                             "Name":  "vmk1",
+                             "IP":  "192.168.153.4",
+                             "SubnetMask":  "255.255.255.0",
+                             "Mac":  "00:50:56:6d:a0:51",
+                             "PortGroupName":  "153-DPG-vMotion",
+                             "VMotionEnabled":  true,
+                             "ManagementTrafficEnabled":  false,
+                             "FaultToleranceLoggingEnabled":  false,
+                             "VsanTrafficEnabled":  false
+                         }
+                     ]
+    }
+]

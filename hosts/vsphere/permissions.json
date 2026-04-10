@@ -1,0 +1,218 @@
+[
+    {
+        "Entity":  "Datacenters",
+        "EntityType":  null,
+        "Principal":  "VSPHERE.LOCAL\\observability-vapi-3632c041-a6f8-494d-a35f-5691737b9764",
+        "Role":  "ObservabilityVapiSvcRole",
+        "IsGroup":  false,
+        "Propagate":  true
+    },
+    {
+        "Entity":  "Datacenters",
+        "EntityType":  null,
+        "Principal":  "VSPHERE.LOCAL\\vpxd-3632c041-a6f8-494d-a35f-5691737b9764",
+        "Role":  "Admin",
+        "IsGroup":  false,
+        "Propagate":  true
+    },
+    {
+        "Entity":  "Datacenters",
+        "EntityType":  null,
+        "Principal":  "VSPHERE.LOCAL\\certificateauthority-3632c041-a6f8-494d-a35f-5691737b9764",
+        "Role":  "ReadOnly",
+        "IsGroup":  false,
+        "Propagate":  true
+    },
+    {
+        "Entity":  "Datacenters",
+        "EntityType":  null,
+        "Principal":  "VSPHERE.LOCAL\\vmware-vsm-3632c041-a6f8-494d-a35f-5691737b9764",
+        "Role":  "VsmSvcRole",
+        "IsGroup":  false,
+        "Propagate":  true
+    },
+    {
+        "Entity":  "Datacenters",
+        "EntityType":  null,
+        "Principal":  "VSPHERE.LOCAL\\vpxd-extension-3632c041-a6f8-494d-a35f-5691737b9764",
+        "Role":  "Admin",
+        "IsGroup":  false,
+        "Propagate":  true
+    },
+    {
+        "Entity":  "Datacenters",
+        "EntityType":  null,
+        "Principal":  "VSPHERE.LOCAL\\perfcharts-3632c041-a6f8-494d-a35f-5691737b9764",
+        "Role":  "PerfchartsSvcRole",
+        "IsGroup":  false,
+        "Propagate":  true
+    },
+    {
+        "Entity":  "Datacenters",
+        "EntityType":  null,
+        "Principal":  "VSPHERE.LOCAL\\topologysvc-3632c041-a6f8-494d-a35f-5691737b9764",
+        "Role":  "TopologysvcUser",
+        "IsGroup":  false,
+        "Propagate":  true
+    },
+    {
+        "Entity":  "Datacenters",
+        "EntityType":  null,
+        "Principal":  "VSPHERE.LOCAL\\vsphere-webclient-3632c041-a6f8-494d-a35f-5691737b9764",
+        "Role":  "vSphere Client Solution User",
+        "IsGroup":  false,
+        "Propagate":  true
+    },
+    {
+        "Entity":  "Datacenters",
+        "EntityType":  null,
+        "Principal":  "VSPHERE.LOCAL\\vsphere-ui-3632c041-a6f8-494d-a35f-5691737b9764",
+        "Role":  "vSphere Client Solution User",
+        "IsGroup":  false,
+        "Propagate":  true
+    },
+    {
+        "Entity":  "Datacenters",
+        "EntityType":  null,
+        "Principal":  "VSPHERE.LOCAL\\cms-3632c041-a6f8-494d-a35f-5691737b9764",
+        "Role":  "ReadOnly",
+        "IsGroup":  false,
+        "Propagate":  true
+    },
+    {
+        "Entity":  "Datacenters",
+        "EntityType":  null,
+        "Principal":  "VSPHERE.LOCAL\\vpxd-svc-acct-3632c041-a6f8-494d-a35f-5691737b9764",
+        "Role":  "Admin",
+        "IsGroup":  false,
+        "Propagate":  true
+    },
+    {
+        "Entity":  "Datacenters",
+        "EntityType":  null,
+        "Principal":  "VSPHERE.LOCAL\\vollmin",
+        "Role":  "Admin",
+        "IsGroup":  false,
+        "Propagate":  true
+    },
+    {
+        "Entity":  "Datacenters",
+        "EntityType":  null,
+        "Principal":  "VSPHERE.LOCAL\\Administrator",
+        "Role":  "Admin",
+        "IsGroup":  false,
+        "Propagate":  true
+    },
+    {
+        "Entity":  "Datacenters",
+        "EntityType":  null,
+        "Principal":  "VSPHERE.LOCAL\\Administrators",
+        "Role":  "Admin",
+        "IsGroup":  true,
+        "Propagate":  true
+    },
+    {
+        "Entity":  "Datacenters",
+        "EntityType":  null,
+        "Principal":  "VSPHERE.LOCAL\\vStatsGroup",
+        "Role":  "vStatsAdmin",
+        "IsGroup":  true,
+        "Propagate":  true
+    },
+    {
+        "Entity":  "Datacenters",
+        "EntityType":  null,
+        "Principal":  "VSPHERE.LOCAL\\ReadOnlyUsers",
+        "Role":  "ReadOnly",
+        "IsGroup":  true,
+        "Propagate":  true
+    },
+    {
+        "Entity":  "Datacenters",
+        "EntityType":  null,
+        "Principal":  "VSPHERE.LOCAL\\NsxAdministrators",
+        "Role":  "NsxAdministrator",
+        "IsGroup":  true,
+        "Propagate":  true
+    },
+    {
+        "Entity":  "Datacenters",
+        "EntityType":  null,
+        "Principal":  "VSPHERE.LOCAL\\NsxViAdministrators",
+        "Role":  "NsxViAdministrator",
+        "IsGroup":  true,
+        "Propagate":  true
+    },
+    {
+        "Entity":  "Datacenters",
+        "EntityType":  null,
+        "Principal":  "VSPHERE.LOCAL\\vSphereClientSolutionUsers",
+        "Role":  "vSphere Client Solution User",
+        "IsGroup":  true,
+        "Propagate":  true
+    },
+    {
+        "Entity":  "Datacenters",
+        "EntityType":  null,
+        "Principal":  "VSPHERE.LOCAL\\applmgmtSvcUsers",
+        "Role":  "applmgmtSvcRole",
+        "IsGroup":  true,
+        "Propagate":  true
+    },
+    {
+        "Entity":  "Datacenters",
+        "EntityType":  null,
+        "Principal":  "VSPHERE.LOCAL\\CAAdmins",
+        "Role":  "ReadOnly",
+        "IsGroup":  true,
+        "Propagate":  true
+    },
+    {
+        "Entity":  "Datacenters",
+        "EntityType":  null,
+        "Principal":  "VSPHERE.LOCAL\\AutoUpdate",
+        "Role":  "AutoUpdateUser",
+        "IsGroup":  true,
+        "Propagate":  true
+    },
+    {
+        "Entity":  "Datacenters",
+        "EntityType":  null,
+        "Principal":  "VSPHERE.LOCAL\\TrustedAdmins",
+        "Role":  "TrustedAdmin",
+        "IsGroup":  true,
+        "Propagate":  true
+    },
+    {
+        "Entity":  "Datacenters",
+        "EntityType":  null,
+        "Principal":  "VSPHERE.LOCAL\\WorkloadStorage",
+        "Role":  "WorkloadStorageManagement",
+        "IsGroup":  true,
+        "Propagate":  true
+    },
+    {
+        "Entity":  "Datacenters",
+        "EntityType":  null,
+        "Principal":  "VSPHERE.LOCAL\\RegistryAdministrators",
+        "Role":  "com.vmware.Content.Registry.Admin",
+        "IsGroup":  true,
+        "Propagate":  true
+    },
+    {
+        "Entity":  "Datacenters",
+        "EntityType":  null,
+        "Principal":  "VSPHERE.LOCAL\\SyncUsers",
+        "Role":  "SyncUsers",
+        "IsGroup":  true,
+        "Propagate":  true
+    },
+    {
+        "Entity":  "Datacenters",
+        "EntityType":  null,
+        "Principal":  "VSPHERE.LOCAL\\NsxAuditors",
+        "Role":  "NsxAuditor",
+        "IsGroup":  true,
+        "Propagate":  true
+    }
+]

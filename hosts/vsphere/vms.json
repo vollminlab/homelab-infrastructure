@@ -1,0 +1,857 @@
+[
+    {
+        "Name":  "groupme01",
+        "GuestId":  "ubuntu64Guest",
+        "NumCpu":  1,
+        "MemoryGB":  2,
+        "PowerState":  1,
+        "Folder":  "Linux VMs",
+        "Notes":  "",
+        "IPs":  [
+                    "192.168.152.17",
+                    "fe80::250:56ff:fe98:a51b"
+                ],
+        "Disks":  {
+                      "Name":  "Hard disk 1",
+                      "CapacityGB":  50,
+                      "StorageFormat":  3,
+                      "Datastore":  "vmstore1"
+                  },
+        "Networks":  {
+                         "Name":  "Network adapter 1",
+                         "NetworkName":  "152-DPG-GuestNet",
+                         "Type":  6,
+                         "MacAddress":  "00:50:56:98:a5:1b",
+                         "MacAddressType":  null
+                     },
+        "Tags":  {
+
+                 }
+    },
+    {
+        "Name":  "haproxy01",
+        "GuestId":  "ubuntu64Guest",
+        "NumCpu":  2,
+        "MemoryGB":  2,
+        "PowerState":  1,
+        "Folder":  "Linux VMs",
+        "Notes":  "",
+        "IPs":  [
+                    "192.168.152.5",
+                    "192.168.152.7",
+                    "fe80::250:56ff:fe98:1b15"
+                ],
+        "Disks":  {
+                      "Name":  "Hard disk 1",
+                      "CapacityGB":  20,
+                      "StorageFormat":  3,
+                      "Datastore":  "vmstore1"
+                  },
+        "Networks":  {
+                         "Name":  "Network adapter 1",
+                         "NetworkName":  "152-DPG-GuestNet",
+                         "Type":  6,
+                         "MacAddress":  "00:50:56:98:1b:15",
+                         "MacAddressType":  null
+                     },
+        "Tags":  {
+
+                 }
+    },
+    {
+        "Name":  "haproxy02",
+        "GuestId":  "ubuntu64Guest",
+        "NumCpu":  2,
+        "MemoryGB":  2,
+        "PowerState":  1,
+        "Folder":  "Linux VMs",
+        "Notes":  "",
+        "IPs":  [
+                    "192.168.152.6",
+                    "fe80::250:56ff:fe98:2a3a"
+                ],
+        "Disks":  {
+                      "Name":  "Hard disk 1",
+                      "CapacityGB":  20,
+                      "StorageFormat":  3,
+                      "Datastore":  "vmstore2"
+                  },
+        "Networks":  {
+                         "Name":  "Network adapter 1",
+                         "NetworkName":  "152-DPG-GuestNet",
+                         "Type":  6,
+                         "MacAddress":  "00:50:56:98:2a:3a",
+                         "MacAddressType":  null
+                     },
+        "Tags":  {
+
+                 }
+    },
+    {
+        "Name":  "haproxydmz01",
+        "GuestId":  "ubuntu64Guest",
+        "NumCpu":  2,
+        "MemoryGB":  2,
+        "PowerState":  1,
+        "Folder":  "Linux DMZ VMs",
+        "Notes":  "",
+        "IPs":  [
+                    "192.168.160.2",
+                    "192.168.160.4",
+                    "fe80::250:56ff:fe98:e2ac"
+                ],
+        "Disks":  {
+                      "Name":  "Hard disk 1",
+                      "CapacityGB":  50,
+                      "StorageFormat":  3,
+                      "Datastore":  "vmstore2"
+                  },
+        "Networks":  {
+                         "Name":  "Network adapter 1",
+                         "NetworkName":  "160-DPG-DMZ",
+                         "Type":  6,
+                         "MacAddress":  "00:50:56:98:e2:ac",
+                         "MacAddressType":  null
+                     },
+        "Tags":  {
+
+                 }
+    },
+    {
+        "Name":  "haproxydmz02",
+        "GuestId":  "ubuntu64Guest",
+        "NumCpu":  2,
+        "MemoryGB":  2,
+        "PowerState":  1,
+        "Folder":  "Linux DMZ VMs",
+        "Notes":  "",
+        "IPs":  [
+                    "192.168.160.3",
+                    "fe80::250:56ff:fe98:9748"
+                ],
+        "Disks":  {
+                      "Name":  "Hard disk 1",
+                      "CapacityGB":  50,
+                      "StorageFormat":  3,
+                      "Datastore":  "vmstore2"
+                  },
+        "Networks":  {
+                         "Name":  "Network adapter 1",
+                         "NetworkName":  "160-DPG-DMZ",
+                         "Type":  6,
+                         "MacAddress":  "00:50:56:98:97:48",
+                         "MacAddressType":  null
+                     },
+        "Tags":  {
+
+                 }
+    },
+    {
+        "Name":  "k8scp01",
+        "GuestId":  "ubuntu64Guest",
+        "NumCpu":  4,
+        "MemoryGB":  8,
+        "PowerState":  1,
+        "Folder":  "k8s Cluster VMs",
+        "Notes":  "",
+        "IPs":  [
+                    "192.168.152.8",
+                    "fe80::250:56ff:fe98:c84b",
+                    "172.18.173.195"
+                ],
+        "Disks":  {
+                      "Name":  "Hard disk 1",
+                      "CapacityGB":  50,
+                      "StorageFormat":  3,
+                      "Datastore":  "vmstore1"
+                  },
+        "Networks":  {
+                         "Name":  "Network adapter 1",
+                         "NetworkName":  "152-DPG-GuestNet",
+                         "Type":  6,
+                         "MacAddress":  "00:50:56:98:c8:4b",
+                         "MacAddressType":  null
+                     },
+        "Tags":  {
+
+                 }
+    },
+    {
+        "Name":  "k8scp02",
+        "GuestId":  "ubuntu64Guest",
+        "NumCpu":  4,
+        "MemoryGB":  8,
+        "PowerState":  1,
+        "Folder":  "k8s Cluster VMs",
+        "Notes":  "",
+        "IPs":  [
+                    "192.168.152.9",
+                    "fe80::250:56ff:fe98:5e96",
+                    "172.18.30.128"
+                ],
+        "Disks":  {
+                      "Name":  "Hard disk 1",
+                      "CapacityGB":  50,
+                      "StorageFormat":  3,
+                      "Datastore":  "vmstore1"
+                  },
+        "Networks":  {
+                         "Name":  "Network adapter 1",
+                         "NetworkName":  "152-DPG-GuestNet",
+                         "Type":  6,
+                         "MacAddress":  "00:50:56:98:5e:96",
+                         "MacAddressType":  null
+                     },
+        "Tags":  {
+
+                 }
+    },
+    {
+        "Name":  "k8scp03",
+        "GuestId":  "ubuntu64Guest",
+        "NumCpu":  4,
+        "MemoryGB":  8,
+        "PowerState":  1,
+        "Folder":  "k8s Cluster VMs",
+        "Notes":  "",
+        "IPs":  [
+                    "192.168.152.10",
+                    "fe80::250:56ff:fe98:a87b",
+                    "172.18.14.64"
+                ],
+        "Disks":  {
+                      "Name":  "Hard disk 1",
+                      "CapacityGB":  50,
+                      "StorageFormat":  3,
+                      "Datastore":  "vmstore2"
+                  },
+        "Networks":  {
+                         "Name":  "Network adapter 1",
+                         "NetworkName":  "152-DPG-GuestNet",
+                         "Type":  6,
+                         "MacAddress":  "00:50:56:98:a8:7b",
+                         "MacAddressType":  null
+                     },
+        "Tags":  {
+
+                 }
+    },
+    {
+        "Name":  "k8sworker01",
+        "GuestId":  "ubuntu64Guest",
+        "NumCpu":  4,
+        "MemoryGB":  8,
+        "PowerState":  1,
+        "Folder":  "k8s Cluster VMs",
+        "Notes":  "",
+        "IPs":  [
+                    "192.168.152.11",
+                    "fe80::250:56ff:fe98:f1ad",
+                    "172.18.218.5"
+                ],
+        "Disks":  {
+                      "Name":  "Hard disk 1",
+                      "CapacityGB":  50,
+                      "StorageFormat":  3,
+                      "Datastore":  "vmstore2"
+                  },
+        "Networks":  {
+                         "Name":  "Network adapter 1",
+                         "NetworkName":  "152-DPG-GuestNet",
+                         "Type":  6,
+                         "MacAddress":  "00:50:56:98:f1:ad",
+                         "MacAddressType":  null
+                     },
+        "Tags":  {
+
+                 }
+    },
+    {
+        "Name":  "k8sworker02",
+        "GuestId":  "ubuntu64Guest",
+        "NumCpu":  4,
+        "MemoryGB":  8,
+        "PowerState":  1,
+        "Folder":  "k8s Cluster VMs",
+        "Notes":  "",
+        "IPs":  [
+                    "192.168.152.12",
+                    "fe80::250:56ff:fe98:e2c7",
+                    "172.18.145.6"
+                ],
+        "Disks":  {
+                      "Name":  "Hard disk 1",
+                      "CapacityGB":  50,
+                      "StorageFormat":  3,
+                      "Datastore":  "vmstore1"
+                  },
+        "Networks":  {
+                         "Name":  "Network adapter 1",
+                         "NetworkName":  "152-DPG-GuestNet",
+                         "Type":  6,
+                         "MacAddress":  "00:50:56:98:e2:c7",
+                         "MacAddressType":  null
+                     },
+        "Tags":  {
+
+                 }
+    },
+    {
+        "Name":  "k8sworker03",
+        "GuestId":  "ubuntu64Guest",
+        "NumCpu":  4,
+        "MemoryGB":  8,
+        "PowerState":  1,
+        "Folder":  "k8s Cluster VMs",
+        "Notes":  "",
+        "IPs":  [
+                    "192.168.152.13",
+                    "fe80::250:56ff:fe98:fb47",
+                    "172.18.53.133"
+                ],
+        "Disks":  {
+                      "Name":  "Hard disk 1",
+                      "CapacityGB":  50,
+                      "StorageFormat":  3,
+                      "Datastore":  "vmstore2"
+                  },
+        "Networks":  {
+                         "Name":  "Network adapter 1",
+                         "NetworkName":  "152-DPG-GuestNet",
+                         "Type":  6,
+                         "MacAddress":  "00:50:56:98:fb:47",
+                         "MacAddressType":  null
+                     },
+        "Tags":  {
+
+                 }
+    },
+    {
+        "Name":  "k8sworker04",
+        "GuestId":  "ubuntu64Guest",
+        "NumCpu":  4,
+        "MemoryGB":  8,
+        "PowerState":  1,
+        "Folder":  "k8s Cluster VMs",
+        "Notes":  "",
+        "IPs":  [
+                    "192.168.152.14",
+                    "fe80::250:56ff:fe98:20ab",
+                    "172.18.26.65"
+                ],
+        "Disks":  {
+                      "Name":  "Hard disk 1",
+                      "CapacityGB":  50,
+                      "StorageFormat":  3,
+                      "Datastore":  "vmstore1"
+                  },
+        "Networks":  {
+                         "Name":  "Network adapter 1",
+                         "NetworkName":  "152-DPG-GuestNet",
+                         "Type":  6,
+                         "MacAddress":  "00:50:56:98:20:ab",
+                         "MacAddressType":  null
+                     },
+        "Tags":  {
+
+                 }
+    },
+    {
+        "Name":  "k8sworker05",
+        "GuestId":  "ubuntu64Guest",
+        "NumCpu":  8,
+        "MemoryGB":  32,
+        "PowerState":  1,
+        "Folder":  "k8s Cluster VMs",
+        "Notes":  "",
+        "IPs":  [
+                    "192.168.152.15",
+                    "fe80::250:56ff:fe98:1458",
+                    "172.18.33.128"
+                ],
+        "Disks":  {
+                      "Name":  "Hard disk 1",
+                      "CapacityGB":  100,
+                      "StorageFormat":  3,
+                      "Datastore":  "vmstore2"
+                  },
+        "Networks":  {
+                         "Name":  "Network adapter 1",
+                         "NetworkName":  "152-DPG-GuestNet",
+                         "Type":  6,
+                         "MacAddress":  "00:50:56:98:14:58",
+                         "MacAddressType":  null
+                     },
+        "Tags":  {
+
+                 }
+    },
+    {
+        "Name":  "k8sworker06",
+        "GuestId":  "ubuntu64Guest",
+        "NumCpu":  8,
+        "MemoryGB":  32,
+        "PowerState":  1,
+        "Folder":  "k8s Cluster VMs",
+        "Notes":  "",
+        "IPs":  [
+                    "192.168.152.16",
+                    "fe80::250:56ff:fe98:2028",
+                    "172.18.52.0"
+                ],
+        "Disks":  {
+                      "Name":  "Hard disk 1",
+                      "CapacityGB":  100,
+                      "StorageFormat":  3,
+                      "Datastore":  "vmstore2"
+                  },
+        "Networks":  {
+                         "Name":  "Network adapter 1",
+                         "NetworkName":  "152-DPG-GuestNet",
+                         "Type":  6,
+                         "MacAddress":  "00:50:56:98:20:28",
+                         "MacAddressType":  null
+                     },
+        "Tags":  {
+
+                 }
+    },
+    {
+        "Name":  "nginx01",
+        "GuestId":  "debian12_64Guest",
+        "NumCpu":  1,
+        "MemoryGB":  2,
+        "PowerState":  1,
+        "Folder":  "Linux VMs",
+        "Notes":  "",
+        "IPs":  [
+                    "192.168.152.2",
+                    "fe80::250:56ff:fe98:fa4a",
+                    "172.18.0.1",
+                    "fe80::42:48ff:fe9e:80c7"
+                ],
+        "Disks":  {
+                      "Name":  "Hard disk 1",
+                      "CapacityGB":  50,
+                      "StorageFormat":  3,
+                      "Datastore":  "vmstore1"
+                  },
+        "Networks":  {
+                         "Name":  "Network adapter 1",
+                         "NetworkName":  "152-DPG-GuestNet",
+                         "Type":  6,
+                         "MacAddress":  "00:50:56:98:fa:4a",
+                         "MacAddressType":  null
+                     },
+        "Tags":  {
+
+                 }
+    },
+    {
+        "Name":  "vcenter",
+        "GuestId":  "other3xLinux64Guest",
+        "NumCpu":  4,
+        "MemoryGB":  21,
+        "PowerState":  1,
+        "Folder":  "vCenter",
+        "Notes":  "VMware vCenter Server Appliance",
+        "IPs":  [
+                    "192.168.155.2"
+                ],
+        "Disks":  [
+                      {
+                          "Name":  "Hard disk 1",
+                          "CapacityGB":  48.56,
+                          "StorageFormat":  3,
+                          "Datastore":  "vmstore1"
+                      },
+                      {
+                          "Name":  "Hard disk 2",
+                          "CapacityGB":  6.87,
+                          "StorageFormat":  3,
+                          "Datastore":  "vmstore1"
+                      },
+                      {
+                          "Name":  "Hard disk 3",
+                          "CapacityGB":  25,
+                          "StorageFormat":  3,
+                          "Datastore":  "vmstore1"
+                      },
+                      {
+                          "Name":  "Hard disk 4",
+                          "CapacityGB":  50,
+                          "StorageFormat":  3,
+                          "Datastore":  "vmstore1"
+                      },
+                      {
+                          "Name":  "Hard disk 5",
+                          "CapacityGB":  10,
+                          "StorageFormat":  3,
+                          "Datastore":  "vmstore1"
+                      },
+                      {
+                          "Name":  "Hard disk 6",
+                          "CapacityGB":  10,
+                          "StorageFormat":  3,
+                          "Datastore":  "vmstore1"
+                      },
+                      {
+                          "Name":  "Hard disk 7",
+                          "CapacityGB":  15,
+                          "StorageFormat":  3,
+                          "Datastore":  "vmstore1"
+                      },
+                      {
+                          "Name":  "Hard disk 8",
+                          "CapacityGB":  25,
+                          "StorageFormat":  3,
+                          "Datastore":  "vmstore1"
+                      },
+                      {
+                          "Name":  "Hard disk 9",
+                          "CapacityGB":  1,
+                          "StorageFormat":  3,
+                          "Datastore":  "vmstore1"
+                      },
+                      {
+                          "Name":  "Hard disk 10",
+                          "CapacityGB":  10,
+                          "StorageFormat":  3,
+                          "Datastore":  "vmstore1"
+                      },
+                      {
+                          "Name":  "Hard disk 11",
+                          "CapacityGB":  10,
+                          "StorageFormat":  3,
+                          "Datastore":  "vmstore1"
+                      },
+                      {
+                          "Name":  "Hard disk 12",
+                          "CapacityGB":  100,
+                          "StorageFormat":  3,
+                          "Datastore":  "vmstore1"
+                      },
+                      {
+                          "Name":  "Hard disk 13",
+                          "CapacityGB":  50,
+                          "StorageFormat":  3,
+                          "Datastore":  "vmstore1"
+                      },
+                      {
+                          "Name":  "Hard disk 14",
+                          "CapacityGB":  25,
+                          "StorageFormat":  3,
+                          "Datastore":  "vmstore1"
+                      },
+                      {
+                          "Name":  "Hard disk 15",
+                          "CapacityGB":  15,
+                          "StorageFormat":  3,
+                          "Datastore":  "vmstore1"
+                      },
+                      {
+                          "Name":  "Hard disk 16",
+                          "CapacityGB":  100,
+                          "StorageFormat":  3,
+                          "Datastore":  "vmstore1"
+                      },
+                      {
+                          "Name":  "Hard disk 17",
+                          "CapacityGB":  200,
+                          "StorageFormat":  3,
+                          "Datastore":  "vmstore1"
+                      }
+                  ],
+        "Networks":  [
+                         {
+                             "Name":  "Network adapter 1",
+                             "NetworkName":  "151-DPG-Management",
+                             "Type":  6,
+                             "MacAddress":  "00:0c:29:40:76:8d",
+                             "MacAddressType":  null
+                         },
+                         {
+                             "Name":  "Network adapter 2",
+                             "NetworkName":  "155-DPG-VCHA",
+                             "Type":  6,
+                             "MacAddress":  "00:50:56:98:f0:f7",
+                             "MacAddressType":  null
+                         }
+                     ],
+        "Tags":  {
+
+                 }
+    },
+    {
+        "Name":  "vcenter-Passive",
+        "GuestId":  "other3xLinux64Guest",
+        "NumCpu":  4,
+        "MemoryGB":  21,
+        "PowerState":  1,
+        "Folder":  "vCenter",
+        "Notes":  "VMware vCenter Server Appliance",
+        "IPs":  [
+                    "192.168.151.5",
+                    "192.168.155.3",
+                    "fe80::250:56ff:fe98:5703"
+                ],
+        "Disks":  [
+                      {
+                          "Name":  "Hard disk 1",
+                          "CapacityGB":  48.56,
+                          "StorageFormat":  3,
+                          "Datastore":  "vmstore2"
+                      },
+                      {
+                          "Name":  "Hard disk 2",
+                          "CapacityGB":  6.87,
+                          "StorageFormat":  3,
+                          "Datastore":  "vmstore2"
+                      },
+                      {
+                          "Name":  "Hard disk 3",
+                          "CapacityGB":  25,
+                          "StorageFormat":  3,
+                          "Datastore":  "vmstore2"
+                      },
+                      {
+                          "Name":  "Hard disk 4",
+                          "CapacityGB":  50,
+                          "StorageFormat":  3,
+                          "Datastore":  "vmstore2"
+                      },
+                      {
+                          "Name":  "Hard disk 5",
+                          "CapacityGB":  10,
+                          "StorageFormat":  3,
+                          "Datastore":  "vmstore2"
+                      },
+                      {
+                          "Name":  "Hard disk 6",
+                          "CapacityGB":  10,
+                          "StorageFormat":  3,
+                          "Datastore":  "vmstore2"
+                      },
+                      {
+                          "Name":  "Hard disk 7",
+                          "CapacityGB":  15,
+                          "StorageFormat":  3,
+                          "Datastore":  "vmstore2"
+                      },
+                      {
+                          "Name":  "Hard disk 8",
+                          "CapacityGB":  25,
+                          "StorageFormat":  3,
+                          "Datastore":  "vmstore2"
+                      },
+                      {
+                          "Name":  "Hard disk 9",
+                          "CapacityGB":  1,
+                          "StorageFormat":  3,
+                          "Datastore":  "vmstore2"
+                      },
+                      {
+                          "Name":  "Hard disk 10",
+                          "CapacityGB":  10,
+                          "StorageFormat":  3,
+                          "Datastore":  "vmstore2"
+                      },
+                      {
+                          "Name":  "Hard disk 11",
+                          "CapacityGB":  10,
+                          "StorageFormat":  3,
+                          "Datastore":  "vmstore2"
+                      },
+                      {
+                          "Name":  "Hard disk 12",
+                          "CapacityGB":  100,
+                          "StorageFormat":  3,
+                          "Datastore":  "vmstore2"
+                      },
+                      {
+                          "Name":  "Hard disk 13",
+                          "CapacityGB":  50,
+                          "StorageFormat":  3,
+                          "Datastore":  "vmstore2"
+                      },
+                      {
+                          "Name":  "Hard disk 14",
+                          "CapacityGB":  25,
+                          "StorageFormat":  3,
+                          "Datastore":  "vmstore2"
+                      },
+                      {
+                          "Name":  "Hard disk 15",
+                          "CapacityGB":  15,
+                          "StorageFormat":  3,
+                          "Datastore":  "vmstore2"
+                      },
+                      {
+                          "Name":  "Hard disk 16",
+                          "CapacityGB":  100,
+                          "StorageFormat":  3,
+                          "Datastore":  "vmstore2"
+                      },
+                      {
+                          "Name":  "Hard disk 17",
+                          "CapacityGB":  200,
+                          "StorageFormat":  3,
+                          "Datastore":  "vmstore2"
+                      }
+                  ],
+        "Networks":  [
+                         {
+                             "Name":  "Network adapter 1",
+                             "NetworkName":  "151-DPG-Management",
+                             "Type":  6,
+                             "MacAddress":  "00:50:56:98:43:9b",
+                             "MacAddressType":  null
+                         },
+                         {
+                             "Name":  "Network adapter 2",
+                             "NetworkName":  "155-DPG-VCHA",
+                             "Type":  6,
+                             "MacAddress":  "00:50:56:98:57:03",
+                             "MacAddressType":  null
+                         }
+                     ],
+        "Tags":  {
+
+                 }
+    },
+    {
+        "Name":  "vcenter-Witness",
+        "GuestId":  "other3xLinux64Guest",
+        "NumCpu":  1,
+        "MemoryGB":  1,
+        "PowerState":  1,
+        "Folder":  "vCenter",
+        "Notes":  "VMware vCenter Server Appliance",
+        "IPs":  [
+                    "192.168.155.4"
+                ],
+        "Disks":  [
+                      {
+                          "Name":  "Hard disk 1",
+                          "CapacityGB":  48.56,
+                          "StorageFormat":  3,
+                          "Datastore":  "vmstore1"
+                      },
+                      {
+                          "Name":  "Hard disk 2",
+                          "CapacityGB":  6.87,
+                          "StorageFormat":  3,
+                          "Datastore":  "vmstore1"
+                      },
+                      {
+                          "Name":  "Hard disk 3",
+                          "CapacityGB":  25,
+                          "StorageFormat":  3,
+                          "Datastore":  "vmstore1"
+                      },
+                      {
+                          "Name":  "Hard disk 4",
+                          "CapacityGB":  50,
+                          "StorageFormat":  3,
+                          "Datastore":  "vmstore1"
+                      },
+                      {
+                          "Name":  "Hard disk 5",
+                          "CapacityGB":  10,
+                          "StorageFormat":  3,
+                          "Datastore":  "vmstore1"
+                      },
+                      {
+                          "Name":  "Hard disk 6",
+                          "CapacityGB":  10,
+                          "StorageFormat":  3,
+                          "Datastore":  "vmstore1"
+                      },
+                      {
+                          "Name":  "Hard disk 7",
+                          "CapacityGB":  15,
+                          "StorageFormat":  3,
+                          "Datastore":  "vmstore1"
+                      },
+                      {
+                          "Name":  "Hard disk 8",
+                          "CapacityGB":  25,
+                          "StorageFormat":  3,
+                          "Datastore":  "vmstore1"
+                      },
+                      {
+                          "Name":  "Hard disk 9",
+                          "CapacityGB":  1,
+                          "StorageFormat":  3,
+                          "Datastore":  "vmstore1"
+                      },
+                      {
+                          "Name":  "Hard disk 10",
+                          "CapacityGB":  10,
+                          "StorageFormat":  3,
+                          "Datastore":  "vmstore1"
+                      },
+                      {
+                          "Name":  "Hard disk 11",
+                          "CapacityGB":  10,
+                          "StorageFormat":  3,
+                          "Datastore":  "vmstore1"
+                      },
+                      {
+                          "Name":  "Hard disk 12",
+                          "CapacityGB":  100,
+                          "StorageFormat":  3,
+                          "Datastore":  "vmstore1"
+                      },
+                      {
+                          "Name":  "Hard disk 13",
+                          "CapacityGB":  50,
+                          "StorageFormat":  3,
+                          "Datastore":  "vmstore1"
+                      },
+                      {
+                          "Name":  "Hard disk 14",
+                          "CapacityGB":  25,
+                          "StorageFormat":  3,
+                          "Datastore":  "vmstore1"
+                      },
+                      {
+                          "Name":  "Hard disk 15",
+                          "CapacityGB":  15,
+                          "StorageFormat":  3,
+                          "Datastore":  "vmstore1"
+                      },
+                      {
+                          "Name":  "Hard disk 16",
+                          "CapacityGB":  100,
+                          "StorageFormat":  3,
+                          "Datastore":  "vmstore1"
+                      },
+                      {
+                          "Name":  "Hard disk 17",
+                          "CapacityGB":  200,
+                          "StorageFormat":  3,
+                          "Datastore":  "vmstore1"
+                      }
+                  ],
+        "Networks":  [
+                         {
+                             "Name":  "Network adapter 1",
+                             "NetworkName":  "151-DPG-Management",
+                             "Type":  6,
+                             "MacAddress":  "00:50:56:98:e4:86",
+                             "MacAddressType":  null
+                         },
+                         {
+                             "Name":  "Network adapter 2",
+                             "NetworkName":  "155-DPG-VCHA",
+                             "Type":  6,
+                             "MacAddress":  "00:50:56:98:dd:09",
+                             "MacAddressType":  null
+                         }
+                     ],
+        "Tags":  {
+
+                 }
+    }
+]

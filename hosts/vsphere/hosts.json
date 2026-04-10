@@ -1,0 +1,80 @@
+[
+    {
+        "Name":  "esxi01.vollminlab.com",
+        "Version":  "8.0.3",
+        "Build":  "24859861",
+        "ConnectionState":  0,
+        "Manufacturer":  "Micro Computer (HK) Tech Limited",
+        "Model":  "Venus Series",
+        "NumCpu":  6,
+        "MemoryTotalGB":  95.74,
+        "DNS":  {
+                    "Hostname":  "esxi01",
+                    "Domain":  "vollminlab.com",
+                    "SearchDomain":  [
+                                         "vollminlab.com"
+                                     ],
+                    "Servers":  [
+                                    "192.168.100.4",
+                                    "192.168.100.3"
+                                ]
+                },
+        "NTP":  {
+                    "Servers":  "pool.ntp.org",
+                    "ServiceRunning":  true,
+                    "ServicePolicy":  "on"
+                }
+    },
+    {
+        "Name":  "esxi02.vollminlab.com",
+        "Version":  "8.0.3",
+        "Build":  "24859861",
+        "ConnectionState":  0,
+        "Manufacturer":  "Micro Computer (HK) Tech Limited",
+        "Model":  "Venus Series",
+        "NumCpu":  6,
+        "MemoryTotalGB":  95.74,
+        "DNS":  {
+                    "Hostname":  "esxi02",
+                    "Domain":  "vollminlab.com",
+                    "SearchDomain":  [
+                                         "vollminlab.com"
+                                     ],
+                    "Servers":  [
+                                    "192.168.100.4",
+                                    "192.168.100.3"
+                                ]
+                },
+        "NTP":  {
+                    "Servers":  "pool.ntp.org",
+                    "ServiceRunning":  true,
+                    "ServicePolicy":  "on"
+                }
+    },
+    {
+        "Name":  "esxi03.vollminlab.com",
+        "Version":  "8.0.3",
+        "Build":  "24859861",
+        "ConnectionState":  0,
+        "Manufacturer":  "Micro Computer (HK) Tech Limited",
+        "Model":  "Venus Series",
+        "NumCpu":  6,
+        "MemoryTotalGB":  95.74,
+        "DNS":  {
+                    "Hostname":  "esxi03",
+                    "Domain":  "vollminlab.com",
+                    "SearchDomain":  [
+                                         "vollminlab.com"
+                                     ],
+                    "Servers":  [
+                                    "192.168.100.4",
+                                    "192.168.100.3"
+                                ]
+                },
+        "NTP":  {
+                    "Servers":  "pool.ntp.org",
+                    "ServiceRunning":  true,
+                    "ServicePolicy":  "on"
+                }
+    }
+]

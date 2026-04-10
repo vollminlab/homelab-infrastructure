@@ -1,0 +1,22 @@
+[
+  {
+    "id": 1,
+    "path": "/mnt/pool_0/vcenter_backups",
+    "aliases": [],
+    "comment": "vCenter File-Based Backups",
+    "hosts": [
+      "vcenter.vollminlab.com"
+    ],
+    "ro": false,
+    "maproot_user": "nobody",
+    "maproot_group": "nogroup",
+    "mapall_user": "",
+    "mapall_group": "",
+    "security": [],
+    "enabled": true,
+    "networks": [
+      "192.168.151.0/24"
+    ],
+    "locked": false
+  }
+]

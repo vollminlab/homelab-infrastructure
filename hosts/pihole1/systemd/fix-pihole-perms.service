@@ -1,0 +1,12 @@
+[Unit]
+Description=Watch and fix permissions on pihole.toml
+After=network.target
+
+[Service]
+Type=simple
+ExecStart=/usr/local/bin/fix-pihole-perms.sh
+Restart=always
+
+[Install]
+WantedBy=multi-user.target
+

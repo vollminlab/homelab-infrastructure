@@ -1,0 +1,7188 @@
+{
+  "interfaces": [
+    {
+      "identification": {
+        "id": "lo",
+        "type": "loopback"
+      },
+      "status": {
+        "enabled": true,
+        "mtu": 65536
+      },
+      "addresses": [
+        {
+          "type": "static",
+          "cidr": "127.0.0.1/8",
+          "version": "v4"
+        },
+        {
+          "type": "static",
+          "cidr": "::1/128",
+          "version": "v6"
+        }
+      ]
+    },
+    {
+      "identification": {
+        "id": "eth8",
+        "type": "ethernet"
+      },
+      "status": {
+        "enabled": true,
+        "comment": "WAN",
+        "baseReachableTime": 30
+      },
+      "addresses": [
+        {
+          "type": "dynamic",
+          "cidr": null,
+          "origin": "dhcp",
+          "version": "v4"
+        }
+      ],
+      "ipv4": {},
+      "ethernet": {
+        "lldp": {
+          "enabled": false
+        }
+      }
+    },
+    {
+      "identification": {
+        "id": "eth0",
+        "type": "ethernet"
+      },
+      "status": {
+        "enabled": true,
+        "mtu": 9216
+      },
+      "ethernet": {
+        "poe": "active",
+        "loopProtection": {
+          "enabled": false
+        }
+      }
+    },
+    {
+      "identification": {
+        "id": "eth1",
+        "type": "ethernet"
+      },
+      "status": {
+        "enabled": true,
+        "mtu": 9216
+      },
+      "ethernet": {
+        "poe": "active"
+      }
+    },
+    {
+      "identification": {
+        "id": "eth2",
+        "type": "ethernet"
+      },
+      "status": {
+        "enabled": true,
+        "mtu": 9216
+      },
+      "ethernet": {
+        "poe": "off",
+        "loopProtection": {
+          "enabled": false
+        }
+      }
+    },
+    {
+      "identification": {
+        "id": "eth3",
+        "type": "ethernet"
+      },
+      "status": {
+        "enabled": true,
+        "mtu": 9216
+      },
+      "ethernet": {
+        "poe": "off",
+        "loopProtection": {
+          "enabled": false
+        }
+      }
+    },
+    {
+      "identification": {
+        "id": "eth4",
+        "type": "ethernet"
+      },
+      "status": {
+        "enabled": true,
+        "mtu": 9216
+      },
+      "ethernet": {
+        "poe": "off",
+        "loopProtection": {
+          "enabled": false
+        }
+      }
+    },
+    {
+      "identification": {
+        "id": "eth5",
+        "type": "ethernet"
+      },
+      "status": {
+        "enabled": true,
+        "mtu": 9216
+      },
+      "ethernet": {
+        "poe": "off",
+        "loopProtection": {
+          "enabled": false
+        }
+      }
+    },
+    {
+      "identification": {
+        "id": "eth6",
+        "type": "ethernet"
+      },
+      "status": {
+        "enabled": true,
+        "mtu": 9216
+      },
+      "ethernet": {
+        "poe": "off",
+        "loopProtection": {
+          "enabled": false
+        }
+      }
+    },
+    {
+      "identification": {
+        "id": "eth7",
+        "type": "ethernet"
+      },
+      "status": {
+        "enabled": true,
+        "mtu": 9216
+      },
+      "ethernet": {
+        "poe": "off",
+        "loopProtection": {
+          "enabled": false
+        }
+      }
+    },
+    {
+      "identification": {
+        "id": "eth9",
+        "type": "ethernet"
+      },
+      "status": {
+        "enabled": true,
+        "mtu": 9216
+      },
+      "ethernet": {
+        "loopProtection": {
+          "enabled": false
+        }
+      }
+    },
+    {
+      "identification": {
+        "id": "eth9.160",
+        "type": "vlan"
+      },
+      "status": {
+        "enabled": true,
+        "mtu": 9216
+      },
+      "vlan": {
+        "id": 160,
+        "interface": {
+          "id": "eth9"
+        }
+      }
+    },
+    {
+      "identification": {
+        "id": "eth9.130",
+        "type": "vlan"
+      },
+      "status": {
+        "enabled": true,
+        "mtu": 9216
+      },
+      "vlan": {
+        "id": 130,
+        "interface": {
+          "id": "eth9"
+        }
+      }
+    },
+    {
+      "identification": {
+        "id": "eth9.100",
+        "type": "vlan"
+      },
+      "status": {
+        "enabled": true,
+        "mtu": 9216
+      },
+      "vlan": {
+        "id": 100,
+        "interface": {
+          "id": "eth9"
+        }
+      }
+    },
+    {
+      "identification": {
+        "id": "eth9.140",
+        "type": "vlan"
+      },
+      "status": {
+        "enabled": true,
+        "mtu": 9216
+      },
+      "vlan": {
+        "id": 140,
+        "interface": {
+          "id": "eth9"
+        }
+      }
+    },
+    {
+      "identification": {
+        "id": "eth9.110",
+        "type": "vlan"
+      },
+      "status": {
+        "enabled": true,
+        "mtu": 9216
+      },
+      "vlan": {
+        "id": 110,
+        "interface": {
+          "id": "eth9"
+        }
+      }
+    },
+    {
+      "identification": {
+        "id": "eth9.150",
+        "type": "vlan"
+      },
+      "status": {
+        "enabled": true,
+        "mtu": 9216
+      },
+      "vlan": {
+        "id": 150,
+        "interface": {
+          "id": "eth9"
+        }
+      }
+    },
+    {
+      "identification": {
+        "id": "eth9.151",
+        "type": "vlan"
+      },
+      "status": {
+        "enabled": true,
+        "mtu": 9216
+      },
+      "vlan": {
+        "id": 151,
+        "interface": {
+          "id": "eth9"
+        }
+      }
+    },
+    {
+      "identification": {
+        "id": "eth9.120",
+        "type": "vlan"
+      },
+      "status": {
+        "enabled": true,
+        "mtu": 9216
+      },
+      "vlan": {
+        "id": 120,
+        "interface": {
+          "id": "eth9"
+        }
+      }
+    },
+    {
+      "identification": {
+        "id": "eth9.152",
+        "type": "vlan"
+      },
+      "status": {
+        "enabled": true,
+        "mtu": 9216
+      },
+      "vlan": {
+        "id": 152,
+        "interface": {
+          "id": "eth9"
+        }
+      }
+    },
+    {
+      "identification": {
+        "id": "eth9.153",
+        "type": "vlan"
+      },
+      "status": {
+        "enabled": true,
+        "mtu": 9216
+      },
+      "vlan": {
+        "id": 153,
+        "interface": {
+          "id": "eth9"
+        }
+      }
+    },
+    {
+      "identification": {
+        "id": "eth9.154",
+        "type": "vlan"
+      },
+      "status": {
+        "enabled": true,
+        "mtu": 9216
+      },
+      "vlan": {
+        "id": 154,
+        "interface": {
+          "id": "eth9"
+        }
+      }
+    },
+    {
+      "identification": {
+        "id": "eth9.155",
+        "type": "vlan"
+      },
+      "status": {
+        "enabled": true,
+        "mtu": 9216
+      },
+      "vlan": {
+        "id": 155,
+        "interface": {
+          "id": "eth9"
+        }
+      }
+    },
+    {
+      "identification": {
+        "id": "eth10",
+        "type": "ethernet"
+      },
+      "status": {
+        "enabled": true,
+        "mtu": 9216
+      },
+      "ethernet": {
+        "loopProtection": {
+          "enabled": false
+        }
+      }
+    },
+    {
+      "identification": {
+        "id": "eth10.151",
+        "type": "vlan"
+      },
+      "status": {
+        "enabled": true,
+        "mtu": 9216
+      },
+      "vlan": {
+        "id": 151,
+        "interface": {
+          "id": "eth10"
+        }
+      }
+    },
+    {
+      "identification": {
+        "id": "eth10.152",
+        "type": "vlan"
+      },
+      "status": {
+        "enabled": true,
+        "mtu": 9216
+      },
+      "vlan": {
+        "id": 152,
+        "interface": {
+          "id": "eth10"
+        }
+      }
+    },
+    {
+      "identification": {
+        "id": "eth10.155",
+        "type": "vlan"
+      },
+      "status": {
+        "enabled": true,
+        "mtu": 9216
+      },
+      "vlan": {
+        "id": 155,
+        "interface": {
+          "id": "eth10"
+        }
+      }
+    },
+    {
+      "identification": {
+        "id": "eth10.160",
+        "type": "vlan"
+      },
+      "status": {
+        "enabled": true,
+        "mtu": 9216
+      },
+      "vlan": {
+        "id": 160,
+        "interface": {
+          "id": "eth10"
+        }
+      }
+    },
+    {
+      "identification": {
+        "id": "eth10.100",
+        "type": "vlan"
+      },
+      "status": {
+        "enabled": true,
+        "mtu": 9216
+      },
+      "vlan": {
+        "id": 100,
+        "interface": {
+          "id": "eth10"
+        }
+      }
+    },
+    {
+      "identification": {
+        "id": "eth10.153",
+        "type": "vlan"
+      },
+      "status": {
+        "enabled": true,
+        "mtu": 9216
+      },
+      "vlan": {
+        "id": 153,
+        "interface": {
+          "id": "eth10"
+        }
+      }
+    },
+    {
+      "identification": {
+        "id": "eth10.154",
+        "type": "vlan"
+      },
+      "status": {
+        "enabled": true,
+        "mtu": 9216
+      },
+      "vlan": {
+        "id": 154,
+        "interface": {
+          "id": "eth10"
+        }
+      }
+    },
+    {
+      "identification": {
+        "id": "switch0",
+        "type": "switch"
+      },
+      "status": {
+        "enabled": true,
+        "mtu": 9216
+      },
+      "switch": {
+        "ports": [
+          {
+            "enabled": true,
+            "interface": {
+              "id": "eth0"
+            },
+            "pvid": 1,
+            "vid": [
+              120,
+              140,
+              130
+            ]
+          },
+          {
+            "enabled": true,
+            "interface": {
+              "id": "eth1"
+            },
+            "pvid": 1,
+            "vid": [
+              160,
+              130,
+              100,
+              140,
+              110,
+              150,
+              151,
+              120,
+              152,
+              153,
+              154,
+              155
+            ]
+          },
+          {
+            "enabled": true,
+            "interface": {
+              "id": "eth2"
+            },
+            "pvid": 100,
+            "vid": [
+              120,
+              151,
+              152,
+              150,
+              140,
+              130,
+              110,
+              155,
+              160,
+              153,
+              154
+            ]
+          },
+          {
+            "enabled": true,
+            "interface": {
+              "id": "eth3"
+            },
+            "pvid": 1,
+            "vid": [
+              160,
+              130,
+              100,
+              140,
+              110,
+              150,
+              151,
+              120,
+              152,
+              153,
+              154,
+              155
+            ]
+          },
+          {
+            "enabled": true,
+            "interface": {
+              "id": "eth4"
+            },
+            "pvid": 1,
+            "vid": [
+              120,
+              140,
+              130
+            ]
+          },
+          {
+            "enabled": true,
+            "interface": {
+              "id": "eth5"
+            },
+            "pvid": 100,
+            "vid": [
+              120,
+              151,
+              152,
+              150,
+              140,
+              130,
+              110,
+              155,
+              160,
+              153,
+              154
+            ]
+          },
+          {
+            "enabled": true,
+            "interface": {
+              "id": "eth6"
+            },
+            "pvid": 110
+          },
+          {
+            "enabled": true,
+            "interface": {
+              "id": "eth7"
+            },
+            "pvid": 100,
+            "vid": [
+              120,
+              151,
+              152,
+              150,
+              140,
+              130,
+              110,
+              155,
+              160,
+              153,
+              154
+            ]
+          }
+        ],
+        "vlanEnabled": true
+      }
+    },
+    {
+      "identification": {
+        "id": "switch0.160",
+        "type": "vlan"
+      },
+      "status": {
+        "enabled": true,
+        "mtu": 9216
+      },
+      "vlan": {
+        "id": 160,
+        "interface": {
+          "id": "switch0"
+        }
+      }
+    },
+    {
+      "identification": {
+        "id": "switch0.1",
+        "type": "vlan"
+      },
+      "status": {
+        "enabled": true,
+        "mtu": 9216
+      },
+      "vlan": {
+        "id": 1,
+        "interface": {
+          "id": "switch0"
+        }
+      }
+    },
+    {
+      "identification": {
+        "id": "switch0.130",
+        "type": "vlan"
+      },
+      "status": {
+        "enabled": true,
+        "mtu": 9216
+      },
+      "vlan": {
+        "id": 130,
+        "interface": {
+          "id": "switch0"
+        }
+      }
+    },
+    {
+      "identification": {
+        "id": "switch0.100",
+        "type": "vlan"
+      },
+      "status": {
+        "enabled": true,
+        "mtu": 9216
+      },
+      "vlan": {
+        "id": 100,
+        "interface": {
+          "id": "switch0"
+        }
+      }
+    },
+    {
+      "identification": {
+        "id": "switch0.140",
+        "type": "vlan"
+      },
+      "status": {
+        "enabled": true,
+        "mtu": 9216
+      },
+      "vlan": {
+        "id": 140,
+        "interface": {
+          "id": "switch0"
+        }
+      }
+    },
+    {
+      "identification": {
+        "id": "switch0.110",
+        "type": "vlan"
+      },
+      "status": {
+        "enabled": true,
+        "mtu": 9216
+      },
+      "vlan": {
+        "id": 110,
+        "interface": {
+          "id": "switch0"
+        }
+      }
+    },
+    {
+      "identification": {
+        "id": "switch0.150",
+        "type": "vlan"
+      },
+      "status": {
+        "enabled": true,
+        "mtu": 9216
+      },
+      "vlan": {
+        "id": 150,
+        "interface": {
+          "id": "switch0"
+        }
+      }
+    },
+    {
+      "identification": {
+        "id": "switch0.151",
+        "type": "vlan"
+      },
+      "status": {
+        "enabled": true,
+        "mtu": 9216
+      },
+      "vlan": {
+        "id": 151,
+        "interface": {
+          "id": "switch0"
+        }
+      }
+    },
+    {
+      "identification": {
+        "id": "switch0.120",
+        "type": "vlan"
+      },
+      "status": {
+        "enabled": true,
+        "mtu": 9216
+      },
+      "vlan": {
+        "id": 120,
+        "interface": {
+          "id": "switch0"
+        }
+      }
+    },
+    {
+      "identification": {
+        "id": "switch0.152",
+        "type": "vlan"
+      },
+      "status": {
+        "enabled": true,
+        "mtu": 9216
+      },
+      "vlan": {
+        "id": 152,
+        "interface": {
+          "id": "switch0"
+        }
+      }
+    },
+    {
+      "identification": {
+        "id": "switch0.153",
+        "type": "vlan"
+      },
+      "status": {
+        "enabled": true,
+        "mtu": 9216
+      },
+      "vlan": {
+        "id": 153,
+        "interface": {
+          "id": "switch0"
+        }
+      }
+    },
+    {
+      "identification": {
+        "id": "switch0.154",
+        "type": "vlan"
+      },
+      "status": {
+        "enabled": true,
+        "mtu": 9216
+      },
+      "vlan": {
+        "id": 154,
+        "interface": {
+          "id": "switch0"
+        }
+      }
+    },
+    {
+      "identification": {
+        "id": "switch0.155",
+        "type": "vlan"
+      },
+      "status": {
+        "enabled": true,
+        "mtu": 9216
+      },
+      "vlan": {
+        "id": 155,
+        "interface": {
+          "id": "switch0"
+        }
+      }
+    },
+    {
+      "identification": {
+        "id": "br160",
+        "type": "bridge"
+      },
+      "status": {
+        "enabled": true,
+        "comment": "LAN",
+        "mtu": 9216
+      },
+      "addresses": [
+        {
+          "type": "static",
+          "cidr": "192.168.160.1/24",
+          "version": "v4"
+        }
+      ],
+      "bridge": {
+        "interfaces": [
+          {
+            "id": "eth9.160"
+          },
+          {
+            "id": "eth10.160"
+          },
+          {
+            "id": "switch0.160"
+          }
+        ],
+        "id": 160
+      }
+    },
+    {
+      "identification": {
+        "id": "br0",
+        "type": "bridge"
+      },
+      "status": {
+        "enabled": true,
+        "comment": "LAN",
+        "mtu": 9216
+      },
+      "addresses": [
+        {
+          "type": "static",
+          "cidr": "192.168.1.1/24",
+          "version": "v4"
+        }
+      ],
+      "bridge": {
+        "interfaces": [
+          {
+            "id": "eth9"
+          },
+          {
+            "id": "switch0.1"
+          }
+        ],
+        "id": 0
+      }
+    },
+    {
+      "identification": {
+        "id": "br130",
+        "type": "bridge"
+      },
+      "status": {
+        "enabled": true,
+        "comment": "LAN",
+        "mtu": 9216
+      },
+      "addresses": [
+        {
+          "type": "static",
+          "cidr": "192.168.130.1/24",
+          "version": "v4"
+        }
+      ],
+      "bridge": {
+        "interfaces": [
+          {
+            "id": "eth9.130"
+          },
+          {
+            "id": "switch0.130"
+          }
+        ],
+        "id": 130
+      }
+    },
+    {
+      "identification": {
+        "id": "br100",
+        "type": "bridge"
+      },
+      "status": {
+        "enabled": true,
+        "comment": "LAN",
+        "mtu": 9216
+      },
+      "addresses": [
+        {
+          "type": "static",
+          "cidr": "192.168.100.1/24",
+          "version": "v4"
+        }
+      ],
+      "bridge": {
+        "interfaces": [
+          {
+            "id": "eth9.100"
+          },
+          {
+            "id": "eth10.100"
+          },
+          {
+            "id": "switch0.100"
+          }
+        ],
+        "id": 100
+      }
+    },
+    {
+      "identification": {
+        "id": "br150",
+        "type": "bridge"
+      },
+      "status": {
+        "enabled": true,
+        "comment": "LAN",
+        "mtu": 9216
+      },
+      "addresses": [
+        {
+          "type": "static",
+          "cidr": "192.168.150.1/24",
+          "version": "v4"
+        }
+      ],
+      "bridge": {
+        "interfaces": [
+          {
+            "id": "eth9.150"
+          },
+          {
+            "id": "eth10"
+          },
+          {
+            "id": "switch0.150"
+          }
+        ],
+        "id": 150
+      }
+    },
+    {
+      "identification": {
+        "id": "br151",
+        "type": "bridge"
+      },
+      "status": {
+        "enabled": true,
+        "comment": "LAN",
+        "mtu": 9216
+      },
+      "addresses": [
+        {
+          "type": "static",
+          "cidr": "192.168.151.1/24",
+          "version": "v4"
+        }
+      ],
+      "bridge": {
+        "interfaces": [
+          {
+            "id": "eth9.151"
+          },
+          {
+            "id": "eth10.151"
+          },
+          {
+            "id": "switch0.151"
+          }
+        ],
+        "id": 151
+      }
+    },
+    {
+      "identification": {
+        "id": "br152",
+        "type": "bridge"
+      },
+      "status": {
+        "enabled": true,
+        "comment": "LAN",
+        "mtu": 9216
+      },
+      "addresses": [
+        {
+          "type": "static",
+          "cidr": "192.168.152.1/24",
+          "version": "v4"
+        }
+      ],
+      "bridge": {
+        "interfaces": [
+          {
+            "id": "eth9.152"
+          },
+          {
+            "id": "eth10.152"
+          },
+          {
+            "id": "switch0.152"
+          }
+        ],
+        "id": 152
+      }
+    },
+    {
+      "identification": {
+        "id": "br120",
+        "type": "bridge"
+      },
+      "status": {
+        "enabled": true,
+        "comment": "LAN",
+        "mtu": 9216
+      },
+      "addresses": [
+        {
+          "type": "static",
+          "cidr": "192.168.120.1/24",
+          "version": "v4"
+        }
+      ],
+      "bridge": {
+        "interfaces": [
+          {
+            "id": "eth9.120"
+          },
+          {
+            "id": "switch0.120"
+          }
+        ],
+        "id": 120
+      }
+    },
+    {
+      "identification": {
+        "id": "br153",
+        "type": "bridge"
+      },
+      "status": {
+        "enabled": true,
+        "comment": "LAN",
+        "mtu": 9216
+      },
+      "addresses": [
+        {
+          "type": "static",
+          "cidr": "192.168.153.1/24",
+          "version": "v4"
+        }
+      ],
+      "bridge": {
+        "interfaces": [
+          {
+            "id": "eth9.153"
+          },
+          {
+            "id": "eth10.153"
+          },
+          {
+            "id": "switch0.153"
+          }
+        ],
+        "id": 153
+      }
+    },
+    {
+      "identification": {
+        "id": "br154",
+        "type": "bridge"
+      },
+      "status": {
+        "enabled": true,
+        "comment": "LAN",
+        "mtu": 9216
+      },
+      "addresses": [
+        {
+          "type": "static",
+          "cidr": "192.168.154.1/24",
+          "version": "v4"
+        }
+      ],
+      "bridge": {
+        "interfaces": [
+          {
+            "id": "eth9.154"
+          },
+          {
+            "id": "eth10.154"
+          },
+          {
+            "id": "switch0.154"
+          }
+        ],
+        "id": 154
+      }
+    },
+    {
+      "identification": {
+        "id": "br155",
+        "type": "bridge"
+      },
+      "status": {
+        "enabled": true,
+        "comment": "LAN",
+        "mtu": 9216
+      },
+      "addresses": [
+        {
+          "type": "static",
+          "cidr": "192.168.155.1/28",
+          "version": "v4"
+        }
+      ],
+      "bridge": {
+        "interfaces": [
+          {
+            "id": "eth9.155"
+          },
+          {
+            "id": "eth10.155"
+          },
+          {
+            "id": "switch0.155"
+          }
+        ],
+        "id": 155
+      }
+    },
+    {
+      "identification": {
+        "id": "br140",
+        "type": "bridge"
+      },
+      "status": {
+        "enabled": true,
+        "comment": "LAN",
+        "mtu": 9216
+      },
+      "addresses": [
+        {
+          "type": "static",
+          "cidr": "192.168.140.1/24",
+          "version": "v4"
+        }
+      ],
+      "bridge": {
+        "interfaces": [
+          {
+            "id": "eth9.140"
+          },
+          {
+            "id": "switch0.140"
+          }
+        ],
+        "id": 140
+      }
+    },
+    {
+      "identification": {
+        "id": "br110",
+        "type": "bridge"
+      },
+      "status": {
+        "enabled": true,
+        "comment": "LAN",
+        "mtu": 9216
+      },
+      "addresses": [
+        {
+          "type": "static",
+          "cidr": "192.168.110.1/24",
+          "version": "v4"
+        }
+      ],
+      "bridge": {
+        "interfaces": [
+          {
+            "id": "eth9.110"
+          },
+          {
+            "id": "switch0.110"
+          }
+        ],
+        "id": 110
+      }
+    }
+  ],
+  "services": {
+    "systemLog": {
+      "enabled": false
+    },
+    "unifiNetwork": {
+      "enabled": true,
+      "sitename": "default",
+      "token": "REDACTED",
+      "controllerURL": "https://192.168.1.1:8443",
+      "informURL": "http://192.168.1.1:8080/inform",
+      "certificate": {
+        "crt": "MIIDfTCCAmWgAwIBAgIEaR199jANBgkqhkiG9w0BAQsFADBrMQswCQYDVQQGEwJVUzERMA8GA1UECAwITmV3IFlvcmsxETAPBgNVBAcMCE5ldyBZb3JrMRYwFAYDVQQKDA1VYmlxdWl0aSBJbmMuMQ4wDAYDVQQLDAVVbmlGaTEOMAwGA1UEAwwFVW5pRmkwHhcNMjUxMTE5MDgyMTEwWhcNMjgwMjIyMDgyMTEwWjBrMQswCQYDVQQGEwJVUzERMA8GA1UECAwITmV3IFlvcmsxETAPBgNVBAcMCE5ldyBZb3JrMRYwFAYDVQQKDA1VYmlxdWl0aSBJbmMuMQ4wDAYDVQQLDAVVbmlGaTEOMAwGA1UEAwwFVW5pRmkwggEiMA0GCSqGSIb3DQEBAQUAA4IBDwAwggEKAoIBAQC94NKUnmIWhdKEF9xVrU+92Rwm2lV9G+ei/v+ojULSQOCbz9mEw3R7cDRnktCZHYtpbS/UZLX14QRJ6BC1wMnMo0wetbnVQNeyZ17pIc0ubxmgf40SZ89fbiAnohs7kNZGwcTgQUskB86/kHkr3JAiWNIKsZ7U5KHD/7zt1wGzZv/eVkbO2CmtHFhFd/HxEPIecxdAC7+opwi+r1faw5nB+agITim+PC2b4q4ZXZyJneEZNJWQ8KEfJxv4enhN2aOHRm9x7Fz9KYESGWT6UHZUTIrOYvrrHSL4rm1NID62r4mcB4YM6hZPAJ0eCOYBX3qwjif7DvY9jlyfF5lQJaSbAgMBAAGjKTAnMBAGA1UdEQQJMAeCBVVuaUZpMBMGA1UdJQQMMAoGCCsGAQUFBwMBMA0GCSqGSIb3DQEBCwUAA4IBAQChSqhKOvyQlcglNmB0Rg5WvJSetsKe2Lg3FWX8DDYFXA8+ixCV4GnuCGfs5+8xqP6ziNiS9VWZ2Ir3cxsHVQa4FuDPE9ubOmJ0II3fth0Mk2Y1Wkr61X1SjRil5Ul/jm/ZSag2XLftrFOdi+6O3vJlbnz1UcJIw3aq/MQx4bB1mJF42tlMOZK6ewM70vl61bwfkn1XmrmXbPcS0xqBNd1xj9t8tr2ANiJZ0L/2TDB5ii05yYOZ8YE9KhO+c4QlD94gVSfEf2+9GTarytwd5+XrriQsL0bzLuzMrQjWUy/ujTyV7onJo5cGhH0BKpdVwA1eg/8LZJE6N1wE5pYv2ks2"
+      }
+    },
+    "lldp": {
+      "enabled": true
+    },
+    "ntpClient": {
+      "enabled": true,
+      "ntpServers": [
+        "0.ubnt.pool.ntp.org",
+        "1.ubnt.pool.ntp.org",
+        "2.ubnt.pool.ntp.org",
+        "3.ubnt.pool.ntp.org"
+      ]
+    },
+    "dhcpServers": [
+      {
+        "enabled": true,
+        "interfaces": [
+          {
+            "id": "br160"
+          }
+        ],
+        "name": "net_DMZ_br160_192-168-160-0-24",
+        "leaseTime": 86400,
+        "ipVersion": "v4",
+        "rangeStart": "192.168.160.100",
+        "staticLeases": [
+          {
+            "id": "00:50:56:98:73:e4",
+            "addresses": [
+              "192.168.160.2"
+            ]
+          },
+          {
+            "id": "00:50:56:98:1e:d8",
+            "addresses": [
+              "192.168.160.3"
+            ]
+          }
+        ],
+        "dnsServers": [
+          "192.168.160.1"
+        ],
+        "gatewayAddress": "192.168.160.1",
+        "domain": "vollminlab.com",
+        "rangeStop": "192.168.160.200",
+        "ipv4Netmask": 24,
+        "conflictChecking": true
+      },
+      {
+        "enabled": true,
+        "interfaces": [
+          {
+            "id": "br0"
+          }
+        ],
+        "name": "net_Default_br0_192-168-1-0-24",
+        "leaseTime": 86400,
+        "ipVersion": "v4",
+        "rangeStart": "192.168.1.6",
+        "staticLeases": [
+          {
+            "id": "00:00:00:00:00:00",
+            "addresses": [
+              "192.168.1.20"
+            ]
+          },
+          {
+            "id": "28:70:4e:23:c2:d4",
+            "addresses": [
+              "192.168.1.4"
+            ]
+          },
+          {
+            "id": "9c:05:d6:f1:8d:43",
+            "addresses": [
+              "192.168.1.3"
+            ]
+          },
+          {
+            "id": "90:48:6c:88:3f:ec",
+            "addresses": [
+              "192.168.1.155"
+            ]
+          },
+          {
+            "id": "94:8f:cf:bc:5a:e6",
+            "addresses": [
+              "192.168.1.102"
+            ]
+          },
+          {
+            "id": "98:f7:81:49:81:ae",
+            "addresses": [
+              "192.168.1.100"
+            ]
+          },
+          {
+            "id": "98:f7:81:46:14:ab",
+            "addresses": [
+              "192.168.1.101"
+            ]
+          },
+          {
+            "id": "78:67:0e:01:3d:69",
+            "addresses": [
+              "192.168.1.2"
+            ]
+          }
+        ],
+        "dnsServers": [
+          "192.168.100.4"
+        ],
+        "gatewayAddress": "192.168.1.1",
+        "domain": "default.vollminlab.com",
+        "rangeStop": "192.168.1.254",
+        "ipv4Netmask": 24,
+        "conflictChecking": true
+      },
+      {
+        "enabled": true,
+        "interfaces": [
+          {
+            "id": "br130"
+          }
+        ],
+        "name": "net_IoT_WLAN_br130_192-168-130-0-24",
+        "leaseTime": 86400,
+        "ipVersion": "v4",
+        "rangeStart": "192.168.130.6",
+        "staticLeases": [
+          {
+            "id": "cc:a7:c1:28:88:af",
+            "addresses": [
+              "192.168.130.85"
+            ]
+          },
+          {
+            "id": "f0:ef:86:3e:de:4b",
+            "addresses": [
+              "192.168.130.144"
+            ]
+          },
+          {
+            "id": "20:df:b9:04:a6:0f",
+            "addresses": [
+              "192.168.130.208"
+            ]
+          },
+          {
+            "id": "5c:47:5e:cf:95:c6",
+            "addresses": [
+              "192.168.130.113"
+            ]
+          },
+          {
+            "id": "9c:43:1e:4e:bd:35",
+            "addresses": [
+              "192.168.130.149"
+            ]
+          },
+          {
+            "id": "80:5b:65:9d:1f:5c",
+            "addresses": [
+              "192.168.130.9"
+            ]
+          },
+          {
+            "id": "d4:f5:47:4b:a8:3c",
+            "addresses": [
+              "192.168.130.128"
+            ]
+          },
+          {
+            "id": "10:59:17:03:96:ce",
+            "addresses": [
+              "192.168.130.121"
+            ]
+          },
+          {
+            "id": "20:ef:bd:75:5c:b9",
+            "addresses": [
+              "192.168.130.254"
+            ]
+          },
+          {
+            "id": "8c:26:aa:b9:1e:72",
+            "addresses": [
+              "192.168.130.243"
+            ]
+          },
+          {
+            "id": "8c:26:aa:b7:f7:e6",
+            "addresses": [
+              "192.168.130.145"
+            ]
+          },
+          {
+            "id": "ac:04:0b:3e:5f:69",
+            "addresses": [
+              "192.168.130.246"
+            ]
+          },
+          {
+            "id": "dc:a0:d0:f3:9a:08",
+            "addresses": [
+              "192.168.130.37"
+            ]
+          },
+          {
+            "id": "f0:2f:9e:17:31:63",
+            "addresses": [
+              "192.168.130.122"
+            ]
+          },
+          {
+            "id": "b4:3a:45:ac:56:0c",
+            "addresses": [
+              "192.168.130.70"
+            ]
+          }
+        ],
+        "dnsServers": [
+          "192.168.100.4"
+        ],
+        "gatewayAddress": "192.168.130.1",
+        "domain": "iot.vollminlab.com",
+        "rangeStop": "192.168.130.254",
+        "ipv4Netmask": 24,
+        "conflictChecking": true
+      },
+      {
+        "enabled": true,
+        "interfaces": [
+          {
+            "id": "br100"
+          }
+        ],
+        "name": "net_Management_br100_192-168-100-0-24",
+        "leaseTime": 86400,
+        "ipVersion": "v4",
+        "rangeStart": "192.168.100.6",
+        "staticLeases": [
+          {
+            "id": "7c:c2:55:54:05:b4",
+            "addresses": [
+              "192.168.100.5"
+            ]
+          },
+          {
+            "id": "58:47:ca:7a:53:bf",
+            "addresses": [
+              "192.168.100.6"
+            ]
+          },
+          {
+            "id": "58:47:ca:7a:50:e7",
+            "addresses": [
+              "192.168.100.7"
+            ]
+          },
+          {
+            "id": "58:47:ca:79:24:d9",
+            "addresses": [
+              "192.168.100.8"
+            ]
+          }
+        ],
+        "dnsServers": [
+          "192.168.100.4"
+        ],
+        "gatewayAddress": "192.168.100.1",
+        "domain": "mgmt.vollminlab.com",
+        "rangeStop": "192.168.100.254",
+        "ipv4Netmask": 24,
+        "conflictChecking": true
+      },
+      {
+        "enabled": true,
+        "interfaces": [
+          {
+            "id": "br150"
+          }
+        ],
+        "name": "net_Lab_br150_192-168-150-0-24",
+        "leaseTime": 86400,
+        "ipVersion": "v4",
+        "rangeStart": "192.168.150.6",
+        "staticLeases": [
+          {
+            "id": "00:07:43:7b:e2:70",
+            "addresses": [
+              "192.168.150.2"
+            ]
+          }
+        ],
+        "dnsServers": [
+          "192.168.100.4"
+        ],
+        "gatewayAddress": "192.168.150.1",
+        "domain": "vollminlab.com",
+        "rangeStop": "192.168.150.254",
+        "ipv4Netmask": 24,
+        "conflictChecking": true
+      },
+      {
+        "enabled": true,
+        "interfaces": [
+          {
+            "id": "br151"
+          }
+        ],
+        "name": "net_VMWMgmt_br151_192-168-151-0-24",
+        "leaseTime": 86400,
+        "ipVersion": "v4",
+        "rangeStart": "192.168.151.6",
+        "staticLeases": [
+          {
+            "id": "00:0c:29:40:76:8d",
+            "addresses": [
+              "192.168.151.5"
+            ]
+          },
+          {
+            "id": "58:47:ca:7a:50:e4",
+            "addresses": [
+              "192.168.151.3"
+            ]
+          },
+          {
+            "id": "58:47:ca:79:24:d6",
+            "addresses": [
+              "192.168.151.4"
+            ]
+          },
+          {
+            "id": "58:47:ca:7a:53:bc",
+            "addresses": [
+              "192.168.151.2"
+            ]
+          }
+        ],
+        "dnsServers": [
+          "192.168.100.4"
+        ],
+        "gatewayAddress": "192.168.151.1",
+        "domain": "vollminlab.com",
+        "rangeStop": "192.168.151.254",
+        "ipv4Netmask": 24,
+        "conflictChecking": true
+      },
+      {
+        "enabled": true,
+        "interfaces": [
+          {
+            "id": "br152"
+          }
+        ],
+        "name": "net_VMWGuestNet_br152_192-168-152-0-24",
+        "leaseTime": 86400,
+        "ipVersion": "v4",
+        "rangeStart": "192.168.152.20",
+        "staticLeases": [
+          {
+            "id": "00:50:56:98:4d:d6",
+            "addresses": [
+              "192.168.152.5"
+            ]
+          },
+          {
+            "id": "00:50:56:98:fa:4a",
+            "addresses": [
+              "192.168.152.2"
+            ]
+          },
+          {
+            "id": "00:50:56:98:c8:4b",
+            "addresses": [
+              "192.168.152.8"
+            ]
+          },
+          {
+            "id": "00:50:56:98:f1:ad",
+            "addresses": [
+              "192.168.152.11"
+            ]
+          },
+          {
+            "id": "00:50:56:98:9f:ee",
+            "addresses": [
+              "192.168.152.6"
+            ]
+          },
+          {
+            "id": "00:50:56:98:fb:47",
+            "addresses": [
+              "192.168.152.13"
+            ]
+          },
+          {
+            "id": "00:50:56:98:e2:c7",
+            "addresses": [
+              "192.168.152.12"
+            ]
+          },
+          {
+            "id": "00:50:56:98:a8:7b",
+            "addresses": [
+              "192.168.152.10"
+            ]
+          },
+          {
+            "id": "00:50:56:98:5e:96",
+            "addresses": [
+              "192.168.152.9"
+            ]
+          },
+          {
+            "id": "00:50:56:98:20:ab",
+            "addresses": [
+              "192.168.152.14"
+            ]
+          },
+          {
+            "id": "00:50:56:98:14:58",
+            "addresses": [
+              "192.168.152.15"
+            ]
+          }
+        ],
+        "dnsServers": [
+          "192.168.100.4"
+        ],
+        "gatewayAddress": "192.168.152.1",
+        "domain": "vollminlab.com",
+        "rangeStop": "192.168.152.199",
+        "ipv4Netmask": 24,
+        "conflictChecking": true
+      },
+      {
+        "enabled": true,
+        "interfaces": [
+          {
+            "id": "br120"
+          }
+        ],
+        "name": "net_Trusted_WLAN_br120_192-168-120-0-24",
+        "leaseTime": 86400,
+        "ipVersion": "v4",
+        "rangeStart": "192.168.120.6",
+        "staticLeases": [
+          {
+            "id": "50:eb:71:23:34:a8",
+            "addresses": [
+              "192.168.120.217"
+            ]
+          },
+          {
+            "id": "1a:98:f0:d4:53:f1",
+            "addresses": [
+              "192.168.120.132"
+            ]
+          },
+          {
+            "id": "38:68:93:c0:c6:aa",
+            "addresses": [
+              "192.168.120.194"
+            ]
+          },
+          {
+            "id": "96:6a:95:da:e7:6e",
+            "addresses": [
+              "192.168.120.234"
+            ]
+          },
+          {
+            "id": "5a:8d:0f:1a:3d:db",
+            "addresses": [
+              "192.168.120.47"
+            ]
+          }
+        ],
+        "dnsServers": [
+          "192.168.100.4"
+        ],
+        "gatewayAddress": "192.168.120.1",
+        "domain": "vollminlab.com",
+        "rangeStop": "192.168.120.254",
+        "ipv4Netmask": 24,
+        "conflictChecking": true
+      },
+      {
+        "enabled": true,
+        "interfaces": [
+          {
+            "id": "br153"
+          }
+        ],
+        "name": "net_VMWvMotion_br153_192-168-153-0-24",
+        "leaseTime": 86400,
+        "ipVersion": "v4",
+        "rangeStart": "192.168.153.6",
+        "staticLeases": [
+          {
+            "id": "00:50:56:66:cb:9b",
+            "addresses": [
+              "192.168.153.3"
+            ]
+          },
+          {
+            "id": "00:50:56:6d:a0:51",
+            "addresses": [
+              "192.168.153.4"
+            ]
+          },
+          {
+            "id": "00:50:56:65:be:90",
+            "addresses": [
+              "192.168.153.2"
+            ]
+          }
+        ],
+        "dnsServers": [
+          "192.168.100.4"
+        ],
+        "gatewayAddress": "192.168.153.1",
+        "domain": "vollminlab.com",
+        "rangeStop": "192.168.153.254",
+        "ipv4Netmask": 24,
+        "conflictChecking": true
+      },
+      {
+        "enabled": true,
+        "interfaces": [
+          {
+            "id": "br154"
+          }
+        ],
+        "name": "net_VMWStorage_br154_192-168-154-0-24",
+        "leaseTime": 86400,
+        "ipVersion": "v4",
+        "rangeStart": "192.168.154.6",
+        "staticLeases": [
+          {
+            "id": "00:50:56:68:0a:20",
+            "addresses": [
+              "192.168.154.2"
+            ]
+          },
+          {
+            "id": "00:50:56:65:8d:ae",
+            "addresses": [
+              "192.168.154.4"
+            ]
+          },
+          {
+            "id": "00:50:56:6c:d6:61",
+            "addresses": [
+              "192.168.154.3"
+            ]
+          },
+          {
+            "id": "00:50:56:61:46:b4",
+            "addresses": [
+              "192.168.154.5"
+            ]
+          },
+          {
+            "id": "00:50:56:6b:dd:e5",
+            "addresses": [
+              "192.168.154.6"
+            ]
+          },
+          {
+            "id": "00:50:56:68:90:be",
+            "addresses": [
+              "192.168.154.7"
+            ]
+          }
+        ],
+        "dnsServers": [
+          "192.168.100.4"
+        ],
+        "gatewayAddress": "192.168.154.1",
+        "domain": "vollminlab.com",
+        "rangeStop": "192.168.154.254",
+        "ipv4Netmask": 24,
+        "conflictChecking": true
+      },
+      {
+        "enabled": true,
+        "interfaces": [
+          {
+            "id": "br155"
+          }
+        ],
+        "name": "net_VMWVCHA_br155_192-168-155-0-28",
+        "leaseTime": 86400,
+        "ipVersion": "v4",
+        "rangeStart": "192.168.155.2",
+        "staticLeases": [
+          {
+            "id": "00:50:56:98:f0:f7",
+            "addresses": [
+              "192.168.155.2"
+            ]
+          },
+          {
+            "id": "00:50:56:98:57:03",
+            "addresses": [
+              "192.168.155.3"
+            ]
+          },
+          {
+            "id": "00:50:56:98:dd:09",
+            "addresses": [
+              "192.168.155.4"
+            ]
+          }
+        ],
+        "dnsServers": [
+          "192.168.100.4"
+        ],
+        "gatewayAddress": "192.168.155.1",
+        "domain": "vollminlab.com",
+        "rangeStop": "192.168.155.14",
+        "ipv4Netmask": 28,
+        "conflictChecking": true
+      },
+      {
+        "enabled": true,
+        "interfaces": [
+          {
+            "id": "br140"
+          }
+        ],
+        "name": "net_Guest_WLAN_br140_192-168-140-0-24",
+        "leaseTime": 86400,
+        "ipVersion": "v4",
+        "rangeStart": "192.168.140.6",
+        "dnsServers": [
+          "192.168.100.4"
+        ],
+        "gatewayAddress": "192.168.140.1",
+        "domain": "vollminlab.com",
+        "rangeStop": "192.168.140.254",
+        "ipv4Netmask": 24,
+        "conflictChecking": true
+      },
+      {
+        "enabled": true,
+        "interfaces": [
+          {
+            "id": "br110"
+          }
+        ],
+        "name": "net_Trusted_Wired_br110_192-168-110-0-24",
+        "leaseTime": 86400,
+        "ipVersion": "v4",
+        "rangeStart": "192.168.110.6",
+        "staticLeases": [
+          {
+            "id": "50:eb:f6:7e:9d:f5",
+            "addresses": [
+              "192.168.110.173"
+            ]
+          }
+        ],
+        "dnsServers": [
+          "192.168.100.4"
+        ],
+        "gatewayAddress": "192.168.110.1",
+        "domain": "vollminlab.com",
+        "rangeStop": "192.168.110.254",
+        "ipv4Netmask": 24,
+        "conflictChecking": true
+      }
+    ],
+    "dnsForwarder": {
+      "listenInterfaces": [
+        {
+          "id": "br160"
+        },
+        {
+          "id": "br0"
+        },
+        {
+          "id": "br130"
+        },
+        {
+          "id": "br100"
+        },
+        {
+          "id": "br150"
+        },
+        {
+          "id": "br151"
+        },
+        {
+          "id": "br152"
+        },
+        {
+          "id": "br120"
+        },
+        {
+          "id": "br153"
+        },
+        {
+          "id": "br154"
+        },
+        {
+          "id": "br155"
+        },
+        {
+          "id": "br140"
+        },
+        {
+          "id": "br110"
+        }
+      ],
+      "forwardBehavior": "allServers",
+      "enabled": true,
+      "hostRecords": [
+        {
+          "hostName": "unifi.default.vollminlab.com",
+          "registerNonQualified": true,
+          "address": null
+        },
+        {
+          "hostName": "setup.ui.com",
+          "registerNonQualified": false,
+          "address": null
+        },
+        {
+          "hostName": "VollminGateway-UDM-SE.default.vollminlab.com",
+          "registerNonQualified": true,
+          "address": null
+        },
+        {
+          "hostName": "d8b37097687107aa9024080d6528064e3bafe.id.ui.direct",
+          "registerNonQualified": true,
+          "address": null
+        },
+        {
+          "hostName": "unifi.vollminlab.com",
+          "registerNonQualified": false,
+          "address": null
+        },
+        {
+          "hostName": "unifi.iot.vollminlab.com",
+          "registerNonQualified": false,
+          "address": null
+        },
+        {
+          "hostName": "unifi.mgmt.vollminlab.com",
+          "registerNonQualified": false,
+          "address": null
+        },
+        {
+          "hostName": "*.devices.wifiman.me",
+          "registerNonQualified": false,
+          "address": {
+            "address": "192.168.1.1",
+            "version": "v4"
+          }
+        }
+      ]
+    },
+    "idsIps": {
+      "enabled": false,
+      "tor": false,
+      "alien": false,
+      "signatureScheduler": 0
+    },
+    "ddns": {
+      "enabled": true,
+      "clients": [
+        {
+          "hostname": "all.dnsomatic.com",
+          "username": "REDACTED",
+          "password": "REDACTED",
+          "interface": {
+            "id": "eth8"
+          },
+          "service": "custom",
+          "server": "updates.dnsomatic.com",
+          "customName": "updates.dnsomatic.com",
+          "serverPath": "/nic/update?hostname=%h&myip=%i"
+        }
+      ]
+    },
+    "mdns": {
+      "enabled": true,
+      "interfaces": [
+        {
+          "id": "br0"
+        },
+        {
+          "id": "br100"
+        },
+        {
+          "id": "br110"
+        },
+        {
+          "id": "br120"
+        },
+        {
+          "id": "br130"
+        },
+        {
+          "id": "br140"
+        },
+        {
+          "id": "br150"
+        },
+        {
+          "id": "br151"
+        },
+        {
+          "id": "br152"
+        },
+        {
+          "id": "br153"
+        },
+        {
+          "id": "br154"
+        },
+        {
+          "id": "br155"
+        }
+      ],
+      "reflectFilter": []
+    },
+    "dpi": {
+      "enabled": true,
+      "refreshInterval": 15,
+      "dpiModule": {
+        "fingerprinting": {
+          "fingerbankAPIToken": "null",
+          "wifiListener": {
+            "port": 10101,
+            "key": "REDACTED",
+            "address": "192.168.1.1"
+          }
+        }
+      }
+    },
+    "arpInspection": {
+      "enabled": false,
+      "interfaces": [
+        {
+          "id": "dummy"
+        }
+      ]
+    },
+    "bleHTTPTransport": {
+      "enabled": true,
+      "serviceUUID": null,
+      "advertiseName": null,
+      "advertiseMAC": null,
+      "advertiseIPv4": null,
+      "httpHostAddress": "http://127.0.0.1:1"
+    },
+    "wanFailover": {
+      "enabled": true,
+      "wanInterfaces": [
+        {
+          "interface": "eth8",
+          "routingTable": 201,
+          "monitors": [
+            {
+              "id": 1,
+              "interval": 3,
+              "timePeriod": 60,
+              "target": "ping.ui.com",
+              "alert": {
+                "lossThreshold": 50
+              },
+              "type": "icmp"
+            },
+            {
+              "id": 2,
+              "interval": 10,
+              "timePeriod": 30,
+              "target": "1.1.1.1",
+              "alert": {
+                "latencyThreshold": 1500,
+                "lossThreshold": 100
+              },
+              "type": "dns",
+              "domain": "ui.com"
+            },
+            {
+              "id": 3,
+              "interval": 10,
+              "timePeriod": 30,
+              "target": "8.8.8.8",
+              "alert": {
+                "latencyThreshold": 1500,
+                "lossThreshold": 100
+              },
+              "type": "dns",
+              "domain": "ui.com"
+            },
+            {
+              "id": 4,
+              "interval": 60,
+              "timePeriod": 86400,
+              "target": "ping.ui.com",
+              "type": "icmp"
+            },
+            {
+              "id": 5,
+              "interval": 10,
+              "timePeriod": 30,
+              "target": "www.microsoft.com",
+              "type": "icmp"
+            },
+            {
+              "id": 6,
+              "interval": 10,
+              "timePeriod": 30,
+              "target": "google.com",
+              "type": "icmp"
+            },
+            {
+              "id": 7,
+              "interval": 10,
+              "timePeriod": 30,
+              "target": "1.1.1.1",
+              "type": "icmp"
+            }
+          ],
+          "metric": 1,
+          "weight": 99
+        }
+      ],
+      "failoverGroups": [
+        {
+          "id": 1,
+          "algorithm": "single",
+          "interfaces": [
+            "eth8"
+          ],
+          "metric": 1,
+          "connectionResetTriggers": [
+            "onActivation",
+            "onConfiguration",
+            "onWanHealthBad"
+          ]
+        }
+      ]
+    },
+    "igmpSnooping": {
+      "enabled": true
+    },
+    "messageBroker": {
+      "enabled": true,
+      "extended": false,
+      "siteID": "66df88a8a20d360e9112fd4b",
+      "rabbitMq": {
+        "host": "127.0.0.1",
+        "port": 5672,
+        "authentication": {
+          "username": "ui",
+          "password": "REDACTED"
+        }
+      },
+      "flowConfiguration": {
+        "eventState": [
+          "ipsIds",
+          "honeypot",
+          "tor",
+          "alien",
+          "contentFiltering",
+          "adBlocking",
+          "regionBlocking",
+          "trigger",
+          "conntrack",
+          "dnsQueries"
+        ]
+      }
+    },
+    "wifiman": {
+      "enabled": true,
+      "token": "REDACTED"
+    },
+    "redirector": {
+      "enabled": true,
+      "instances": [
+        {
+          "enabled": true,
+          "url": "http://192.168.1.1:8880/guest/s/default/",
+          "devNames": [
+            "br140"
+          ],
+          "httpsEnabled": true,
+          "httpsURL": "http://192.168.1.1:8880/guest/s/default/",
+          "redirectPattern": "http://192.168.1.1:8881",
+          "initialEC": true
+        }
+      ]
+    },
+    "loopProtection": {
+      "enabled": false,
+      "portRecovery": null
+    }
+  },
+  "system": {
+    "hostname": "VollminGateway-UDM-SE",
+    "domainName": "default.vollminlab.com",
+    "dnsServers": [
+      {
+        "type": "static",
+        "address": "192.168.100.4",
+        "version": "v4",
+        "interface": "eth8",
+        "priority": 1
+      }
+    ],
+    "arp": {
+      "baseReachableTime": 600
+    },
+    "fwReleaseChannel": "release"
+  },
+  "unifi": {},
+  "version": 48,
+  "versionFormat": "v2",
+  "versionDetail": {
+    "bridge-firewall": 1,
+    "firewall/filter": 5,
+    "firewall/mangle": 7,
+    "firewall/nat": 10,
+    "firewall/pbr": 9,
+    "firewall/sets": 1,
+    "firewall/settings": 1,
+    "interfaces": 40,
+    "peripherals": 1,
+    "qos": 1,
+    "qos/ip": 2,
+    "routes/access-lists": 1,
+    "routes/ospf": 4,
+    "routes/ospf/areas": 3,
+    "routes/ospf/interfaces": 3,
+    "routes/bgp/raw": 1,
+    "routes/static": 3,
+    "services/arpInspection": 1,
+    "services/bleHTTPTransport": 1,
+    "services/clientIsolation": 1,
+    "services/ddns": 2,
+    "services/dhcpServers": 2,
+    "services/discoveryResponder": 1,
+    "services/dnsForwarder": 7,
+    "services/dpi": 1,
+    "services/dohProxy": 3,
+    "services/geoipFiltering": 1,
+    "services/idsIps": 4,
+    "services/igmpProxy": 1,
+    "services/igmpSnooping": 2,
+    "services/ipAccounting": 1,
+    "services/l2tpServer": 3,
+    "services/latencyMonitor": 1,
+    "services/lldp": 1,
+    "services/loopProtection": 1,
+    "services/mdns": 2,
+    "services/messageBroker": 3,
+    "services/ntpClient": 1,
+    "services/radius-profiles": 3,
+    "services/radiusServer": 2,
+    "services/snmpAgent": 2,
+    "services/sshServer": 1,
+    "services/sslInspection": 2,
+    "services/stunnel": 1,
+    "services/suspend": 1,
+    "services/systemLog": 1,
+    "services/telnetServer": 1,
+    "services/uid": 1,
+    "services/unifiNetwork": 2,
+    "services/unms": 1,
+    "services/upnp": 1,
+    "services/utm": 6,
+    "services/vrrp": 5,
+    "services/wanFailover": 12,
+    "services/wanMagic": 3,
+    "services/webServer": 1,
+    "services/wifiman": 2,
+    "services/redirector": 1,
+    "services/flowAccounting": 2,
+    "system": 2,
+    "system/users": 1,
+    "vlans": 1,
+    "vpn/ipsec/site-to-site": 4,
+    "vpn/openvpn/peers": 6,
+    "vpn/openvpn/raws": 6,
+    "vpn/wireguard/clients": 5,
+    "vpn/wireguard/servers": 6,
+    "vpn/teleport": 1,
+    "vpn/wireguard/site-to-sites": 6
+  },
+  "firewall/nat": [
+    {
+      "id": 1,
+      "chain": "POSTROUTING",
+      "target": "MASQUERADE",
+      "enabled": true,
+      "log": false,
+      "source": {
+        "sets": [
+          "!ALL_ADDRv4_eth8"
+        ]
+      },
+      "outInterface": {
+        "id": "eth8"
+      },
+      "ipVersion": "v4only",
+      "triggerTag": {
+        "id": "684bcfb26a681001d80ca5e9",
+        "type": "PREDEFINED_MASQUERADE"
+      },
+      "originId": "684bcfb26a681001d80ca5e9"
+    },
+    {
+      "id": 2,
+      "chain": "PREROUTING",
+      "target": "DNAT",
+      "translation": {
+        "address": "192.168.160.4",
+        "port": "25565"
+      },
+      "description": "PortForward DNAT [Minecraft External]",
+      "enabled": true,
+      "log": true,
+      "protocol": "tcp",
+      "source": {},
+      "destination": {
+        "sets": [
+          "KEY_ADDRv4_eth8"
+        ],
+        "port": "25565"
+      },
+      "ipVersion": "v4only",
+      "triggerTag": {
+        "id": "68f339015209c60a8c69d81a",
+        "type": "PORT_FORWARDING"
+      }
+    },
+    {
+      "id": 3,
+      "chain": "POSTROUTING",
+      "target": "MASQUERADE",
+      "description": "PortForward MASQUERADE [Minecraft External]",
+      "enabled": true,
+      "log": true,
+      "protocol": "tcp",
+      "source": {
+        "sets": [
+          "ALL_NETv4_br160"
+        ]
+      },
+      "destination": {
+        "address": "192.168.160.4",
+        "port": "25565"
+      },
+      "ipVersion": "v4only",
+      "triggerTag": {
+        "id": "68f339015209c60a8c69d81a",
+        "type": "PORT_FORWARDING"
+      }
+    },
+    {
+      "id": 4,
+      "chain": "PREROUTING",
+      "target": "DNAT",
+      "translation": {
+        "address": "192.168.160.4",
+        "port": "80"
+      },
+      "description": "PortForward DNAT [haproxydmz-VIP-HTTP]",
+      "enabled": true,
+      "log": true,
+      "protocol": "tcp",
+      "source": {},
+      "destination": {
+        "sets": [
+          "KEY_ADDRv4_eth8"
+        ],
+        "port": "80"
+      },
+      "ipVersion": "v4only",
+      "triggerTag": {
+        "id": "69168f265209c60a8c2f320b",
+        "type": "PORT_FORWARDING"
+      }
+    },
+    {
+      "id": 5,
+      "chain": "POSTROUTING",
+      "target": "MASQUERADE",
+      "description": "PortForward MASQUERADE [haproxydmz-VIP-HTTP]",
+      "enabled": true,
+      "log": true,
+      "protocol": "tcp",
+      "source": {
+        "sets": [
+          "ALL_NETv4_br160"
+        ]
+      },
+      "destination": {
+        "address": "192.168.160.4",
+        "port": "80"
+      },
+      "ipVersion": "v4only",
+      "triggerTag": {
+        "id": "69168f265209c60a8c2f320b",
+        "type": "PORT_FORWARDING"
+      }
+    },
+    {
+      "id": 6,
+      "chain": "PREROUTING",
+      "target": "DNAT",
+      "translation": {
+        "address": "192.168.160.4",
+        "port": "443"
+      },
+      "description": "PortForward DNAT [haproxydmz-VIP-HTTPS]",
+      "enabled": true,
+      "log": true,
+      "protocol": "tcp",
+      "source": {},
+      "destination": {
+        "sets": [
+          "KEY_ADDRv4_eth8"
+        ],
+        "port": "443"
+      },
+      "ipVersion": "v4only",
+      "triggerTag": {
+        "id": "69168f3f5209c60a8c2f3263",
+        "type": "PORT_FORWARDING"
+      }
+    },
+    {
+      "id": 7,
+      "chain": "POSTROUTING",
+      "target": "MASQUERADE",
+      "description": "PortForward MASQUERADE [haproxydmz-VIP-HTTPS]",
+      "enabled": true,
+      "log": true,
+      "protocol": "tcp",
+      "source": {
+        "sets": [
+          "ALL_NETv4_br160"
+        ]
+      },
+      "destination": {
+        "address": "192.168.160.4",
+        "port": "443"
+      },
+      "ipVersion": "v4only",
+      "triggerTag": {
+        "id": "69168f3f5209c60a8c2f3263",
+        "type": "PORT_FORWARDING"
+      }
+    }
+  ],
+  "firewall/sets": [
+    {
+      "identification": {
+        "name": "unifi_controller_addresse",
+        "type": "address"
+      },
+      "description": "UniFi addresses"
+    },
+    {
+      "identification": {
+        "name": "DMZ_subnets",
+        "type": "address"
+      },
+      "description": "Dmz zone subnets",
+      "entries": [
+        "192.168.160.0/24"
+      ]
+    },
+    {
+      "identification": {
+        "name": "DMZ_corporate_network",
+        "type": "address"
+      },
+      "description": "Dmz zone corporate subnets",
+      "entries": [
+        "192.168.160.0/24"
+      ]
+    },
+    {
+      "identification": {
+        "name": "GUEST_subnets",
+        "type": "address"
+      },
+      "description": "Hotspot zone subnets",
+      "entries": [
+        "192.168.140.0/24"
+      ]
+    },
+    {
+      "identification": {
+        "name": "GUEST_corporate_network",
+        "type": "address"
+      },
+      "description": "Hotspot zone corporate subnets"
+    },
+    {
+      "identification": {
+        "name": "LAN_subnets",
+        "type": "address"
+      },
+      "description": "Internal zone subnets",
+      "entries": [
+        "192.168.120.0/24",
+        "192.168.151.0/24",
+        "192.168.152.0/24",
+        "192.168.150.0/24",
+        "192.168.130.0/24",
+        "192.168.100.0/24",
+        "192.168.110.0/24",
+        "192.168.155.0/28",
+        "192.168.1.0/24",
+        "192.168.153.0/24",
+        "192.168.154.0/24"
+      ]
+    },
+    {
+      "identification": {
+        "name": "LAN_corporate_network",
+        "type": "address"
+      },
+      "description": "Internal zone corporate subnets",
+      "entries": [
+        "192.168.120.0/24",
+        "192.168.151.0/24",
+        "192.168.152.0/24",
+        "192.168.150.0/24",
+        "192.168.130.0/24",
+        "192.168.100.0/24",
+        "192.168.110.0/24",
+        "192.168.155.0/28",
+        "192.168.1.0/24",
+        "192.168.153.0/24",
+        "192.168.154.0/24"
+      ]
+    },
+    {
+      "identification": {
+        "name": "LOCAL_subnets",
+        "type": "address"
+      },
+      "description": "Gateway zone subnets"
+    },
+    {
+      "identification": {
+        "name": "LOCAL_corporate_network",
+        "type": "address"
+      },
+      "description": "Gateway zone corporate subnets"
+    },
+    {
+      "identification": {
+        "name": "VPN_subnets",
+        "type": "address"
+      },
+      "description": "Vpn zone subnets",
+      "entries": [
+        "192.168.200.0/24"
+      ]
+    },
+    {
+      "identification": {
+        "name": "local_zoned_subnets",
+        "type": "address"
+      },
+      "description": "external zone ip address set",
+      "entries": [
+        "192.168.120.0/24",
+        "192.168.151.0/24",
+        "192.168.152.0/24",
+        "192.168.150.0/24",
+        "192.168.130.0/24",
+        "192.168.100.0/24",
+        "192.168.110.0/24",
+        "192.168.155.0/28",
+        "192.168.160.0/24",
+        "192.168.1.0/24",
+        "192.168.153.0/24",
+        "192.168.154.0/24",
+        "192.168.140.0/24"
+      ]
+    },
+    {
+      "identification": {
+        "name": "guest_network",
+        "type": "address"
+      },
+      "description": "guest subnets",
+      "entries": [
+        "192.168.140.0/24"
+      ]
+    },
+    {
+      "identification": {
+        "name": "guest_networkv6",
+        "type": "address"
+      },
+      "description": "IPv6 guest subnets"
+    },
+    {
+      "identification": {
+        "name": "corporate_network",
+        "type": "address"
+      },
+      "description": "corporate subnets",
+      "entries": [
+        "192.168.120.0/24",
+        "192.168.151.0/24",
+        "192.168.152.0/24",
+        "192.168.150.0/24",
+        "192.168.130.0/24",
+        "192.168.100.0/24",
+        "192.168.110.0/24",
+        "192.168.155.0/28",
+        "192.168.160.0/24",
+        "192.168.1.0/24",
+        "192.168.153.0/24",
+        "192.168.154.0/24"
+      ]
+    },
+    {
+      "identification": {
+        "name": "corporate_networkv6",
+        "type": "address"
+      },
+      "description": "IPv6 corporate subnets"
+    },
+    {
+      "identification": {
+        "name": "local_network",
+        "type": "address"
+      },
+      "description": "local subnets (corporate + guest)",
+      "entries": [
+        "192.168.120.0/24",
+        "192.168.151.0/24",
+        "192.168.152.0/24",
+        "192.168.150.0/24",
+        "192.168.130.0/24",
+        "192.168.100.0/24",
+        "192.168.110.0/24",
+        "192.168.155.0/28",
+        "192.168.160.0/24",
+        "192.168.1.0/24",
+        "192.168.153.0/24",
+        "192.168.154.0/24",
+        "192.168.140.0/24"
+      ]
+    },
+    {
+      "identification": {
+        "name": "local_networkv6",
+        "type": "address"
+      },
+      "description": "IPv6 local subnets (corporate + guest)"
+    },
+    {
+      "identification": {
+        "name": "LAN_isolated_subnets",
+        "type": "address"
+      },
+      "description": "LAN isolated subnets",
+      "entries": [
+        "192.168.130.0/24"
+      ]
+    },
+    {
+      "identification": {
+        "name": "mdns_addresses_name",
+        "type": "address"
+      },
+      "description": "mDNS addresses",
+      "entries": [
+        "224.0.0.251",
+        "ff02::fb"
+      ]
+    },
+    {
+      "identification": {
+        "name": "mdns_ports_name",
+        "type": "port"
+      },
+      "description": "mDNS ports",
+      "entries": [
+        "5353"
+      ]
+    },
+    {
+      "identification": {
+        "name": "remote_user_vpn_network",
+        "type": "address"
+      },
+      "description": "Remote User VPN subnets",
+      "entries": [
+        "192.168.200.0/24"
+      ]
+    },
+    {
+      "identification": {
+        "name": "remote_client_vpn_network",
+        "type": "address"
+      },
+      "description": "remote client VPN subnets"
+    },
+    {
+      "identification": {
+        "name": "remote_site_vpn_network",
+        "type": "address"
+      },
+      "description": "remote site VPN subnets"
+    },
+    {
+      "identification": {
+        "name": "guest_allow_dns_servers",
+        "type": "address"
+      },
+      "description": "allow dns servers for guests"
+    },
+    {
+      "identification": {
+        "name": "captive_portal_subnets",
+        "type": "address"
+      },
+      "description": "captive portal subnets"
+    },
+    {
+      "identification": {
+        "name": "guest_portal_address",
+        "type": "address"
+      },
+      "description": "guest portal address",
+      "entries": [
+        "192.168.1.1"
+      ]
+    },
+    {
+      "identification": {
+        "name": "66df88baa20d360e9112fd53",
+        "type": "mac"
+      }
+    },
+    {
+      "identification": {
+        "name": "66df98437c39fc235a9654b7",
+        "type": "mac"
+      }
+    },
+    {
+      "identification": {
+        "name": "670da7ce3b005a12cec04286",
+        "type": "mac"
+      }
+    },
+    {
+      "identification": {
+        "name": "670daa483b005a12cec042c5",
+        "type": "mac"
+      }
+    },
+    {
+      "identification": {
+        "name": "6716b04691c0587604d4a595",
+        "type": "address"
+      },
+      "description": "customized-Pihole Servers",
+      "entries": [
+        "192.168.100.2",
+        "192.168.100.3",
+        "192.168.100.4"
+      ]
+    },
+    {
+      "identification": {
+        "name": "6717220891c0587604d4b824",
+        "type": "address"
+      },
+      "description": "customized-Plex",
+      "entries": [
+        "192.168.150.2"
+      ]
+    },
+    {
+      "identification": {
+        "name": "68dc98911b11c129cb9ce0d4",
+        "type": "address"
+      },
+      "description": "customized-Admin Devices",
+      "entries": [
+        "192.168.110.173",
+        "192.168.120.217"
+      ]
+    },
+    {
+      "identification": {
+        "name": "68f32b635209c60a8c699866",
+        "type": "address"
+      },
+      "description": "customized-HAProxy DMZ Hosts",
+      "entries": [
+        "192.168.160.2",
+        "192.168.160.3"
+      ]
+    },
+    {
+      "identification": {
+        "name": "692354a5da2cf33f27f262c1",
+        "type": "address"
+      },
+      "description": "customized-k8s DMZ Hosts",
+      "entries": [
+        "192.168.152.15",
+        "192.168.152.16"
+      ]
+    },
+    {
+      "identification": {
+        "name": "guest_portal_ports",
+        "type": "port"
+      },
+      "description": "guest portal ports",
+      "entries": [
+        "8880",
+        "8843"
+      ]
+    },
+    {
+      "identification": {
+        "name": "guest_portal_redirector_p",
+        "type": "port"
+      },
+      "description": "guest portal redirector ports",
+      "entries": [
+        "39080",
+        "39443"
+      ]
+    },
+    {
+      "identification": {
+        "name": "unifi_controller_ports-tc",
+        "type": "port"
+      },
+      "description": "unifi tcp ports",
+      "entries": [
+        "8080"
+      ]
+    },
+    {
+      "identification": {
+        "name": "unifi_controller_ports-ud",
+        "type": "port"
+      },
+      "description": "unifi udp ports",
+      "entries": [
+        "3478"
+      ]
+    },
+    {
+      "identification": {
+        "name": "671867c1e1099912bd61c5aa",
+        "type": "port"
+      },
+      "description": "customized-Plex Local Ports",
+      "entries": [
+        "32400"
+      ]
+    },
+    {
+      "identification": {
+        "name": "671ff353e1099912bd62cbac",
+        "type": "port"
+      },
+      "description": "customized-DNS/DoT",
+      "entries": [
+        "53",
+        "853"
+      ]
+    },
+    {
+      "identification": {
+        "name": "68f32c065209c60a8c699b96",
+        "type": "port"
+      },
+      "description": "customized-Minecraft Nodeport",
+      "entries": [
+        "32565"
+      ]
+    },
+    {
+      "identification": {
+        "name": "690ee53e5209c60a8ce9bbc0",
+        "type": "port"
+      },
+      "description": "customized-Bluemap Nodeport",
+      "entries": [
+        "32566"
+      ]
+    },
+    {
+      "identification": {
+        "name": "wireguard_ports",
+        "type": "port"
+      },
+      "description": "Wireguard VPN ports",
+      "entries": [
+        "51821"
+      ]
+    },
+    {
+      "identification": {
+        "name": "policy_src_net_8",
+        "type": "address"
+      },
+      "description": "Network addresses related to policy (short_id: 8) ips",
+      "entries": [
+        "192.168.130.0/24"
+      ]
+    },
+    {
+      "identification": {
+        "name": "policy_src_net_9",
+        "type": "address"
+      },
+      "description": "Network addresses related to policy (short_id: 9) ips",
+      "entries": [
+        "192.168.140.0/24"
+      ]
+    },
+    {
+      "identification": {
+        "name": "policy_dst_net_16",
+        "type": "address"
+      },
+      "description": "Network addresses related to policy (short_id: 16) ips",
+      "entries": [
+        "192.168.100.0/24"
+      ]
+    },
+    {
+      "identification": {
+        "name": "policy_src_net_51",
+        "type": "address"
+      },
+      "description": "Network addresses related to policy (short_id: 51) ips",
+      "entries": [
+        "192.168.130.0/24"
+      ]
+    },
+    {
+      "identification": {
+        "name": "policy_dst_net_53",
+        "type": "address"
+      },
+      "description": "Network addresses related to policy (short_id: 53) ips",
+      "entries": [
+        "192.168.130.0/24"
+      ]
+    },
+    {
+      "identification": {
+        "name": "policy_src_net_54",
+        "type": "address"
+      },
+      "description": "Network addresses related to policy (short_id: 54) ips",
+      "entries": [
+        "192.168.130.0/24"
+      ]
+    },
+    {
+      "identification": {
+        "name": "policy_src_net_55",
+        "type": "address"
+      },
+      "description": "Network addresses related to policy (short_id: 55) ips",
+      "entries": [
+        "192.168.160.0/24"
+      ]
+    },
+    {
+      "identification": {
+        "name": "guest_pre_allow",
+        "type": "address"
+      },
+      "description": "guest network allowed subnet list"
+    },
+    {
+      "identification": {
+        "name": "guest_restricted",
+        "type": "address"
+      },
+      "description": "guest network restricted subnet list",
+      "entries": [
+        "224.0.0.0/4",
+        "192.168.0.0/16",
+        "10.0.0.0/8",
+        "172.16.0.0/12"
+      ]
+    },
+    {
+      "identification": {
+        "name": "authorized_guests",
+        "type": "mac"
+      },
+      "description": "guest network authorized mac list"
+    }
+  ],
+  "firewall/filter": [
+    {
+      "config": {
+        "name": "WAN_PF_IN",
+        "logDefault": false
+      },
+      "rules": [
+        {
+          "id": 1231105964,
+          "target": "RETURN",
+          "description": "[WAN_PF_IN] PortForward Accounting [haproxydmz-VIP-HTTP]",
+          "log": false,
+          "protocol": "tcp",
+          "source": {},
+          "destination": {
+            "address": "192.168.160.4",
+            "port": "80"
+          },
+          "ipVersion": "v4only",
+          "triggerTag": {
+            "id": "69168f275209c60a8c2f320e",
+            "type": "PREDEFINED_FIREWALL_RULE"
+          },
+          "originId": "69168f275209c60a8c2f320e"
+        },
+        {
+          "id": 1529880082,
+          "target": "RETURN",
+          "description": "[WAN_PF_IN] PortForward Accounting [Minecraft External]",
+          "log": false,
+          "protocol": "tcp",
+          "source": {},
+          "destination": {
+            "address": "192.168.160.4",
+            "port": "25565"
+          },
+          "ipVersion": "v4only",
+          "triggerTag": {
+            "id": "68f339025209c60a8c69d825",
+            "type": "PREDEFINED_FIREWALL_RULE"
+          },
+          "originId": "68f339025209c60a8c69d825"
+        },
+        {
+          "id": 1693822162,
+          "target": "RETURN",
+          "description": "[WAN_PF_IN] PortForward Accounting [haproxydmz-VIP-HTTPS]",
+          "log": false,
+          "protocol": "tcp",
+          "source": {},
+          "destination": {
+            "address": "192.168.160.4",
+            "port": "443"
+          },
+          "ipVersion": "v4only",
+          "triggerTag": {
+            "id": "69168f405209c60a8c2f3268",
+            "type": "PREDEFINED_FIREWALL_RULE"
+          },
+          "originId": "69168f405209c60a8c2f3268"
+        }
+      ]
+    },
+    {
+      "config": {
+        "name": "WAN_PF_OUT",
+        "logDefault": false
+      },
+      "rules": [
+        {
+          "id": 1231105964,
+          "target": "RETURN",
+          "description": "[WAN_PF_OUT] PortForward Accounting [haproxydmz-VIP-HTTP]",
+          "log": false,
+          "protocol": "tcp",
+          "source": {
+            "address": "192.168.160.4",
+            "port": "80"
+          },
+          "destination": {},
+          "ipVersion": "v4only",
+          "triggerTag": {
+            "id": "69168f275209c60a8c2f320f",
+            "type": "PREDEFINED_FIREWALL_RULE"
+          },
+          "originId": "69168f275209c60a8c2f320f"
+        },
+        {
+          "id": 1529880082,
+          "target": "RETURN",
+          "description": "[WAN_PF_OUT] PortForward Accounting [Minecraft External]",
+          "log": false,
+          "protocol": "tcp",
+          "source": {
+            "address": "192.168.160.4",
+            "port": "25565"
+          },
+          "destination": {},
+          "ipVersion": "v4only",
+          "triggerTag": {
+            "id": "68f339025209c60a8c69d826",
+            "type": "PREDEFINED_FIREWALL_RULE"
+          },
+          "originId": "68f339025209c60a8c69d826"
+        },
+        {
+          "id": 1693822162,
+          "target": "RETURN",
+          "description": "[WAN_PF_OUT] PortForward Accounting [haproxydmz-VIP-HTTPS]",
+          "log": false,
+          "protocol": "tcp",
+          "source": {
+            "address": "192.168.160.4",
+            "port": "443"
+          },
+          "destination": {},
+          "ipVersion": "v4only",
+          "triggerTag": {
+            "id": "69168f405209c60a8c2f3269",
+            "type": "PREDEFINED_FIREWALL_RULE"
+          },
+          "originId": "69168f405209c60a8c2f3269"
+        }
+      ]
+    },
+    {
+      "config": {
+        "name": "AUTHORIZED_GUESTS",
+        "logDefault": false
+      },
+      "rules": [
+        {
+          "id": 30000,
+          "target": "ACCEPT",
+          "description": "[AUTHORIZED_GUESTS]accept authorized guests",
+          "log": false,
+          "source": {
+            "sets": [
+              "authorized_guests"
+            ]
+          },
+          "ipVersion": "v4only",
+          "triggerTag": {
+            "id": "684bcfb46a681001d80ca6bf",
+            "type": "PREDEFINED_FIREWALL_RULE"
+          },
+          "originId": "684bcfb46a681001d80ca6bf"
+        },
+        {
+          "id": 2147483647,
+          "target": "DROP",
+          "log": false,
+          "ipVersion": "both",
+          "triggerTag": {
+            "id": "684bcfb46a681001d80ca6c0",
+            "type": "PREDEFINED_FIREWALL_RULE"
+          },
+          "originId": "684bcfb46a681001d80ca6c0"
+        }
+      ]
+    },
+    {
+      "config": {
+        "name": "INPUT",
+        "policy": "ACCEPT",
+        "logDefault": false
+      },
+      "rules": [
+        {
+          "id": 30000,
+          "target": "WAN_LOCAL",
+          "description": "WAN_LOCAL jump (interface: eth8)",
+          "log": false,
+          "inInterface": {
+            "id": "eth8"
+          },
+          "ipVersion": "both",
+          "triggerTag": {
+            "id": "684bcfb36a681001d80ca61b",
+            "type": "PREDEFINED_FIREWALL_RULE"
+          },
+          "originId": "684bcfb36a681001d80ca61b"
+        },
+        {
+          "id": 30001,
+          "target": "LAN_LOCAL",
+          "description": "LAN_LOCAL jump (interface: br0)",
+          "log": false,
+          "inInterface": {
+            "id": "br0"
+          },
+          "ipVersion": "both",
+          "triggerTag": {
+            "id": "684bcfb46a681001d80ca62f",
+            "type": "PREDEFINED_FIREWALL_RULE"
+          },
+          "originId": "684bcfb46a681001d80ca62f"
+        },
+        {
+          "id": 30002,
+          "target": "LAN_LOCAL",
+          "description": "LAN_LOCAL jump (interface: br100)",
+          "log": false,
+          "inInterface": {
+            "id": "br100"
+          },
+          "ipVersion": "both",
+          "triggerTag": {
+            "id": "684bcfb36a681001d80ca625",
+            "type": "PREDEFINED_FIREWALL_RULE"
+          },
+          "originId": "684bcfb36a681001d80ca625"
+        },
+        {
+          "id": 30003,
+          "target": "LAN_LOCAL",
+          "description": "LAN_LOCAL jump (interface: br110)",
+          "log": false,
+          "inInterface": {
+            "id": "br110"
+          },
+          "ipVersion": "both",
+          "triggerTag": {
+            "id": "684bcfb36a681001d80ca623",
+            "type": "PREDEFINED_FIREWALL_RULE"
+          },
+          "originId": "684bcfb36a681001d80ca623"
+        },
+        {
+          "id": 30004,
+          "target": "LAN_LOCAL",
+          "description": "LAN_LOCAL jump (interface: br120)",
+          "log": false,
+          "inInterface": {
+            "id": "br120"
+          },
+          "ipVersion": "both",
+          "triggerTag": {
+            "id": "684bcfb46a681001d80ca644",
+            "type": "PREDEFINED_FIREWALL_RULE"
+          },
+          "originId": "684bcfb46a681001d80ca644"
+        },
+        {
+          "id": 30005,
+          "target": "LAN_LOCAL",
+          "description": "LAN_LOCAL jump (interface: br130)",
+          "log": false,
+          "inInterface": {
+            "id": "br130"
+          },
+          "ipVersion": "both",
+          "triggerTag": {
+            "id": "684bcfb36a681001d80ca622",
+            "type": "PREDEFINED_FIREWALL_RULE"
+          },
+          "originId": "684bcfb36a681001d80ca622"
+        },
+        {
+          "id": 30006,
+          "target": "GUEST_LOCAL",
+          "description": "GUEST_LOCAL jump (interface: br140)",
+          "log": false,
+          "inInterface": {
+            "id": "br140"
+          },
+          "ipVersion": "both",
+          "triggerTag": {
+            "id": "684bcfb46a681001d80ca64f",
+            "type": "PREDEFINED_FIREWALL_RULE"
+          },
+          "originId": "684bcfb46a681001d80ca64f"
+        },
+        {
+          "id": 30007,
+          "target": "LAN_LOCAL",
+          "description": "LAN_LOCAL jump (interface: br150)",
+          "log": false,
+          "inInterface": {
+            "id": "br150"
+          },
+          "ipVersion": "both",
+          "triggerTag": {
+            "id": "684bcfb46a681001d80ca631",
+            "type": "PREDEFINED_FIREWALL_RULE"
+          },
+          "originId": "684bcfb46a681001d80ca631"
+        },
+        {
+          "id": 30008,
+          "target": "LAN_LOCAL",
+          "description": "LAN_LOCAL jump (interface: br151)",
+          "log": false,
+          "inInterface": {
+            "id": "br151"
+          },
+          "ipVersion": "both",
+          "triggerTag": {
+            "id": "684bcfb46a681001d80ca649",
+            "type": "PREDEFINED_FIREWALL_RULE"
+          },
+          "originId": "684bcfb46a681001d80ca649"
+        },
+        {
+          "id": 30009,
+          "target": "LAN_LOCAL",
+          "description": "LAN_LOCAL jump (interface: br152)",
+          "log": false,
+          "inInterface": {
+            "id": "br152"
+          },
+          "ipVersion": "both",
+          "triggerTag": {
+            "id": "684bcfb46a681001d80ca627",
+            "type": "PREDEFINED_FIREWALL_RULE"
+          },
+          "originId": "684bcfb46a681001d80ca627"
+        },
+        {
+          "id": 30010,
+          "target": "LAN_LOCAL",
+          "description": "LAN_LOCAL jump (interface: br153)",
+          "log": false,
+          "inInterface": {
+            "id": "br153"
+          },
+          "ipVersion": "both",
+          "triggerTag": {
+            "id": "684bcfb46a681001d80ca64b",
+            "type": "PREDEFINED_FIREWALL_RULE"
+          },
+          "originId": "684bcfb46a681001d80ca64b"
+        },
+        {
+          "id": 30011,
+          "target": "LAN_LOCAL",
+          "description": "LAN_LOCAL jump (interface: br154)",
+          "log": false,
+          "inInterface": {
+            "id": "br154"
+          },
+          "ipVersion": "both",
+          "triggerTag": {
+            "id": "684bcfb46a681001d80ca641",
+            "type": "PREDEFINED_FIREWALL_RULE"
+          },
+          "originId": "684bcfb46a681001d80ca641"
+        },
+        {
+          "id": 30012,
+          "target": "LAN_LOCAL",
+          "description": "LAN_LOCAL jump (interface: br155)",
+          "log": false,
+          "inInterface": {
+            "id": "br155"
+          },
+          "ipVersion": "both",
+          "triggerTag": {
+            "id": "684bcfb46a681001d80ca632",
+            "type": "PREDEFINED_FIREWALL_RULE"
+          },
+          "originId": "684bcfb46a681001d80ca632"
+        },
+        {
+          "id": 30013,
+          "target": "DMZ_LOCAL",
+          "description": "DMZ_LOCAL jump (interface: br160)",
+          "log": false,
+          "inInterface": {
+            "id": "br160"
+          },
+          "ipVersion": "both",
+          "triggerTag": {
+            "id": "68ea64f91b11c129cb0cad00",
+            "type": "PREDEFINED_FIREWALL_RULE"
+          },
+          "originId": "68ea64f91b11c129cb0cad00"
+        },
+        {
+          "id": 30014,
+          "target": "VPN_LOCAL",
+          "negateInInterface": false,
+          "negateOutInterface": false,
+          "description": "Forward WIREGUARD_SERVER traffic to VPN_LOCAL",
+          "log": false,
+          "protocol": "all",
+          "connectionState": [],
+          "inInterface": {
+            "id": "wgsrv+"
+          },
+          "ipVersion": "both",
+          "triggerTag": {
+            "id": "684bcfb46a681001d80ca65f",
+            "type": "PREDEFINED_FIREWALL_RULE"
+          },
+          "originId": "684bcfb46a681001d80ca65f"
+        },
+        {
+          "id": 30015,
+          "target": "VPN_LOCAL",
+          "negateInInterface": false,
+          "negateOutInterface": false,
+          "description": "Forward TELEPORT traffic to VPN_LOCAL",
+          "log": false,
+          "protocol": "all",
+          "connectionState": [],
+          "inInterface": {
+            "id": "tlprt+"
+          },
+          "ipVersion": "both",
+          "triggerTag": {
+            "id": "684bcfb46a681001d80ca659",
+            "type": "PREDEFINED_FIREWALL_RULE"
+          },
+          "originId": "684bcfb46a681001d80ca659"
+        }
+      ]
+    },
+    {
+      "config": {
+        "name": "WAN_LOCAL",
+        "logDefault": false
+      },
+      "rules": [
+        {
+          "id": 30000,
+          "target": "ACCEPT",
+          "description": "[WAN_LOCAL]Allow Return Traffic",
+          "log": false,
+          "connectionState": [
+            "established",
+            "related"
+          ],
+          "ipVersion": "both",
+          "triggerTag": {
+            "id": "684bcfb46a681001d80ca660",
+            "type": "PREDEFINED_FIREWALL_RULE"
+          },
+          "originId": "684bcfb46a681001d80ca660"
+        },
+        {
+          "id": 30001,
+          "target": "DROP",
+          "description": "[WAN_LOCAL]Block Invalid Traffic",
+          "log": false,
+          "connectionState": [
+            "invalid"
+          ],
+          "ipVersion": "both",
+          "triggerTag": {
+            "id": "684bcfb46a681001d80ca665",
+            "type": "PREDEFINED_FIREWALL_RULE"
+          },
+          "originId": "684bcfb46a681001d80ca665"
+        },
+        {
+          "id": 30002,
+          "target": "ACCEPT",
+          "description": "[WAN_LOCAL]Allow WireGuard VPNs",
+          "log": false,
+          "protocol": "udp",
+          "destination": {
+            "sets": [
+              "wireguard_ports"
+            ]
+          },
+          "ipVersion": "v4only",
+          "triggerTag": {
+            "id": "684bcfb46a681001d80ca668",
+            "type": "PREDEFINED_FIREWALL_RULE"
+          },
+          "originId": "684bcfb46a681001d80ca668"
+        },
+        {
+          "id": 30003,
+          "target": "ACCEPT",
+          "description": "[WAN_LOCAL]Allow Neighbor Solicitations",
+          "log": false,
+          "protocol": "icmpv6",
+          "icmpv6Type": "neighbor-solicitation",
+          "ipVersion": "v6only",
+          "triggerTag": {
+            "id": "684bcfb46a681001d80ca661",
+            "type": "PREDEFINED_FIREWALL_RULE"
+          },
+          "originId": "684bcfb46a681001d80ca661"
+        },
+        {
+          "id": 30004,
+          "target": "ACCEPT",
+          "description": "[WAN_LOCAL]Allow Neighbor Advertisements",
+          "log": false,
+          "protocol": "icmpv6",
+          "icmpv6Type": "neighbor-advertisement",
+          "ipVersion": "v6only",
+          "triggerTag": {
+            "id": "684bcfb46a681001d80ca663",
+            "type": "PREDEFINED_FIREWALL_RULE"
+          },
+          "originId": "684bcfb46a681001d80ca663"
+        },
+        {
+          "id": 2147483647,
+          "target": "DROP",
+          "description": "[WAN_LOCAL]Block All Traffic",
+          "log": false,
+          "ipVersion": "both",
+          "triggerTag": {
+            "id": "684bcfb46a681001d80ca666",
+            "type": "PREDEFINED_FIREWALL_RULE"
+          },
+          "originId": "684bcfb46a681001d80ca666"
+        }
+      ]
+    },
+    {
+      "config": {
+        "name": "LAN_LOCAL",
+        "logDefault": false
+      },
+      "rules": [
+        {
+          "id": 30000,
+          "target": "ACCEPT",
+          "description": "[LAN_LOCAL]Allow mDNS",
+          "log": false,
+          "protocol": "udp",
+          "source": {
+            "sets": [
+              "mdns_ports_name"
+            ]
+          },
+          "destination": {
+            "sets": [
+              "mdns_addresses_name",
+              "mdns_ports_name"
+            ]
+          },
+          "ipVersion": "both",
+          "triggerTag": {
+            "id": "684bcfb46a681001d80ca686",
+            "type": "PREDEFINED_FIREWALL_RULE"
+          },
+          "originId": "684bcfb46a681001d80ca686"
+        },
+        {
+          "id": 2147483647,
+          "target": "ACCEPT",
+          "description": "[LAN_LOCAL]Allow All Traffic",
+          "log": false,
+          "ipVersion": "both",
+          "triggerTag": {
+            "id": "684bcfb46a681001d80ca687",
+            "type": "PREDEFINED_FIREWALL_RULE"
+          },
+          "originId": "684bcfb46a681001d80ca687"
+        }
+      ]
+    },
+    {
+      "config": {
+        "name": "GUEST_LOCAL",
+        "logDefault": false
+      },
+      "rules": [
+        {
+          "id": 30000,
+          "target": "ACCEPT",
+          "description": "[GUEST_LOCAL]Allow mDNS",
+          "log": false,
+          "protocol": "udp",
+          "source": {
+            "sets": [
+              "mdns_ports_name"
+            ]
+          },
+          "destination": {
+            "sets": [
+              "mdns_addresses_name",
+              "mdns_ports_name"
+            ]
+          },
+          "ipVersion": "both",
+          "triggerTag": {
+            "id": "684bcfb46a681001d80ca6cd",
+            "type": "PREDEFINED_FIREWALL_RULE"
+          },
+          "originId": "684bcfb46a681001d80ca6cd"
+        },
+        {
+          "id": 30001,
+          "target": "ACCEPT",
+          "description": "[GUEST_LOCAL]Allow DNS",
+          "log": false,
+          "protocol": "tcp_udp",
+          "destination": {
+            "port": "53"
+          },
+          "ipVersion": "both",
+          "triggerTag": {
+            "id": "684bcfb46a681001d80ca6c2",
+            "type": "PREDEFINED_FIREWALL_RULE"
+          },
+          "originId": "684bcfb46a681001d80ca6c2"
+        },
+        {
+          "id": 30002,
+          "target": "ACCEPT",
+          "description": "[GUEST_LOCAL]Allow ICMP",
+          "log": false,
+          "protocol": "icmp",
+          "ipVersion": "v4only",
+          "triggerTag": {
+            "id": "684bcfb46a681001d80ca6d2",
+            "type": "PREDEFINED_FIREWALL_RULE"
+          },
+          "originId": "684bcfb46a681001d80ca6d2"
+        },
+        {
+          "id": 30003,
+          "target": "ACCEPT",
+          "description": "[GUEST_LOCAL]Allow DHCP",
+          "log": false,
+          "protocol": "udp",
+          "source": {
+            "port": "68"
+          },
+          "destination": {
+            "port": "67"
+          },
+          "ipVersion": "v4only",
+          "triggerTag": {
+            "id": "684bcfb46a681001d80ca6c6",
+            "type": "PREDEFINED_FIREWALL_RULE"
+          },
+          "originId": "684bcfb46a681001d80ca6c6"
+        },
+        {
+          "id": 30004,
+          "target": "ACCEPT",
+          "description": "[GUEST_LOCAL]Allow Hotspot Portal Authentication",
+          "log": false,
+          "destination": {
+            "sets": [
+              "guest_portal_address",
+              "guest_portal_ports"
+            ]
+          },
+          "ipVersion": "v4only",
+          "triggerTag": {
+            "id": "684bcfb46a681001d80ca6c9",
+            "type": "PREDEFINED_FIREWALL_RULE"
+          },
+          "originId": "684bcfb46a681001d80ca6c9"
+        },
+        {
+          "id": 30005,
+          "target": "ACCEPT",
+          "description": "[GUEST_LOCAL]Allow Hotspot Portal Redirects",
+          "log": false,
+          "protocol": "tcp",
+          "destination": {
+            "sets": [
+              "guest_portal_redirector_p"
+            ]
+          },
+          "ipVersion": "v4only",
+          "triggerTag": {
+            "id": "684bcfb46a681001d80ca6cb",
+            "type": "PREDEFINED_FIREWALL_RULE"
+          },
+          "originId": "684bcfb46a681001d80ca6cb"
+        },
+        {
+          "id": 30006,
+          "target": "ACCEPT",
+          "description": "[GUEST_LOCAL]Allow ICMPv6",
+          "log": false,
+          "protocol": "icmpv6",
+          "ipVersion": "v6only",
+          "triggerTag": {
+            "id": "684bcfb46a681001d80ca6c4",
+            "type": "PREDEFINED_FIREWALL_RULE"
+          },
+          "originId": "684bcfb46a681001d80ca6c4"
+        },
+        {
+          "id": 30007,
+          "target": "ACCEPT",
+          "description": "[GUEST_LOCAL]Allow DHCPv6",
+          "log": false,
+          "protocol": "udp",
+          "source": {
+            "port": "546"
+          },
+          "destination": {
+            "port": "547"
+          },
+          "ipVersion": "v6only",
+          "triggerTag": {
+            "id": "684bcfb46a681001d80ca6ce",
+            "type": "PREDEFINED_FIREWALL_RULE"
+          },
+          "originId": "684bcfb46a681001d80ca6ce"
+        },
+        {
+          "id": 30008,
+          "target": "ACCEPT",
+          "description": "[GUEST_LOCAL]Allow Return Traffic",
+          "log": false,
+          "connectionState": [
+            "established",
+            "related"
+          ],
+          "ipVersion": "both",
+          "triggerTag": {
+            "id": "684bcfb46a681001d80ca6c8",
+            "type": "PREDEFINED_FIREWALL_RULE"
+          },
+          "originId": "684bcfb46a681001d80ca6c8"
+        },
+        {
+          "id": 2147483647,
+          "target": "DROP",
+          "description": "[GUEST_LOCAL]Block All Traffic",
+          "log": false,
+          "ipVersion": "both",
+          "triggerTag": {
+            "id": "684bcfb46a681001d80ca6c1",
+            "type": "PREDEFINED_FIREWALL_RULE"
+          },
+          "originId": "684bcfb46a681001d80ca6c1"
+        }
+      ]
+    },
+    {
+      "config": {
+        "name": "VPN_LOCAL",
+        "logDefault": false
+      },
+      "rules": [
+        {
+          "id": 2147483647,
+          "target": "ACCEPT",
+          "description": "[VPN_LOCAL]Allow All Traffic",
+          "log": false,
+          "ipVersion": "both",
+          "triggerTag": {
+            "id": "684bcfb46a681001d80ca6ef",
+            "type": "PREDEFINED_FIREWALL_RULE"
+          },
+          "originId": "684bcfb46a681001d80ca6ef"
+        }
+      ]
+    },
+    {
+      "config": {
+        "name": "DMZ_LOCAL",
+        "logDefault": false
+      },
+      "rules": [
+        {
+          "id": 30000,
+          "target": "ACCEPT",
+          "description": "[DMZ_LOCAL]Allow DNS",
+          "log": false,
+          "protocol": "tcp_udp",
+          "destination": {
+            "port": "53"
+          },
+          "ipVersion": "both",
+          "triggerTag": {
+            "id": "68ea64f91b11c129cb0cad03",
+            "type": "PREDEFINED_FIREWALL_RULE"
+          },
+          "originId": "68ea64f91b11c129cb0cad03"
+        },
+        {
+          "id": 30001,
+          "target": "ACCEPT",
+          "description": "[DMZ_LOCAL]Allow ICMP",
+          "log": false,
+          "protocol": "icmp",
+          "ipVersion": "v4only",
+          "triggerTag": {
+            "id": "68ea64f91b11c129cb0cad05",
+            "type": "PREDEFINED_FIREWALL_RULE"
+          },
+          "originId": "68ea64f91b11c129cb0cad05"
+        },
+        {
+          "id": 30002,
+          "target": "ACCEPT",
+          "description": "[DMZ_LOCAL]Allow DHCP",
+          "log": false,
+          "protocol": "udp",
+          "source": {
+            "port": "68"
+          },
+          "destination": {
+            "port": "67"
+          },
+          "ipVersion": "v4only",
+          "triggerTag": {
+            "id": "68ea64f91b11c129cb0cad07",
+            "type": "PREDEFINED_FIREWALL_RULE"
+          },
+          "originId": "68ea64f91b11c129cb0cad07"
+        },
+        {
+          "id": 30003,
+          "target": "ACCEPT",
+          "description": "[DMZ_LOCAL]Allow ICMPv6",
+          "log": false,
+          "protocol": "icmpv6",
+          "ipVersion": "v6only",
+          "triggerTag": {
+            "id": "68ea64f91b11c129cb0cad06",
+            "type": "PREDEFINED_FIREWALL_RULE"
+          },
+          "originId": "68ea64f91b11c129cb0cad06"
+        },
+        {
+          "id": 30004,
+          "target": "ACCEPT",
+          "description": "[DMZ_LOCAL]Allow DHCPv6",
+          "log": false,
+          "protocol": "udp",
+          "source": {
+            "port": "546"
+          },
+          "destination": {
+            "port": "547"
+          },
+          "ipVersion": "v6only",
+          "triggerTag": {
+            "id": "68ea64f91b11c129cb0cad04",
+            "type": "PREDEFINED_FIREWALL_RULE"
+          },
+          "originId": "68ea64f91b11c129cb0cad04"
+        },
+        {
+          "id": 30005,
+          "target": "ACCEPT",
+          "description": "[DMZ_LOCAL]Allow Return Traffic",
+          "log": false,
+          "connectionState": [
+            "established",
+            "related"
+          ],
+          "ipVersion": "both",
+          "triggerTag": {
+            "id": "684bcfb46a681001d80ca6f7",
+            "type": "PREDEFINED_FIREWALL_RULE"
+          },
+          "originId": "684bcfb46a681001d80ca6f7"
+        },
+        {
+          "id": 2147483647,
+          "target": "DROP",
+          "description": "[DMZ_LOCAL]Block All Traffic",
+          "log": false,
+          "ipVersion": "both",
+          "triggerTag": {
+            "id": "684bcfb46a681001d80ca6f8",
+            "type": "PREDEFINED_FIREWALL_RULE"
+          },
+          "originId": "684bcfb46a681001d80ca6f8"
+        }
+      ]
+    },
+    {
+      "config": {
+        "name": "OUTPUT",
+        "policy": "ACCEPT",
+        "logDefault": false
+      },
+      "rules": [
+        {
+          "id": 30000,
+          "target": "LOCAL_WAN",
+          "description": "LOCAL_WAN jump (interface: eth8)",
+          "log": false,
+          "outInterface": {
+            "id": "eth8"
+          },
+          "ipVersion": "both",
+          "triggerTag": {
+            "id": "684bcfb36a681001d80ca61d",
+            "type": "PREDEFINED_FIREWALL_RULE"
+          },
+          "originId": "684bcfb36a681001d80ca61d"
+        },
+        {
+          "id": 30001,
+          "target": "LOCAL_LAN",
+          "description": "LOCAL_LAN jump (interface: br0)",
+          "log": false,
+          "outInterface": {
+            "id": "br0"
+          },
+          "ipVersion": "both",
+          "triggerTag": {
+            "id": "684bcfb46a681001d80ca64a",
+            "type": "PREDEFINED_FIREWALL_RULE"
+          },
+          "originId": "684bcfb46a681001d80ca64a"
+        },
+        {
+          "id": 30002,
+          "target": "LOCAL_LAN",
+          "description": "LOCAL_LAN jump (interface: br100)",
+          "log": false,
+          "outInterface": {
+            "id": "br100"
+          },
+          "ipVersion": "both",
+          "triggerTag": {
+            "id": "684bcfb46a681001d80ca63e",
+            "type": "PREDEFINED_FIREWALL_RULE"
+          },
+          "originId": "684bcfb46a681001d80ca63e"
+        },
+        {
+          "id": 30003,
+          "target": "LOCAL_LAN",
+          "description": "LOCAL_LAN jump (interface: br110)",
+          "log": false,
+          "outInterface": {
+            "id": "br110"
+          },
+          "ipVersion": "both",
+          "triggerTag": {
+            "id": "684bcfb46a681001d80ca633",
+            "type": "PREDEFINED_FIREWALL_RULE"
+          },
+          "originId": "684bcfb46a681001d80ca633"
+        },
+        {
+          "id": 30004,
+          "target": "LOCAL_LAN",
+          "description": "LOCAL_LAN jump (interface: br120)",
+          "log": false,
+          "outInterface": {
+            "id": "br120"
+          },
+          "ipVersion": "both",
+          "triggerTag": {
+            "id": "684bcfb46a681001d80ca635",
+            "type": "PREDEFINED_FIREWALL_RULE"
+          },
+          "originId": "684bcfb46a681001d80ca635"
+        },
+        {
+          "id": 30005,
+          "target": "LOCAL_LAN",
+          "description": "LOCAL_LAN jump (interface: br130)",
+          "log": false,
+          "outInterface": {
+            "id": "br130"
+          },
+          "ipVersion": "both",
+          "triggerTag": {
+            "id": "684bcfb46a681001d80ca63b",
+            "type": "PREDEFINED_FIREWALL_RULE"
+          },
+          "originId": "684bcfb46a681001d80ca63b"
+        },
+        {
+          "id": 30006,
+          "target": "LOCAL_GUEST",
+          "description": "LOCAL_GUEST jump (interface: br140)",
+          "log": false,
+          "outInterface": {
+            "id": "br140"
+          },
+          "ipVersion": "both",
+          "triggerTag": {
+            "id": "684bcfb36a681001d80ca620",
+            "type": "PREDEFINED_FIREWALL_RULE"
+          },
+          "originId": "684bcfb36a681001d80ca620"
+        },
+        {
+          "id": 30007,
+          "target": "LOCAL_LAN",
+          "description": "LOCAL_LAN jump (interface: br150)",
+          "log": false,
+          "outInterface": {
+            "id": "br150"
+          },
+          "ipVersion": "both",
+          "triggerTag": {
+            "id": "684bcfb46a681001d80ca648",
+            "type": "PREDEFINED_FIREWALL_RULE"
+          },
+          "originId": "684bcfb46a681001d80ca648"
+        },
+        {
+          "id": 30008,
+          "target": "LOCAL_LAN",
+          "description": "LOCAL_LAN jump (interface: br151)",
+          "log": false,
+          "outInterface": {
+            "id": "br151"
+          },
+          "ipVersion": "both",
+          "triggerTag": {
+            "id": "684bcfb46a681001d80ca638",
+            "type": "PREDEFINED_FIREWALL_RULE"
+          },
+          "originId": "684bcfb46a681001d80ca638"
+        },
+        {
+          "id": 30009,
+          "target": "LOCAL_LAN",
+          "description": "LOCAL_LAN jump (interface: br152)",
+          "log": false,
+          "outInterface": {
+            "id": "br152"
+          },
+          "ipVersion": "both",
+          "triggerTag": {
+            "id": "684bcfb46a681001d80ca64c",
+            "type": "PREDEFINED_FIREWALL_RULE"
+          },
+          "originId": "684bcfb46a681001d80ca64c"
+        },
+        {
+          "id": 30010,
+          "target": "LOCAL_LAN",
+          "description": "LOCAL_LAN jump (interface: br153)",
+          "log": false,
+          "outInterface": {
+            "id": "br153"
+          },
+          "ipVersion": "both",
+          "triggerTag": {
+            "id": "684bcfb46a681001d80ca650",
+            "type": "PREDEFINED_FIREWALL_RULE"
+          },
+          "originId": "684bcfb46a681001d80ca650"
+        },
+        {
+          "id": 30011,
+          "target": "LOCAL_LAN",
+          "description": "LOCAL_LAN jump (interface: br154)",
+          "log": false,
+          "outInterface": {
+            "id": "br154"
+          },
+          "ipVersion": "both",
+          "triggerTag": {
+            "id": "684bcfb46a681001d80ca639",
+            "type": "PREDEFINED_FIREWALL_RULE"
+          },
+          "originId": "684bcfb46a681001d80ca639"
+        },
+        {
+          "id": 30012,
+          "target": "LOCAL_LAN",
+          "description": "LOCAL_LAN jump (interface: br155)",
+          "log": false,
+          "outInterface": {
+            "id": "br155"
+          },
+          "ipVersion": "both",
+          "triggerTag": {
+            "id": "684bcfb46a681001d80ca62a",
+            "type": "PREDEFINED_FIREWALL_RULE"
+          },
+          "originId": "684bcfb46a681001d80ca62a"
+        },
+        {
+          "id": 30013,
+          "target": "LOCAL_DMZ",
+          "description": "LOCAL_DMZ jump (interface: br160)",
+          "log": false,
+          "outInterface": {
+            "id": "br160"
+          },
+          "ipVersion": "both",
+          "triggerTag": {
+            "id": "68ea64f91b11c129cb0cad01",
+            "type": "PREDEFINED_FIREWALL_RULE"
+          },
+          "originId": "68ea64f91b11c129cb0cad01"
+        },
+        {
+          "id": 30014,
+          "target": "LOCAL_VPN",
+          "negateInInterface": false,
+          "negateOutInterface": false,
+          "description": "Forward WIREGUARD_SERVER traffic to LOCAL_VPN",
+          "log": false,
+          "protocol": "all",
+          "connectionState": [],
+          "outInterface": {
+            "id": "wgsrv+"
+          },
+          "ipVersion": "both",
+          "triggerTag": {
+            "id": "684bcfb46a681001d80ca65a",
+            "type": "PREDEFINED_FIREWALL_RULE"
+          },
+          "originId": "684bcfb46a681001d80ca65a"
+        },
+        {
+          "id": 30015,
+          "target": "LOCAL_VPN",
+          "negateInInterface": false,
+          "negateOutInterface": false,
+          "description": "Forward TELEPORT traffic to LOCAL_VPN",
+          "log": false,
+          "protocol": "all",
+          "connectionState": [],
+          "outInterface": {
+            "id": "tlprt+"
+          },
+          "ipVersion": "both",
+          "triggerTag": {
+            "id": "684bcfb46a681001d80ca65c",
+            "type": "PREDEFINED_FIREWALL_RULE"
+          },
+          "originId": "684bcfb46a681001d80ca65c"
+        }
+      ]
+    },
+    {
+      "config": {
+        "name": "LOCAL_WAN",
+        "logDefault": false
+      },
+      "rules": [
+        {
+          "id": 2147483647,
+          "target": "ACCEPT",
+          "description": "[LOCAL_WAN]Allow All Traffic",
+          "log": false,
+          "ipVersion": "both",
+          "triggerTag": {
+            "id": "684bcfb46a681001d80ca669",
+            "type": "PREDEFINED_FIREWALL_RULE"
+          },
+          "originId": "684bcfb46a681001d80ca669"
+        }
+      ]
+    },
+    {
+      "config": {
+        "name": "LOCAL_LAN",
+        "logDefault": false
+      },
+      "rules": [
+        {
+          "id": 2147483647,
+          "target": "ACCEPT",
+          "description": "[LOCAL_LAN]Allow All Traffic",
+          "log": false,
+          "ipVersion": "both",
+          "triggerTag": {
+            "id": "684bcfb46a681001d80ca688",
+            "type": "PREDEFINED_FIREWALL_RULE"
+          },
+          "originId": "684bcfb46a681001d80ca688"
+        }
+      ]
+    },
+    {
+      "config": {
+        "name": "LOCAL_GUEST",
+        "logDefault": false
+      },
+      "rules": [
+        {
+          "id": 2147483647,
+          "target": "ACCEPT",
+          "description": "[LOCAL_GUEST]Allow All Traffic",
+          "log": false,
+          "ipVersion": "both",
+          "triggerTag": {
+            "id": "684bcfb46a681001d80ca6d4",
+            "type": "PREDEFINED_FIREWALL_RULE"
+          },
+          "originId": "684bcfb46a681001d80ca6d4"
+        }
+      ]
+    },
+    {
+      "config": {
+        "name": "LOCAL_VPN",
+        "logDefault": false
+      },
+      "rules": [
+        {
+          "id": 2147483647,
+          "target": "ACCEPT",
+          "description": "[LOCAL_VPN]Allow All Traffic",
+          "log": false,
+          "ipVersion": "both",
+          "triggerTag": {
+            "id": "684bcfb46a681001d80ca6f0",
+            "type": "PREDEFINED_FIREWALL_RULE"
+          },
+          "originId": "684bcfb46a681001d80ca6f0"
+        }
+      ]
+    },
+    {
+      "config": {
+        "name": "LOCAL_DMZ",
+        "logDefault": false
+      },
+      "rules": [
+        {
+          "id": 2147483647,
+          "target": "ACCEPT",
+          "description": "[LOCAL_DMZ]Allow All Traffic",
+          "log": false,
+          "ipVersion": "both",
+          "triggerTag": {
+            "id": "684bcfb46a681001d80ca6fa",
+            "type": "PREDEFINED_FIREWALL_RULE"
+          },
+          "originId": "684bcfb46a681001d80ca6fa"
+        }
+      ]
+    },
+    {
+      "config": {
+        "name": "FORWARD",
+        "policy": "ACCEPT",
+        "logDefault": false
+      },
+      "rules": [
+        {
+          "id": 30000,
+          "target": "FORWARD_IN",
+          "description": "FORWARD_IN jump",
+          "log": false,
+          "ipVersion": "both",
+          "triggerTag": {
+            "id": "684bcfb46a681001d80ca655",
+            "type": "PREDEFINED_FIREWALL_RULE"
+          },
+          "originId": "684bcfb46a681001d80ca655"
+        }
+      ]
+    },
+    {
+      "config": {
+        "name": "FORWARD_IN",
+        "logDefault": false
+      },
+      "rules": [
+        {
+          "id": 30000,
+          "target": "WAN_PF_IN",
+          "description": "WAN_IN_PF jump (interface: eth8)",
+          "log": false,
+          "inInterface": {
+            "id": "eth8"
+          },
+          "ipVersion": "both",
+          "triggerTag": {
+            "id": "68f339025209c60a8c69d823",
+            "type": "PREDEFINED_FIREWALL_RULE"
+          },
+          "originId": "68f339025209c60a8c69d823"
+        },
+        {
+          "id": 30001,
+          "target": "WAN_IN",
+          "description": "WAN_IN jump (interface: eth8)",
+          "log": false,
+          "inInterface": {
+            "id": "eth8"
+          },
+          "ipVersion": "both",
+          "triggerTag": {
+            "id": "684bcfb36a681001d80ca61e",
+            "type": "PREDEFINED_FIREWALL_RULE"
+          },
+          "originId": "684bcfb36a681001d80ca61e"
+        },
+        {
+          "id": 30002,
+          "target": "LAN_IN",
+          "description": "LAN_IN jump (interface: br0)",
+          "log": false,
+          "inInterface": {
+            "id": "br0"
+          },
+          "ipVersion": "both",
+          "triggerTag": {
+            "id": "684bcfb46a681001d80ca643",
+            "type": "PREDEFINED_FIREWALL_RULE"
+          },
+          "originId": "684bcfb46a681001d80ca643"
+        },
+        {
+          "id": 30003,
+          "target": "LAN_IN",
+          "description": "LAN_IN jump (interface: br100)",
+          "log": false,
+          "inInterface": {
+            "id": "br100"
+          },
+          "ipVersion": "both",
+          "triggerTag": {
+            "id": "684bcfb46a681001d80ca62c",
+            "type": "PREDEFINED_FIREWALL_RULE"
+          },
+          "originId": "684bcfb46a681001d80ca62c"
+        },
+        {
+          "id": 30004,
+          "target": "LAN_IN",
+          "description": "LAN_IN jump (interface: br110)",
+          "log": false,
+          "inInterface": {
+            "id": "br110"
+          },
+          "ipVersion": "both",
+          "triggerTag": {
+            "id": "684bcfb46a681001d80ca629",
+            "type": "PREDEFINED_FIREWALL_RULE"
+          },
+          "originId": "684bcfb46a681001d80ca629"
+        },
+        {
+          "id": 30005,
+          "target": "LAN_IN",
+          "description": "LAN_IN jump (interface: br120)",
+          "log": false,
+          "inInterface": {
+            "id": "br120"
+          },
+          "ipVersion": "both",
+          "triggerTag": {
+            "id": "684bcfb46a681001d80ca651",
+            "type": "PREDEFINED_FIREWALL_RULE"
+          },
+          "originId": "684bcfb46a681001d80ca651"
+        },
+        {
+          "id": 30006,
+          "target": "LAN_IN",
+          "description": "LAN_IN jump (interface: br130)",
+          "log": false,
+          "inInterface": {
+            "id": "br130"
+          },
+          "ipVersion": "both",
+          "triggerTag": {
+            "id": "684bcfb46a681001d80ca647",
+            "type": "PREDEFINED_FIREWALL_RULE"
+          },
+          "originId": "684bcfb46a681001d80ca647"
+        },
+        {
+          "id": 30007,
+          "target": "GUEST_IN",
+          "description": "GUEST_IN jump (interface: br140)",
+          "log": false,
+          "inInterface": {
+            "id": "br140"
+          },
+          "ipVersion": "both",
+          "triggerTag": {
+            "id": "684bcfb46a681001d80ca642",
+            "type": "PREDEFINED_FIREWALL_RULE"
+          },
+          "originId": "684bcfb46a681001d80ca642"
+        },
+        {
+          "id": 30008,
+          "target": "LAN_IN",
+          "description": "LAN_IN jump (interface: br150)",
+          "log": false,
+          "inInterface": {
+            "id": "br150"
+          },
+          "ipVersion": "both",
+          "triggerTag": {
+            "id": "684bcfb46a681001d80ca645",
+            "type": "PREDEFINED_FIREWALL_RULE"
+          },
+          "originId": "684bcfb46a681001d80ca645"
+        },
+        {
+          "id": 30009,
+          "target": "LAN_IN",
+          "description": "LAN_IN jump (interface: br151)",
+          "log": false,
+          "inInterface": {
+            "id": "br151"
+          },
+          "ipVersion": "both",
+          "triggerTag": {
+            "id": "684bcfb46a681001d80ca64d",
+            "type": "PREDEFINED_FIREWALL_RULE"
+          },
+          "originId": "684bcfb46a681001d80ca64d"
+        },
+        {
+          "id": 30010,
+          "target": "LAN_IN",
+          "description": "LAN_IN jump (interface: br152)",
+          "log": false,
+          "inInterface": {
+            "id": "br152"
+          },
+          "ipVersion": "both",
+          "triggerTag": {
+            "id": "684bcfb46a681001d80ca63c",
+            "type": "PREDEFINED_FIREWALL_RULE"
+          },
+          "originId": "684bcfb46a681001d80ca63c"
+        },
+        {
+          "id": 30011,
+          "target": "LAN_IN",
+          "description": "LAN_IN jump (interface: br153)",
+          "log": false,
+          "inInterface": {
+            "id": "br153"
+          },
+          "ipVersion": "both",
+          "triggerTag": {
+            "id": "684bcfb46a681001d80ca62e",
+            "type": "PREDEFINED_FIREWALL_RULE"
+          },
+          "originId": "684bcfb46a681001d80ca62e"
+        },
+        {
+          "id": 30012,
+          "target": "LAN_IN",
+          "description": "LAN_IN jump (interface: br154)",
+          "log": false,
+          "inInterface": {
+            "id": "br154"
+          },
+          "ipVersion": "both",
+          "triggerTag": {
+            "id": "684bcfb46a681001d80ca637",
+            "type": "PREDEFINED_FIREWALL_RULE"
+          },
+          "originId": "684bcfb46a681001d80ca637"
+        },
+        {
+          "id": 30013,
+          "target": "LAN_IN",
+          "description": "LAN_IN jump (interface: br155)",
+          "log": false,
+          "inInterface": {
+            "id": "br155"
+          },
+          "ipVersion": "both",
+          "triggerTag": {
+            "id": "684bcfb46a681001d80ca653",
+            "type": "PREDEFINED_FIREWALL_RULE"
+          },
+          "originId": "684bcfb46a681001d80ca653"
+        },
+        {
+          "id": 30014,
+          "target": "DMZ_IN",
+          "description": "DMZ_IN jump (interface: br160)",
+          "log": false,
+          "inInterface": {
+            "id": "br160"
+          },
+          "ipVersion": "both",
+          "triggerTag": {
+            "id": "68ea64f91b11c129cb0cacff",
+            "type": "PREDEFINED_FIREWALL_RULE"
+          },
+          "originId": "68ea64f91b11c129cb0cacff"
+        },
+        {
+          "id": 30015,
+          "target": "VPN_IN",
+          "negateInInterface": false,
+          "negateOutInterface": false,
+          "description": "VPN_IN jump (interface: wgsrv+) ",
+          "log": false,
+          "protocol": "all",
+          "connectionState": [],
+          "inInterface": {
+            "id": "wgsrv+"
+          },
+          "ipVersion": "both",
+          "triggerTag": {
+            "id": "684bcfb46a681001d80ca65d",
+            "type": "PREDEFINED_FIREWALL_RULE"
+          },
+          "originId": "684bcfb46a681001d80ca65d"
+        },
+        {
+          "id": 30016,
+          "target": "VPN_IN",
+          "negateInInterface": false,
+          "negateOutInterface": false,
+          "description": "VPN_IN jump (interface: tlprt+) ",
+          "log": false,
+          "protocol": "all",
+          "connectionState": [],
+          "inInterface": {
+            "id": "tlprt+"
+          },
+          "ipVersion": "both",
+          "triggerTag": {
+            "id": "684bcfb46a681001d80ca657",
+            "type": "PREDEFINED_FIREWALL_RULE"
+          },
+          "originId": "684bcfb46a681001d80ca657"
+        }
+      ]
+    },
+    {
+      "config": {
+        "name": "FORWARD_OUT",
+        "logDefault": false
+      },
+      "rules": [
+        {
+          "id": 30000,
+          "target": "WAN_PF_OUT",
+          "description": "WAN_OUT_PF jump (interface: eth8)",
+          "log": false,
+          "outInterface": {
+            "id": "eth8"
+          },
+          "ipVersion": "both",
+          "triggerTag": {
+            "id": "68f339025209c60a8c69d824",
+            "type": "PREDEFINED_FIREWALL_RULE"
+          },
+          "originId": "68f339025209c60a8c69d824"
+        }
+      ]
+    },
+    {
+      "config": {
+        "name": "WAN_IN",
+        "logDefault": false
+      },
+      "rules": [
+        {
+          "id": 30000,
+          "target": "WAN_DMZ",
+          "description": "WAN_DMZ jump ",
+          "log": false,
+          "protocol": "all",
+          "destination": {
+            "sets": [
+              "DMZ_subnets"
+            ]
+          },
+          "ipVersion": "both",
+          "triggerTag": {
+            "id": "684bcfb46a681001d80ca66e",
+            "type": "PREDEFINED_FIREWALL_RULE"
+          },
+          "originId": "684bcfb46a681001d80ca66e"
+        },
+        {
+          "id": 30001,
+          "target": "WAN_GUEST",
+          "description": "WAN_GUEST jump ",
+          "log": false,
+          "protocol": "all",
+          "destination": {
+            "sets": [
+              "GUEST_subnets"
+            ]
+          },
+          "ipVersion": "both",
+          "triggerTag": {
+            "id": "684bcfb46a681001d80ca66b",
+            "type": "PREDEFINED_FIREWALL_RULE"
+          },
+          "originId": "684bcfb46a681001d80ca66b"
+        },
+        {
+          "id": 30002,
+          "target": "WAN_LAN",
+          "description": "WAN_LAN jump ",
+          "log": false,
+          "protocol": "all",
+          "destination": {
+            "sets": [
+              "LAN_subnets"
+            ]
+          },
+          "ipVersion": "both",
+          "triggerTag": {
+            "id": "684bcfb46a681001d80ca670",
+            "type": "PREDEFINED_FIREWALL_RULE"
+          },
+          "originId": "684bcfb46a681001d80ca670"
+        },
+        {
+          "id": 30003,
+          "target": "WAN_VPN",
+          "description": "WAN_VPN jump ",
+          "log": false,
+          "protocol": "all",
+          "destination": {
+            "sets": [
+              "VPN_subnets"
+            ]
+          },
+          "ipVersion": "both",
+          "triggerTag": {
+            "id": "684bcfb46a681001d80ca66f",
+            "type": "PREDEFINED_FIREWALL_RULE"
+          },
+          "originId": "684bcfb46a681001d80ca66f"
+        },
+        {
+          "id": 30004,
+          "target": "WAN_WAN",
+          "description": "WAN_WAN jump ",
+          "log": false,
+          "protocol": "all",
+          "destination": {
+            "sets": [
+              "!local_zoned_subnets"
+            ]
+          },
+          "ipVersion": "both",
+          "triggerTag": {
+            "id": "684bcfb46a681001d80ca66c",
+            "type": "PREDEFINED_FIREWALL_RULE"
+          },
+          "originId": "684bcfb46a681001d80ca66c"
+        },
+        {
+          "id": 30005,
+          "target": "ACCEPT",
+          "description": "[WAN_IN]Allow Return Traffic",
+          "log": false,
+          "connectionState": [
+            "established",
+            "related"
+          ],
+          "ipVersion": "both",
+          "triggerTag": {
+            "id": "684bcfb46a681001d80ca673",
+            "type": "PREDEFINED_FIREWALL_RULE"
+          },
+          "originId": "684bcfb46a681001d80ca673"
+        },
+        {
+          "id": 2147483647,
+          "target": "DROP",
+          "description": "[WAN_IN]Block All Traffic",
+          "log": false,
+          "ipVersion": "both"
+        }
+      ]
+    },
+    {
+      "config": {
+        "name": "WAN_DMZ",
+        "logDefault": false
+      },
+      "rules": [
+        {
+          "id": 30000,
+          "target": "ACCEPT",
+          "description": "[WAN_DMZ]Allow Port Forward Minecraft External",
+          "log": false,
+          "protocol": "tcp",
+          "source": {},
+          "destination": {
+            "address": "192.168.160.4",
+            "port": "25565"
+          },
+          "connectionState": [
+            "new"
+          ],
+          "ipVersion": "v4only",
+          "triggerTag": {
+            "id": "68f339025209c60a8c69d827",
+            "type": "PREDEFINED_FIREWALL_RULE"
+          },
+          "originId": "68f339025209c60a8c69d827"
+        },
+        {
+          "id": 30001,
+          "target": "ACCEPT",
+          "description": "[WAN_DMZ]Allow Port Forward haproxydmz-VIP-HTTP",
+          "log": false,
+          "protocol": "tcp",
+          "source": {},
+          "destination": {
+            "address": "192.168.160.4",
+            "port": "80"
+          },
+          "connectionState": [
+            "new"
+          ],
+          "ipVersion": "v4only",
+          "triggerTag": {
+            "id": "69168f275209c60a8c2f3210",
+            "type": "PREDEFINED_FIREWALL_RULE"
+          },
+          "originId": "69168f275209c60a8c2f3210"
+        },
+        {
+          "id": 30002,
+          "target": "ACCEPT",
+          "description": "[WAN_DMZ]Allow Port Forward haproxydmz-VIP-HTTPS",
+          "log": false,
+          "protocol": "tcp",
+          "source": {},
+          "destination": {
+            "address": "192.168.160.4",
+            "port": "443"
+          },
+          "connectionState": [
+            "new"
+          ],
+          "ipVersion": "v4only",
+          "triggerTag": {
+            "id": "69168f405209c60a8c2f326a",
+            "type": "PREDEFINED_FIREWALL_RULE"
+          },
+          "originId": "69168f405209c60a8c2f326a"
+        },
+        {
+          "id": 30003,
+          "target": "ACCEPT",
+          "description": "[WAN_DMZ]Allow Return Traffic",
+          "log": false,
+          "connectionState": [
+            "established",
+            "related"
+          ],
+          "ipVersion": "both",
+          "triggerTag": {
+            "id": "684bcfb46a681001d80ca676",
+            "type": "PREDEFINED_FIREWALL_RULE"
+          },
+          "originId": "684bcfb46a681001d80ca676"
+        },
+        {
+          "id": 30004,
+          "target": "DROP",
+          "description": "[WAN_DMZ]Block Invalid Traffic",
+          "log": false,
+          "connectionState": [
+            "invalid"
+          ],
+          "ipVersion": "both",
+          "triggerTag": {
+            "id": "684bcfb46a681001d80ca683",
+            "type": "PREDEFINED_FIREWALL_RULE"
+          },
+          "originId": "684bcfb46a681001d80ca683"
+        },
+        {
+          "id": 2147483647,
+          "target": "DROP",
+          "description": "[WAN_DMZ]Block All Traffic",
+          "log": false,
+          "ipVersion": "both",
+          "triggerTag": {
+            "id": "684bcfb46a681001d80ca681",
+            "type": "PREDEFINED_FIREWALL_RULE"
+          },
+          "originId": "684bcfb46a681001d80ca681"
+        }
+      ]
+    },
+    {
+      "config": {
+        "name": "WAN_GUEST",
+        "logDefault": false
+      },
+      "rules": [
+        {
+          "id": 30000,
+          "target": "ACCEPT",
+          "description": "[WAN_GUEST]Allow Return Traffic",
+          "log": false,
+          "connectionState": [
+            "established",
+            "related"
+          ],
+          "ipVersion": "both",
+          "triggerTag": {
+            "id": "684bcfb46a681001d80ca677",
+            "type": "PREDEFINED_FIREWALL_RULE"
+          },
+          "originId": "684bcfb46a681001d80ca677"
+        },
+        {
+          "id": 30001,
+          "target": "DROP",
+          "description": "[WAN_GUEST]Block Invalid Traffic",
+          "log": false,
+          "connectionState": [
+            "invalid"
+          ],
+          "ipVersion": "both",
+          "triggerTag": {
+            "id": "684bcfb46a681001d80ca684",
+            "type": "PREDEFINED_FIREWALL_RULE"
+          },
+          "originId": "684bcfb46a681001d80ca684"
+        },
+        {
+          "id": 2147483647,
+          "target": "DROP",
+          "description": "[WAN_GUEST]Block All Traffic",
+          "log": false,
+          "ipVersion": "both",
+          "triggerTag": {
+            "id": "684bcfb46a681001d80ca67b",
+            "type": "PREDEFINED_FIREWALL_RULE"
+          },
+          "originId": "684bcfb46a681001d80ca67b"
+        }
+      ]
+    },
+    {
+      "config": {
+        "name": "WAN_LAN",
+        "logDefault": false
+      },
+      "rules": [
+        {
+          "id": 30000,
+          "target": "ACCEPT",
+          "description": "[WAN_LAN]Allow Return Traffic",
+          "log": false,
+          "connectionState": [
+            "established",
+            "related"
+          ],
+          "ipVersion": "both",
+          "triggerTag": {
+            "id": "684bcfb46a681001d80ca674",
+            "type": "PREDEFINED_FIREWALL_RULE"
+          },
+          "originId": "684bcfb46a681001d80ca674"
+        },
+        {
+          "id": 30001,
+          "target": "DROP",
+          "description": "[WAN_LAN]Block Invalid Traffic",
+          "log": false,
+          "connectionState": [
+            "invalid"
+          ],
+          "ipVersion": "both",
+          "triggerTag": {
+            "id": "684bcfb46a681001d80ca680",
+            "type": "PREDEFINED_FIREWALL_RULE"
+          },
+          "originId": "684bcfb46a681001d80ca680"
+        },
+        {
+          "id": 2147483647,
+          "target": "DROP",
+          "description": "[WAN_LAN]Block All Traffic",
+          "log": false,
+          "ipVersion": "both",
+          "triggerTag": {
+            "id": "684bcfb46a681001d80ca67f",
+            "type": "PREDEFINED_FIREWALL_RULE"
+          },
+          "originId": "684bcfb46a681001d80ca67f"
+        }
+      ]
+    },
+    {
+      "config": {
+        "name": "WAN_VPN",
+        "logDefault": false
+      },
+      "rules": [
+        {
+          "id": 30000,
+          "target": "ACCEPT",
+          "description": "[WAN_VPN]Allow Return Traffic",
+          "log": false,
+          "connectionState": [
+            "established",
+            "related"
+          ],
+          "ipVersion": "both",
+          "triggerTag": {
+            "id": "684bcfb46a681001d80ca678",
+            "type": "PREDEFINED_FIREWALL_RULE"
+          },
+          "originId": "684bcfb46a681001d80ca678"
+        },
+        {
+          "id": 30001,
+          "target": "DROP",
+          "description": "[WAN_VPN]Block Invalid Traffic",
+          "log": false,
+          "connectionState": [
+            "invalid"
+          ],
+          "ipVersion": "both",
+          "triggerTag": {
+            "id": "684bcfb46a681001d80ca685",
+            "type": "PREDEFINED_FIREWALL_RULE"
+          },
+          "originId": "684bcfb46a681001d80ca685"
+        },
+        {
+          "id": 2147483647,
+          "target": "DROP",
+          "description": "[WAN_VPN]Block All Traffic",
+          "log": false,
+          "ipVersion": "both",
+          "triggerTag": {
+            "id": "684bcfb46a681001d80ca67c",
+            "type": "PREDEFINED_FIREWALL_RULE"
+          },
+          "originId": "684bcfb46a681001d80ca67c"
+        }
+      ]
+    },
+    {
+      "config": {
+        "name": "WAN_WAN",
+        "logDefault": false
+      },
+      "rules": [
+        {
+          "id": 30000,
+          "target": "ACCEPT",
+          "description": "[WAN_WAN]Allow Return Traffic",
+          "log": false,
+          "connectionState": [
+            "established",
+            "related"
+          ],
+          "ipVersion": "both",
+          "triggerTag": {
+            "id": "684bcfb46a681001d80ca67a",
+            "type": "PREDEFINED_FIREWALL_RULE"
+          },
+          "originId": "684bcfb46a681001d80ca67a"
+        },
+        {
+          "id": 30001,
+          "target": "DROP",
+          "description": "[WAN_WAN]Block Invalid Traffic",
+          "log": false,
+          "connectionState": [
+            "invalid"
+          ],
+          "ipVersion": "both",
+          "triggerTag": {
+            "id": "684bcfb46a681001d80ca67e",
+            "type": "PREDEFINED_FIREWALL_RULE"
+          },
+          "originId": "684bcfb46a681001d80ca67e"
+        },
+        {
+          "id": 2147483647,
+          "target": "DROP",
+          "description": "[WAN_WAN]Block All Traffic",
+          "log": false,
+          "ipVersion": "both",
+          "triggerTag": {
+            "id": "684bcfb46a681001d80ca682",
+            "type": "PREDEFINED_FIREWALL_RULE"
+          },
+          "originId": "684bcfb46a681001d80ca682"
+        }
+      ]
+    },
+    {
+      "config": {
+        "name": "LAN_IN",
+        "logDefault": false
+      },
+      "rules": [
+        {
+          "id": 30000,
+          "target": "LAN_DMZ",
+          "description": "LAN_DMZ jump ",
+          "log": false,
+          "protocol": "all",
+          "destination": {
+            "sets": [
+              "DMZ_subnets"
+            ]
+          },
+          "ipVersion": "both",
+          "triggerTag": {
+            "id": "684bcfb46a681001d80ca6a4",
+            "type": "PREDEFINED_FIREWALL_RULE"
+          },
+          "originId": "684bcfb46a681001d80ca6a4"
+        },
+        {
+          "id": 30001,
+          "target": "LAN_GUEST",
+          "description": "LAN_GUEST jump ",
+          "log": false,
+          "protocol": "all",
+          "destination": {
+            "sets": [
+              "GUEST_subnets"
+            ]
+          },
+          "ipVersion": "both",
+          "triggerTag": {
+            "id": "684bcfb46a681001d80ca6a6",
+            "type": "PREDEFINED_FIREWALL_RULE"
+          },
+          "originId": "684bcfb46a681001d80ca6a6"
+        },
+        {
+          "id": 30002,
+          "target": "LAN_LAN",
+          "description": "LAN_LAN jump ",
+          "log": false,
+          "protocol": "all",
+          "destination": {
+            "sets": [
+              "LAN_subnets"
+            ]
+          },
+          "ipVersion": "both",
+          "triggerTag": {
+            "id": "684bcfb46a681001d80ca6a0",
+            "type": "PREDEFINED_FIREWALL_RULE"
+          },
+          "originId": "684bcfb46a681001d80ca6a0"
+        },
+        {
+          "id": 30003,
+          "target": "LAN_VPN",
+          "description": "LAN_VPN jump ",
+          "log": false,
+          "protocol": "all",
+          "destination": {
+            "sets": [
+              "VPN_subnets"
+            ]
+          },
+          "ipVersion": "both",
+          "triggerTag": {
+            "id": "684bcfb46a681001d80ca695",
+            "type": "PREDEFINED_FIREWALL_RULE"
+          },
+          "originId": "684bcfb46a681001d80ca695"
+        },
+        {
+          "id": 30004,
+          "target": "LAN_WAN",
+          "description": "LAN_WAN jump ",
+          "log": false,
+          "protocol": "all",
+          "destination": {
+            "sets": [
+              "!local_zoned_subnets"
+            ]
+          },
+          "ipVersion": "both",
+          "triggerTag": {
+            "id": "684bcfb46a681001d80ca6a7",
+            "type": "PREDEFINED_FIREWALL_RULE"
+          },
+          "originId": "684bcfb46a681001d80ca6a7"
+        },
+        {
+          "id": 30005,
+          "target": "ACCEPT",
+          "description": "[LAN_IN]Allow Return Traffic",
+          "log": false,
+          "connectionState": [
+            "established",
+            "related"
+          ],
+          "ipVersion": "both",
+          "triggerTag": {
+            "id": "684bcfb46a681001d80ca6b6",
+            "type": "PREDEFINED_FIREWALL_RULE"
+          },
+          "originId": "684bcfb46a681001d80ca6b6"
+        },
+        {
+          "id": 2147483647,
+          "target": "DROP",
+          "description": "[LAN_IN]Block All Traffic",
+          "log": false,
+          "ipVersion": "both",
+          "triggerTag": {
+            "id": "684bcfb46a681001d80ca6bc",
+            "type": "PREDEFINED_FIREWALL_RULE"
+          },
+          "originId": "684bcfb46a681001d80ca6bc"
+        }
+      ]
+    },
+    {
+      "config": {
+        "name": "LAN_DMZ",
+        "logDefault": false
+      },
+      "rules": [
+        {
+          "id": 30000,
+          "target": "ACCEPT",
+          "description": "Allow DMZ -[DNS]> Pihole (Return)",
+          "protocol": "tcp_udp",
+          "source": {
+            "sets": [
+              "671ff353e1099912bd62cbac",
+              "6716b04691c0587604d4a595"
+            ]
+          },
+          "destination": {
+            "sets": [
+              "policy_src_net_55"
+            ]
+          },
+          "connectionState": [
+            "related",
+            "established"
+          ],
+          "ipVersion": "both"
+        },
+        {
+          "id": 30001,
+          "target": "ACCEPT",
+          "description": "Allow haproxydmz -[Minecraft]> k8sworker05 (Return)",
+          "protocol": "tcp_udp",
+          "source": {
+            "sets": [
+              "68f32c065209c60a8c699b96",
+              "692354a5da2cf33f27f262c1"
+            ]
+          },
+          "destination": {
+            "sets": [
+              "68f32b635209c60a8c699866"
+            ]
+          },
+          "connectionState": [
+            "related",
+            "established"
+          ],
+          "ipVersion": "both"
+        },
+        {
+          "id": 30002,
+          "target": "ACCEPT",
+          "description": "Allow haproxydmz -[Bluemap]> k8sworker05 (Return)",
+          "protocol": "all",
+          "source": {
+            "sets": [
+              "690ee53e5209c60a8ce9bbc0",
+              "692354a5da2cf33f27f262c1"
+            ]
+          },
+          "destination": {
+            "sets": [
+              "68f32b635209c60a8c699866"
+            ]
+          },
+          "connectionState": [
+            "related",
+            "established"
+          ],
+          "ipVersion": "both"
+        },
+        {
+          "id": 30004,
+          "target": "DROP",
+          "description": "[LAN_DMZ]Isolated Networks",
+          "log": false,
+          "source": {
+            "sets": [
+              "LAN_isolated_subnets"
+            ]
+          },
+          "ipVersion": "both",
+          "triggerTag": {
+            "id": "684bcfb46a681001d80ca68a",
+            "type": "PREDEFINED_FIREWALL_RULE"
+          },
+          "originId": "684bcfb46a681001d80ca68a"
+        },
+        {
+          "id": 2147483647,
+          "target": "ACCEPT",
+          "description": "[LAN_DMZ]Allow All Traffic",
+          "log": false,
+          "ipVersion": "both",
+          "triggerTag": {
+            "id": "684bcfb46a681001d80ca692",
+            "type": "PREDEFINED_FIREWALL_RULE"
+          },
+          "originId": "684bcfb46a681001d80ca692"
+        }
+      ]
+    },
+    {
+      "config": {
+        "name": "LAN_GUEST",
+        "logDefault": false
+      },
+      "rules": [
+        {
+          "id": 10000,
+          "target": "ACCEPT",
+          "description": "Allow Pihole -[DNS]> Hotspot",
+          "protocol": "tcp_udp",
+          "source": {
+            "sets": [
+              "6716b04691c0587604d4a595"
+            ]
+          },
+          "destination": {
+            "sets": [
+              "671ff353e1099912bd62cbac"
+            ]
+          },
+          "connectionState": [
+            "related",
+            "established"
+          ],
+          "ipVersion": "both"
+        },
+        {
+          "id": 30000,
+          "target": "ACCEPT",
+          "description": "Allow Hotspot -[DNS]> Pihole (Return)",
+          "protocol": "tcp_udp",
+          "source": {
+            "sets": [
+              "671ff353e1099912bd62cbac",
+              "6716b04691c0587604d4a595"
+            ]
+          },
+          "destination": {
+            "sets": [
+              "policy_src_net_9"
+            ]
+          },
+          "connectionState": [
+            "related",
+            "established"
+          ],
+          "ipVersion": "both"
+        },
+        {
+          "id": 30002,
+          "target": "DROP",
+          "description": "[LAN_GUEST]Isolated Networks",
+          "log": false,
+          "source": {
+            "sets": [
+              "LAN_isolated_subnets"
+            ]
+          },
+          "ipVersion": "both",
+          "triggerTag": {
+            "id": "684bcfb46a681001d80ca68e",
+            "type": "PREDEFINED_FIREWALL_RULE"
+          },
+          "originId": "684bcfb46a681001d80ca68e"
+        },
+        {
+          "id": 2147483647,
+          "target": "ACCEPT",
+          "description": "[LAN_GUEST]Allow All Traffic",
+          "log": false,
+          "ipVersion": "both",
+          "triggerTag": {
+            "id": "684bcfb46a681001d80ca694",
+            "type": "PREDEFINED_FIREWALL_RULE"
+          },
+          "originId": "684bcfb46a681001d80ca694"
+        }
+      ]
+    },
+    {
+      "config": {
+        "name": "LAN_LAN",
+        "logDefault": false
+      },
+      "rules": [
+        {
+          "id": 10000,
+          "target": "ACCEPT",
+          "description": "Allow IoT-WLAN -[DNS]> Pihole",
+          "protocol": "tcp_udp",
+          "source": {
+            "sets": [
+              "policy_src_net_8"
+            ]
+          },
+          "destination": {
+            "sets": [
+              "671ff353e1099912bd62cbac",
+              "6716b04691c0587604d4a595"
+            ]
+          },
+          "connectionState": [],
+          "ipVersion": "both"
+        },
+        {
+          "id": 10010,
+          "target": "ACCEPT",
+          "description": "Allow Admin Devices -[ANY]> Management",
+          "protocol": "all",
+          "source": {
+            "sets": [
+              "68dc98911b11c129cb9ce0d4"
+            ]
+          },
+          "destination": {
+            "sets": [
+              "policy_dst_net_16"
+            ]
+          },
+          "connectionState": [],
+          "ipVersion": "both"
+        },
+        {
+          "id": 10021,
+          "target": "ACCEPT",
+          "description": "Allow IoT-WLAN Return  -[ANY]> Internal",
+          "protocol": "all",
+          "source": {
+            "sets": [
+              "policy_src_net_51"
+            ]
+          },
+          "destination": {},
+          "connectionState": [
+            "related",
+            "established"
+          ],
+          "ipVersion": "both"
+        },
+        {
+          "id": 10022,
+          "target": "ACCEPT",
+          "description": "Allow Plex -[PLEX]> IoT-WLAN",
+          "protocol": "tcp_udp",
+          "source": {
+            "sets": [
+              "6717220891c0587604d4b824"
+            ]
+          },
+          "destination": {
+            "sets": [
+              "policy_dst_net_53"
+            ]
+          },
+          "connectionState": [],
+          "ipVersion": "both"
+        },
+        {
+          "id": 10023,
+          "target": "ACCEPT",
+          "description": "Allow IoT-WLAN -[PLEX]> Plex Servers",
+          "protocol": "tcp_udp",
+          "source": {
+            "sets": [
+              "policy_src_net_54"
+            ]
+          },
+          "destination": {
+            "sets": [
+              "671867c1e1099912bd61c5aa",
+              "6717220891c0587604d4b824"
+            ]
+          },
+          "connectionState": [],
+          "ipVersion": "both"
+        },
+        {
+          "id": 30000,
+          "target": "DROP",
+          "description": "[LAN_LAN]Isolated Networks",
+          "log": false,
+          "source": {
+            "sets": [
+              "LAN_isolated_subnets"
+            ]
+          },
+          "ipVersion": "both",
+          "triggerTag": {
+            "id": "684bcfb46a681001d80ca68b",
+            "type": "PREDEFINED_FIREWALL_RULE"
+          },
+          "originId": "684bcfb46a681001d80ca68b"
+        },
+        {
+          "id": 2147483647,
+          "target": "ACCEPT",
+          "description": "[LAN_LAN]Allow All Traffic",
+          "log": false,
+          "ipVersion": "both",
+          "triggerTag": {
+            "id": "684bcfb46a681001d80ca693",
+            "type": "PREDEFINED_FIREWALL_RULE"
+          },
+          "originId": "684bcfb46a681001d80ca693"
+        }
+      ]
+    },
+    {
+      "config": {
+        "name": "LAN_VPN",
+        "logDefault": false
+      },
+      "rules": [
+        {
+          "id": 30000,
+          "target": "ACCEPT",
+          "description": "Allow VPN -[DNS]> Pihole (Return)",
+          "protocol": "tcp_udp",
+          "source": {
+            "sets": [
+              "671ff353e1099912bd62cbac",
+              "6716b04691c0587604d4a595"
+            ]
+          },
+          "destination": {},
+          "connectionState": [
+            "related",
+            "established"
+          ],
+          "ipVersion": "both"
+        },
+        {
+          "id": 2147483647,
+          "target": "ACCEPT",
+          "description": "[LAN_VPN]Allow All Traffic",
+          "log": false,
+          "ipVersion": "both",
+          "triggerTag": {
+            "id": "684bcfb46a681001d80ca68f",
+            "type": "PREDEFINED_FIREWALL_RULE"
+          },
+          "originId": "684bcfb46a681001d80ca68f"
+        }
+      ]
+    },
+    {
+      "config": {
+        "name": "LAN_WAN",
+        "logDefault": false
+      },
+      "rules": [
+        {
+          "id": 10000,
+          "target": "ACCEPT",
+          "description": "Allow Pihole -[DNS]> Internet",
+          "protocol": "tcp_udp",
+          "source": {
+            "sets": [
+              "6716b04691c0587604d4a595"
+            ]
+          },
+          "destination": {
+            "sets": [
+              "671ff353e1099912bd62cbac"
+            ]
+          },
+          "connectionState": [],
+          "ipVersion": "both"
+        },
+        {
+          "id": 10002,
+          "target": "REJECT",
+          "description": "Reject Internal -[DNS]> External",
+          "protocol": "tcp_udp",
+          "source": {},
+          "destination": {
+            "sets": [
+              "671ff353e1099912bd62cbac"
+            ]
+          },
+          "connectionState": [],
+          "ipVersion": "both",
+          "triggerTag": {
+            "id": "677f66d52eb59141b1e98769",
+            "type": "FIREWALL_POLICY"
+          }
+        },
+        {
+          "id": 30000,
+          "target": "DROP",
+          "description": "[LAN_WAN]Block Invalid Traffic",
+          "log": false,
+          "connectionState": [
+            "invalid"
+          ],
+          "ipVersion": "both",
+          "triggerTag": {
+            "id": "684bcfb46a681001d80ca68c",
+            "type": "PREDEFINED_FIREWALL_RULE"
+          },
+          "originId": "684bcfb46a681001d80ca68c"
+        },
+        {
+          "id": 2147483647,
+          "target": "ACCEPT",
+          "description": "[LAN_WAN]Allow All Traffic",
+          "log": false,
+          "ipVersion": "both",
+          "triggerTag": {
+            "id": "684bcfb46a681001d80ca690",
+            "type": "PREDEFINED_FIREWALL_RULE"
+          },
+          "originId": "684bcfb46a681001d80ca690"
+        }
+      ]
+    },
+    {
+      "config": {
+        "name": "GUEST_IN",
+        "logDefault": false
+      },
+      "rules": [
+        {
+          "id": 30000,
+          "target": "GUEST_DMZ",
+          "description": "GUEST_DMZ jump ",
+          "log": false,
+          "protocol": "all",
+          "destination": {
+            "sets": [
+              "DMZ_subnets"
+            ]
+          },
+          "ipVersion": "both",
+          "triggerTag": {
+            "id": "684bcfb46a681001d80ca6ae",
+            "type": "PREDEFINED_FIREWALL_RULE"
+          },
+          "originId": "684bcfb46a681001d80ca6ae"
+        },
+        {
+          "id": 30001,
+          "target": "GUEST_GUEST",
+          "description": "GUEST_GUEST jump ",
+          "log": false,
+          "protocol": "all",
+          "destination": {
+            "sets": [
+              "GUEST_subnets"
+            ]
+          },
+          "ipVersion": "both",
+          "triggerTag": {
+            "id": "684bcfb46a681001d80ca6aa",
+            "type": "PREDEFINED_FIREWALL_RULE"
+          },
+          "originId": "684bcfb46a681001d80ca6aa"
+        },
+        {
+          "id": 30002,
+          "target": "GUEST_LAN",
+          "description": "GUEST_LAN jump ",
+          "log": false,
+          "protocol": "all",
+          "destination": {
+            "sets": [
+              "LAN_subnets"
+            ]
+          },
+          "ipVersion": "both",
+          "triggerTag": {
+            "id": "684bcfb46a681001d80ca697",
+            "type": "PREDEFINED_FIREWALL_RULE"
+          },
+          "originId": "684bcfb46a681001d80ca697"
+        },
+        {
+          "id": 30003,
+          "target": "GUEST_VPN",
+          "description": "GUEST_VPN jump ",
+          "log": false,
+          "protocol": "all",
+          "destination": {
+            "sets": [
+              "VPN_subnets"
+            ]
+          },
+          "ipVersion": "both",
+          "triggerTag": {
+            "id": "684bcfb46a681001d80ca69b",
+            "type": "PREDEFINED_FIREWALL_RULE"
+          },
+          "originId": "684bcfb46a681001d80ca69b"
+        },
+        {
+          "id": 30004,
+          "target": "GUEST_WAN",
+          "description": "GUEST_WAN jump ",
+          "log": false,
+          "protocol": "all",
+          "destination": {
+            "sets": [
+              "!local_zoned_subnets"
+            ]
+          },
+          "ipVersion": "both",
+          "triggerTag": {
+            "id": "684bcfb46a681001d80ca6ab",
+            "type": "PREDEFINED_FIREWALL_RULE"
+          },
+          "originId": "684bcfb46a681001d80ca6ab"
+        },
+        {
+          "id": 30005,
+          "target": "ACCEPT",
+          "description": "[GUEST_IN]Allow Return Traffic",
+          "log": false,
+          "connectionState": [
+            "established",
+            "related"
+          ],
+          "ipVersion": "both",
+          "triggerTag": {
+            "id": "684bcfb46a681001d80ca6b5",
+            "type": "PREDEFINED_FIREWALL_RULE"
+          },
+          "originId": "684bcfb46a681001d80ca6b5"
+        },
+        {
+          "id": 2147483647,
+          "target": "DROP",
+          "description": "[GUEST_IN]Block All Traffic",
+          "log": false,
+          "ipVersion": "both",
+          "triggerTag": {
+            "id": "684bcfb46a681001d80ca6bb",
+            "type": "PREDEFINED_FIREWALL_RULE"
+          },
+          "originId": "684bcfb46a681001d80ca6bb"
+        }
+      ]
+    },
+    {
+      "config": {
+        "name": "GUEST_DMZ",
+        "logDefault": false
+      },
+      "rules": [
+        {
+          "id": 30000,
+          "target": "ACCEPT",
+          "description": "[GUEST_DMZ]Allow Public DNS",
+          "log": false,
+          "protocol": "tcp_udp",
+          "destination": {
+            "port": "53"
+          },
+          "ipVersion": "v4only",
+          "triggerTag": {
+            "id": "684bcfb46a681001d80ca6d9",
+            "type": "PREDEFINED_FIREWALL_RULE"
+          },
+          "originId": "684bcfb46a681001d80ca6d9"
+        },
+        {
+          "id": 30001,
+          "target": "DROP",
+          "description": "[GUEST_DMZ]Post-Authorization Restrictions",
+          "log": false,
+          "destination": {
+            "sets": [
+              "guest_restricted"
+            ]
+          },
+          "ipVersion": "v4only",
+          "triggerTag": {
+            "id": "68ea64f91b11c129cb0cad02",
+            "type": "PREDEFINED_FIREWALL_RULE"
+          },
+          "originId": "68ea64f91b11c129cb0cad02"
+        },
+        {
+          "id": 2147483647,
+          "target": "DROP",
+          "description": "[GUEST_DMZ]Block All Traffic",
+          "log": false,
+          "ipVersion": "both",
+          "triggerTag": {
+            "id": "684bcfb46a681001d80ca6e6",
+            "type": "PREDEFINED_FIREWALL_RULE"
+          },
+          "originId": "684bcfb46a681001d80ca6e6"
+        }
+      ]
+    },
+    {
+      "config": {
+        "name": "GUEST_GUEST",
+        "logDefault": false
+      },
+      "rules": [
+        {
+          "id": 30000,
+          "target": "ACCEPT",
+          "description": "[GUEST_GUEST]Allow Public DNS",
+          "log": false,
+          "protocol": "tcp_udp",
+          "destination": {
+            "port": "53"
+          },
+          "ipVersion": "v4only",
+          "triggerTag": {
+            "id": "684bcfb46a681001d80ca6da",
+            "type": "PREDEFINED_FIREWALL_RULE"
+          },
+          "originId": "684bcfb46a681001d80ca6da"
+        },
+        {
+          "id": 30001,
+          "target": "DROP",
+          "description": "[GUEST_GUEST]Post-Authorization Restrictions",
+          "log": false,
+          "destination": {
+            "sets": [
+              "guest_restricted"
+            ]
+          },
+          "ipVersion": "v4only",
+          "triggerTag": {
+            "id": "684bcfb46a681001d80ca6e2",
+            "type": "PREDEFINED_FIREWALL_RULE"
+          },
+          "originId": "684bcfb46a681001d80ca6e2"
+        },
+        {
+          "id": 2147483647,
+          "target": "DROP",
+          "description": "[GUEST_GUEST]Block All Traffic",
+          "log": false,
+          "ipVersion": "both",
+          "triggerTag": {
+            "id": "684bcfb46a681001d80ca6e5",
+            "type": "PREDEFINED_FIREWALL_RULE"
+          },
+          "originId": "684bcfb46a681001d80ca6e5"
+        }
+      ]
+    },
+    {
+      "config": {
+        "name": "GUEST_LAN",
+        "logDefault": false
+      },
+      "rules": [
+        {
+          "id": 10000,
+          "target": "ACCEPT",
+          "description": "Allow Hotspot -[DNS]> Pihole",
+          "protocol": "tcp_udp",
+          "source": {
+            "sets": [
+              "policy_src_net_9"
+            ]
+          },
+          "destination": {
+            "sets": [
+              "671ff353e1099912bd62cbac",
+              "6716b04691c0587604d4a595"
+            ]
+          },
+          "connectionState": [],
+          "ipVersion": "both"
+        },
+        {
+          "id": 30000,
+          "target": "ACCEPT",
+          "description": "[GUEST_LAN]Allow Public DNS",
+          "log": false,
+          "protocol": "tcp_udp",
+          "destination": {
+            "port": "53"
+          },
+          "ipVersion": "v4only",
+          "triggerTag": {
+            "id": "684bcfb46a681001d80ca6dd",
+            "type": "PREDEFINED_FIREWALL_RULE"
+          },
+          "originId": "684bcfb46a681001d80ca6dd"
+        },
+        {
+          "id": 30001,
+          "target": "DROP",
+          "description": "[GUEST_LAN]Post-Authorization Restrictions",
+          "log": false,
+          "destination": {
+            "sets": [
+              "guest_restricted"
+            ]
+          },
+          "ipVersion": "v4only",
+          "triggerTag": {
+            "id": "684bcfb46a681001d80ca6e9",
+            "type": "PREDEFINED_FIREWALL_RULE"
+          },
+          "originId": "684bcfb46a681001d80ca6e9"
+        },
+        {
+          "id": 30002,
+          "target": "ACCEPT",
+          "description": "[GUEST_LAN]Allow Return Traffic",
+          "log": false,
+          "connectionState": [
+            "established",
+            "related"
+          ],
+          "ipVersion": "both",
+          "triggerTag": {
+            "id": "684bcfb46a681001d80ca6dc",
+            "type": "PREDEFINED_FIREWALL_RULE"
+          },
+          "originId": "684bcfb46a681001d80ca6dc"
+        },
+        {
+          "id": 2147483647,
+          "target": "DROP",
+          "description": "[GUEST_LAN]Block All Traffic",
+          "log": false,
+          "ipVersion": "both",
+          "triggerTag": {
+            "id": "684bcfb46a681001d80ca6ed",
+            "type": "PREDEFINED_FIREWALL_RULE"
+          },
+          "originId": "684bcfb46a681001d80ca6ed"
+        }
+      ]
+    },
+    {
+      "config": {
+        "name": "GUEST_VPN",
+        "logDefault": false
+      },
+      "rules": [
+        {
+          "id": 30000,
+          "target": "ACCEPT",
+          "description": "[GUEST_VPN]Allow Public DNS",
+          "log": false,
+          "protocol": "tcp_udp",
+          "destination": {
+            "port": "53"
+          },
+          "ipVersion": "v4only",
+          "triggerTag": {
+            "id": "684bcfb46a681001d80ca6e0",
+            "type": "PREDEFINED_FIREWALL_RULE"
+          },
+          "originId": "684bcfb46a681001d80ca6e0"
+        },
+        {
+          "id": 30001,
+          "target": "DROP",
+          "description": "[GUEST_VPN]Post-Authorization Restrictions",
+          "log": false,
+          "destination": {
+            "sets": [
+              "guest_restricted"
+            ]
+          },
+          "ipVersion": "v4only",
+          "triggerTag": {
+            "id": "684bcfb46a681001d80ca6e8",
+            "type": "PREDEFINED_FIREWALL_RULE"
+          },
+          "originId": "684bcfb46a681001d80ca6e8"
+        },
+        {
+          "id": 30002,
+          "target": "ACCEPT",
+          "description": "[GUEST_VPN]Allow Return Traffic",
+          "log": false,
+          "connectionState": [
+            "established",
+            "related"
+          ],
+          "ipVersion": "both",
+          "triggerTag": {
+            "id": "684bcfb46a681001d80ca6e1",
+            "type": "PREDEFINED_FIREWALL_RULE"
+          },
+          "originId": "684bcfb46a681001d80ca6e1"
+        },
+        {
+          "id": 2147483647,
+          "target": "DROP",
+          "description": "[GUEST_VPN]Block All Traffic",
+          "log": false,
+          "ipVersion": "both",
+          "triggerTag": {
+            "id": "684bcfb46a681001d80ca6ee",
+            "type": "PREDEFINED_FIREWALL_RULE"
+          },
+          "originId": "684bcfb46a681001d80ca6ee"
+        }
+      ]
+    },
+    {
+      "config": {
+        "name": "GUEST_WAN",
+        "logDefault": false
+      },
+      "rules": [
+        {
+          "id": 10001,
+          "target": "REJECT",
+          "description": "Reject Hotspot -[DNS}> External",
+          "protocol": "tcp_udp",
+          "source": {},
+          "destination": {
+            "sets": [
+              "671ff353e1099912bd62cbac"
+            ]
+          },
+          "connectionState": [],
+          "ipVersion": "both",
+          "triggerTag": {
+            "id": "677f66d52eb59141b1e9876a",
+            "type": "FIREWALL_POLICY"
+          }
+        },
+        {
+          "id": 30000,
+          "target": "ACCEPT",
+          "description": "[GUEST_WAN]Allow Public DNS",
+          "log": false,
+          "protocol": "tcp_udp",
+          "destination": {
+            "port": "53"
+          },
+          "ipVersion": "v4only",
+          "triggerTag": {
+            "id": "684bcfb46a681001d80ca6d7",
+            "type": "PREDEFINED_FIREWALL_RULE"
+          },
+          "originId": "684bcfb46a681001d80ca6d7"
+        },
+        {
+          "id": 30001,
+          "target": "ACCEPT",
+          "description": "[GUEST_WAN]Allow Hotspot Portal",
+          "log": false,
+          "protocol": "tcp",
+          "destination": {
+            "sets": [
+              "captive_portal_subnets"
+            ],
+            "port": "443"
+          },
+          "ipVersion": "v4only",
+          "triggerTag": {
+            "id": "684bcfb46a681001d80ca6de",
+            "type": "PREDEFINED_FIREWALL_RULE"
+          },
+          "originId": "684bcfb46a681001d80ca6de"
+        },
+        {
+          "id": 30002,
+          "target": "DROP",
+          "description": "[GUEST_WAN]Post-Authorization Restrictions",
+          "log": false,
+          "destination": {
+            "sets": [
+              "guest_restricted"
+            ]
+          },
+          "ipVersion": "v4only",
+          "triggerTag": {
+            "id": "684bcfb46a681001d80ca6ec",
+            "type": "PREDEFINED_FIREWALL_RULE"
+          },
+          "originId": "684bcfb46a681001d80ca6ec"
+        },
+        {
+          "id": 30003,
+          "target": "AUTHORIZED_GUESTS",
+          "description": "[GUEST_WAN]Block Unauthorized Traffic",
+          "log": false,
+          "ipVersion": "v4only",
+          "triggerTag": {
+            "id": "684bcfb46a681001d80ca6ea",
+            "type": "PREDEFINED_FIREWALL_RULE"
+          },
+          "originId": "684bcfb46a681001d80ca6ea"
+        },
+        {
+          "id": 30005,
+          "target": "DROP",
+          "description": "[GUEST_WAN]Block Invalid Traffic",
+          "log": false,
+          "connectionState": [
+            "invalid"
+          ],
+          "ipVersion": "both",
+          "triggerTag": {
+            "id": "684bcfb46a681001d80ca6e4",
+            "type": "PREDEFINED_FIREWALL_RULE"
+          },
+          "originId": "684bcfb46a681001d80ca6e4"
+        },
+        {
+          "id": 2147483647,
+          "target": "ACCEPT",
+          "description": "[GUEST_WAN]Allow All Traffic",
+          "log": false,
+          "ipVersion": "both",
+          "triggerTag": {
+            "id": "684bcfb46a681001d80ca6d6",
+            "type": "PREDEFINED_FIREWALL_RULE"
+          },
+          "originId": "684bcfb46a681001d80ca6d6"
+        }
+      ]
+    },
+    {
+      "config": {
+        "name": "VPN_IN",
+        "logDefault": false
+      },
+      "rules": [
+        {
+          "id": 30000,
+          "target": "VPN_DMZ",
+          "description": "VPN_DMZ jump ",
+          "log": false,
+          "protocol": "all",
+          "destination": {
+            "sets": [
+              "DMZ_subnets"
+            ]
+          },
+          "ipVersion": "both",
+          "triggerTag": {
+            "id": "684bcfb46a681001d80ca6a1",
+            "type": "PREDEFINED_FIREWALL_RULE"
+          },
+          "originId": "684bcfb46a681001d80ca6a1"
+        },
+        {
+          "id": 30001,
+          "target": "VPN_GUEST",
+          "description": "VPN_GUEST jump ",
+          "log": false,
+          "protocol": "all",
+          "destination": {
+            "sets": [
+              "GUEST_subnets"
+            ]
+          },
+          "ipVersion": "both",
+          "triggerTag": {
+            "id": "684bcfb46a681001d80ca698",
+            "type": "PREDEFINED_FIREWALL_RULE"
+          },
+          "originId": "684bcfb46a681001d80ca698"
+        },
+        {
+          "id": 30002,
+          "target": "VPN_LAN",
+          "description": "VPN_LAN jump ",
+          "log": false,
+          "protocol": "all",
+          "destination": {
+            "sets": [
+              "LAN_subnets"
+            ]
+          },
+          "ipVersion": "both",
+          "triggerTag": {
+            "id": "684bcfb46a681001d80ca6a3",
+            "type": "PREDEFINED_FIREWALL_RULE"
+          },
+          "originId": "684bcfb46a681001d80ca6a3"
+        },
+        {
+          "id": 30003,
+          "target": "VPN_VPN",
+          "description": "VPN_VPN jump ",
+          "log": false,
+          "protocol": "all",
+          "destination": {
+            "sets": [
+              "VPN_subnets"
+            ]
+          },
+          "ipVersion": "both",
+          "triggerTag": {
+            "id": "684bcfb46a681001d80ca69c",
+            "type": "PREDEFINED_FIREWALL_RULE"
+          },
+          "originId": "684bcfb46a681001d80ca69c"
+        },
+        {
+          "id": 30004,
+          "target": "VPN_WAN",
+          "description": "VPN_WAN jump ",
+          "log": false,
+          "protocol": "all",
+          "destination": {
+            "sets": [
+              "!local_zoned_subnets"
+            ]
+          },
+          "ipVersion": "both",
+          "triggerTag": {
+            "id": "684bcfb46a681001d80ca6b3",
+            "type": "PREDEFINED_FIREWALL_RULE"
+          },
+          "originId": "684bcfb46a681001d80ca6b3"
+        },
+        {
+          "id": 30005,
+          "target": "ACCEPT",
+          "description": "[VPN_IN]Allow Return Traffic",
+          "log": false,
+          "connectionState": [
+            "established",
+            "related"
+          ],
+          "ipVersion": "both",
+          "triggerTag": {
+            "id": "684bcfb46a681001d80ca6b9",
+            "type": "PREDEFINED_FIREWALL_RULE"
+          },
+          "originId": "684bcfb46a681001d80ca6b9"
+        },
+        {
+          "id": 2147483647,
+          "target": "DROP",
+          "description": "[VPN_IN]Block All Traffic",
+          "log": false,
+          "ipVersion": "both",
+          "triggerTag": {
+            "id": "684bcfb46a681001d80ca6bd",
+            "type": "PREDEFINED_FIREWALL_RULE"
+          },
+          "originId": "684bcfb46a681001d80ca6bd"
+        }
+      ]
+    },
+    {
+      "config": {
+        "name": "VPN_DMZ",
+        "logDefault": false
+      },
+      "rules": [
+        {
+          "id": 2147483647,
+          "target": "ACCEPT",
+          "description": "[VPN_DMZ]Allow All Traffic",
+          "log": false,
+          "ipVersion": "both",
+          "triggerTag": {
+            "id": "684bcfb46a681001d80ca6f3",
+            "type": "PREDEFINED_FIREWALL_RULE"
+          },
+          "originId": "684bcfb46a681001d80ca6f3"
+        }
+      ]
+    },
+    {
+      "config": {
+        "name": "VPN_GUEST",
+        "logDefault": false
+      },
+      "rules": [
+        {
+          "id": 2147483647,
+          "target": "ACCEPT",
+          "description": "[VPN_GUEST]Allow All Traffic",
+          "log": false,
+          "ipVersion": "both",
+          "triggerTag": {
+            "id": "684bcfb46a681001d80ca6f6",
+            "type": "PREDEFINED_FIREWALL_RULE"
+          },
+          "originId": "684bcfb46a681001d80ca6f6"
+        }
+      ]
+    },
+    {
+      "config": {
+        "name": "VPN_LAN",
+        "logDefault": false
+      },
+      "rules": [
+        {
+          "id": 10000,
+          "target": "ACCEPT",
+          "description": "Allow VPN -[DNS]> Pihole",
+          "protocol": "tcp_udp",
+          "source": {},
+          "destination": {
+            "sets": [
+              "671ff353e1099912bd62cbac",
+              "6716b04691c0587604d4a595"
+            ]
+          },
+          "connectionState": [],
+          "ipVersion": "both"
+        },
+        {
+          "id": 2147483647,
+          "target": "ACCEPT",
+          "description": "[VPN_LAN]Allow All Traffic",
+          "log": false,
+          "ipVersion": "both",
+          "triggerTag": {
+            "id": "684bcfb46a681001d80ca6f2",
+            "type": "PREDEFINED_FIREWALL_RULE"
+          },
+          "originId": "684bcfb46a681001d80ca6f2"
+        }
+      ]
+    },
+    {
+      "config": {
+        "name": "VPN_VPN",
+        "logDefault": false
+      },
+      "rules": [
+        {
+          "id": 2147483647,
+          "target": "ACCEPT",
+          "description": "[VPN_VPN]Allow All Traffic",
+          "log": false,
+          "ipVersion": "both",
+          "triggerTag": {
+            "id": "684bcfb46a681001d80ca6f4",
+            "type": "PREDEFINED_FIREWALL_RULE"
+          },
+          "originId": "684bcfb46a681001d80ca6f4"
+        }
+      ]
+    },
+    {
+      "config": {
+        "name": "VPN_WAN",
+        "logDefault": false
+      },
+      "rules": [
+        {
+          "id": 10001,
+          "target": "REJECT",
+          "description": "Reject VPN -[DNS]> External",
+          "protocol": "tcp_udp",
+          "source": {},
+          "destination": {
+            "sets": [
+              "671ff353e1099912bd62cbac"
+            ]
+          },
+          "connectionState": [],
+          "ipVersion": "both",
+          "triggerTag": {
+            "id": "677f66d52eb59141b1e9876c",
+            "type": "FIREWALL_POLICY"
+          }
+        },
+        {
+          "id": 30000,
+          "target": "DROP",
+          "description": "[VPN_WAN]Block Invalid Traffic",
+          "log": false,
+          "connectionState": [
+            "invalid"
+          ],
+          "ipVersion": "both",
+          "triggerTag": {
+            "id": "684bcfb46a681001d80ca6f1",
+            "type": "PREDEFINED_FIREWALL_RULE"
+          },
+          "originId": "684bcfb46a681001d80ca6f1"
+        },
+        {
+          "id": 2147483647,
+          "target": "ACCEPT",
+          "description": "[VPN_WAN]Allow All Traffic",
+          "log": false,
+          "ipVersion": "both",
+          "triggerTag": {
+            "id": "684bcfb46a681001d80ca6f5",
+            "type": "PREDEFINED_FIREWALL_RULE"
+          },
+          "originId": "684bcfb46a681001d80ca6f5"
+        }
+      ]
+    },
+    {
+      "config": {
+        "name": "DMZ_IN",
+        "logDefault": false
+      },
+      "rules": [
+        {
+          "id": 30000,
+          "target": "DMZ_DMZ",
+          "description": "DMZ_DMZ jump ",
+          "log": false,
+          "protocol": "all",
+          "destination": {
+            "sets": [
+              "DMZ_subnets"
+            ]
+          },
+          "ipVersion": "both",
+          "triggerTag": {
+            "id": "684bcfb46a681001d80ca6ac",
+            "type": "PREDEFINED_FIREWALL_RULE"
+          },
+          "originId": "684bcfb46a681001d80ca6ac"
+        },
+        {
+          "id": 30001,
+          "target": "DMZ_GUEST",
+          "description": "DMZ_GUEST jump ",
+          "log": false,
+          "protocol": "all",
+          "destination": {
+            "sets": [
+              "GUEST_subnets"
+            ]
+          },
+          "ipVersion": "both",
+          "triggerTag": {
+            "id": "684bcfb46a681001d80ca6a8",
+            "type": "PREDEFINED_FIREWALL_RULE"
+          },
+          "originId": "684bcfb46a681001d80ca6a8"
+        },
+        {
+          "id": 30002,
+          "target": "DMZ_LAN",
+          "description": "DMZ_LAN jump ",
+          "log": false,
+          "protocol": "all",
+          "destination": {
+            "sets": [
+              "LAN_subnets"
+            ]
+          },
+          "ipVersion": "both",
+          "triggerTag": {
+            "id": "684bcfb46a681001d80ca69a",
+            "type": "PREDEFINED_FIREWALL_RULE"
+          },
+          "originId": "684bcfb46a681001d80ca69a"
+        },
+        {
+          "id": 30003,
+          "target": "DMZ_VPN",
+          "description": "DMZ_VPN jump ",
+          "log": false,
+          "protocol": "all",
+          "destination": {
+            "sets": [
+              "VPN_subnets"
+            ]
+          },
+          "ipVersion": "both",
+          "triggerTag": {
+            "id": "684bcfb46a681001d80ca69d",
+            "type": "PREDEFINED_FIREWALL_RULE"
+          },
+          "originId": "684bcfb46a681001d80ca69d"
+        },
+        {
+          "id": 30004,
+          "target": "DMZ_WAN",
+          "description": "DMZ_WAN jump ",
+          "log": false,
+          "protocol": "all",
+          "destination": {
+            "sets": [
+              "!local_zoned_subnets"
+            ]
+          },
+          "ipVersion": "both",
+          "triggerTag": {
+            "id": "684bcfb46a681001d80ca6b2",
+            "type": "PREDEFINED_FIREWALL_RULE"
+          },
+          "originId": "684bcfb46a681001d80ca6b2"
+        },
+        {
+          "id": 30005,
+          "target": "ACCEPT",
+          "description": "[DMZ_IN]Allow Return Traffic",
+          "log": false,
+          "connectionState": [
+            "established",
+            "related"
+          ],
+          "ipVersion": "both",
+          "triggerTag": {
+            "id": "684bcfb46a681001d80ca6ba",
+            "type": "PREDEFINED_FIREWALL_RULE"
+          },
+          "originId": "684bcfb46a681001d80ca6ba"
+        },
+        {
+          "id": 2147483647,
+          "target": "DROP",
+          "description": "[DMZ_IN]Block All Traffic",
+          "log": false,
+          "ipVersion": "both",
+          "triggerTag": {
+            "id": "684bcfb46a681001d80ca6be",
+            "type": "PREDEFINED_FIREWALL_RULE"
+          },
+          "originId": "684bcfb46a681001d80ca6be"
+        }
+      ]
+    },
+    {
+      "config": {
+        "name": "DMZ_DMZ",
+        "logDefault": false
+      },
+      "rules": [
+        {
+          "id": 2147483647,
+          "target": "DROP",
+          "description": "[DMZ_DMZ]Block All Traffic",
+          "log": false,
+          "ipVersion": "both",
+          "triggerTag": {
+            "id": "684bcfb46a681001d80ca701",
+            "type": "PREDEFINED_FIREWALL_RULE"
+          },
+          "originId": "684bcfb46a681001d80ca701"
+        }
+      ]
+    },
+    {
+      "config": {
+        "name": "DMZ_GUEST",
+        "logDefault": false
+      },
+      "rules": [
+        {
+          "id": 2147483647,
+          "target": "DROP",
+          "description": "[DMZ_GUEST]Block All Traffic",
+          "log": false,
+          "ipVersion": "both",
+          "triggerTag": {
+            "id": "684bcfb46a681001d80ca6ff",
+            "type": "PREDEFINED_FIREWALL_RULE"
+          },
+          "originId": "684bcfb46a681001d80ca6ff"
+        }
+      ]
+    },
+    {
+      "config": {
+        "name": "DMZ_LAN",
+        "logDefault": false
+      },
+      "rules": [
+        {
+          "id": 10000,
+          "target": "ACCEPT",
+          "description": "Allow DMZ -[DNS]> Pihole",
+          "protocol": "tcp_udp",
+          "source": {
+            "sets": [
+              "policy_src_net_55"
+            ]
+          },
+          "destination": {
+            "sets": [
+              "671ff353e1099912bd62cbac",
+              "6716b04691c0587604d4a595"
+            ]
+          },
+          "connectionState": [],
+          "ipVersion": "both"
+        },
+        {
+          "id": 10001,
+          "target": "ACCEPT",
+          "description": "Allow haproxydmz -[Minecraft]> k8sworker05",
+          "log": true,
+          "protocol": "tcp_udp",
+          "source": {
+            "sets": [
+              "68f32b635209c60a8c699866"
+            ]
+          },
+          "destination": {
+            "sets": [
+              "68f32c065209c60a8c699b96",
+              "692354a5da2cf33f27f262c1"
+            ]
+          },
+          "connectionState": [],
+          "ipVersion": "both"
+        },
+        {
+          "id": 10002,
+          "target": "ACCEPT",
+          "description": "Allow haproxydmz -[Bluemap]> k8sworker05",
+          "log": true,
+          "protocol": "all",
+          "source": {
+            "sets": [
+              "68f32b635209c60a8c699866"
+            ]
+          },
+          "destination": {
+            "sets": [
+              "690ee53e5209c60a8ce9bbc0",
+              "692354a5da2cf33f27f262c1"
+            ]
+          },
+          "connectionState": [],
+          "ipVersion": "both"
+        },
+        {
+          "id": 30001,
+          "target": "ACCEPT",
+          "description": "[DMZ_LAN]Allow Return Traffic",
+          "log": false,
+          "connectionState": [
+            "established",
+            "related"
+          ],
+          "ipVersion": "both",
+          "triggerTag": {
+            "id": "684bcfb46a681001d80ca703",
+            "type": "PREDEFINED_FIREWALL_RULE"
+          },
+          "originId": "684bcfb46a681001d80ca703"
+        },
+        {
+          "id": 2147483647,
+          "target": "DROP",
+          "description": "[DMZ_LAN]Block All Traffic",
+          "log": false,
+          "ipVersion": "both",
+          "triggerTag": {
+            "id": "684bcfb46a681001d80ca6fd",
+            "type": "PREDEFINED_FIREWALL_RULE"
+          },
+          "originId": "684bcfb46a681001d80ca6fd"
+        }
+      ]
+    },
+    {
+      "config": {
+        "name": "DMZ_VPN",
+        "logDefault": false
+      },
+      "rules": [
+        {
+          "id": 30000,
+          "target": "ACCEPT",
+          "description": "[DMZ_VPN]Allow Return Traffic",
+          "log": false,
+          "connectionState": [
+            "established",
+            "related"
+          ],
+          "ipVersion": "both",
+          "triggerTag": {
+            "id": "684bcfb46a681001d80ca702",
+            "type": "PREDEFINED_FIREWALL_RULE"
+          },
+          "originId": "684bcfb46a681001d80ca702"
+        },
+        {
+          "id": 2147483647,
+          "target": "DROP",
+          "description": "[DMZ_VPN]Block All Traffic",
+          "log": false,
+          "ipVersion": "both",
+          "triggerTag": {
+            "id": "684bcfb46a681001d80ca6fb",
+            "type": "PREDEFINED_FIREWALL_RULE"
+          },
+          "originId": "684bcfb46a681001d80ca6fb"
+        }
+      ]
+    },
+    {
+      "config": {
+        "name": "DMZ_WAN",
+        "logDefault": false
+      },
+      "rules": [
+        {
+          "id": 10000,
+          "target": "REJECT",
+          "description": "Reject DMZ -[DNS]> External",
+          "protocol": "tcp_udp",
+          "source": {},
+          "destination": {
+            "sets": [
+              "671ff353e1099912bd62cbac"
+            ]
+          },
+          "connectionState": [],
+          "ipVersion": "both",
+          "triggerTag": {
+            "id": "68ed75ef556b490ab427a946",
+            "type": "FIREWALL_POLICY"
+          }
+        },
+        {
+          "id": 30001,
+          "target": "DROP",
+          "description": "[DMZ_WAN]Block Invalid Traffic",
+          "log": false,
+          "connectionState": [
+            "invalid"
+          ],
+          "ipVersion": "both",
+          "triggerTag": {
+            "id": "684bcfb46a681001d80ca6fe",
+            "type": "PREDEFINED_FIREWALL_RULE"
+          },
+          "originId": "684bcfb46a681001d80ca6fe"
+        },
+        {
+          "id": 2147483647,
+          "target": "ACCEPT",
+          "description": "[DMZ_WAN]Allow All Traffic",
+          "log": false,
+          "ipVersion": "both",
+          "triggerTag": {
+            "id": "684bcfb46a681001d80ca705",
+            "type": "PREDEFINED_FIREWALL_RULE"
+          },
+          "originId": "684bcfb46a681001d80ca705"
+        }
+      ]
+    }
+  ],
+  "firewall/mangle": [
+    {
+      "config": {
+        "enabled": true,
+        "name": "POSTROUTING",
+        "policy": "ACCEPT",
+        "logDefault": false
+      },
+      "rules": []
+    }
+  ],
+  "firewall/settings": {
+    "conntrackModules": {
+      "sip": false,
+      "ftp": true,
+      "gre": true,
+      "h323": true,
+      "pptp": true,
+      "tftp": true
+    },
+    "conntrackTimeouts": {
+      "icmp": 30,
+      "other": 600,
+      "tcpClose": 10,
+      "tcpCloseWait": 60,
+      "tcpEstablished": 7440,
+      "tcpFinWait": 120,
+      "tcpLastAck": 30,
+      "tcpSynRecv": 60,
+      "tcpSynSent": 120,
+      "tcpTimeWait": 120,
+      "udpOther": 30,
+      "udpStream": 180
+    }
+  },
+  "routes/static": [],
+  "services/radius-profiles": [
+    {
+      "id": "66df88baa20d360e9112fd5e",
+      "name": "Default",
+      "authServers": [
+        {
+          "address": "192.168.1.1",
+          "port": 1812,
+          "secret": "REDACTED"
+        }
+      ],
+      "vlanForWiredNetwork": false,
+      "vlanForWirelessNetwork": false
+    }
+  ],
+  "firewall/pbr": {
+    "rules": []
+  },
+  "vpn/wireguard/servers": [
+    {
+      "id": "1",
+      "enabled": true,
+      "name": "vpn.vollminlab.com",
+      "address": {
+        "source": "any",
+        "ipVersion": "v4"
+      },
+      "port": 51821,
+      "privateKey": "REDACTED",
+      "interfaceIPs": [
+        "192.168.200.1/24"
+      ],
+      "remotePeers": [
+        {
+          "publicKey": "zj0Ig20RkuidByhzmLzV6uinEjqPJsCt7kwIJ2ek10k=",
+          "allowedIPs": [
+            "192.168.200.2/32"
+          ],
+          "name": "vollminxps"
+        },
+        {
+          "publicKey": "omJmZ0TmjMbm5RjtKnHWw45YHNGPIynTkYWICBBgSkI=",
+          "allowedIPs": [
+            "192.168.200.3/32"
+          ],
+          "name": "SViphone"
+        }
+      ],
+      "tunnelMSSClamping": {
+        "clampMSSToPMTU": true
+      }
+    }
+  ],
+  "vpn/teleport": {
+    "enabled": true
+  },
+  "bridge-firewall/nat": [
+    {
+      "config": {
+        "name": "PREROUTING",
+        "policy": "ACCEPT",
+        "enabled": true
+      },
+      "rules": [
+        {
+          "target": "GUESTIN",
+          "logicalIn": {
+            "id": "br140"
+          }
+        }
+      ]
+    },
+    {
+      "config": {
+        "name": "POSTROUTING",
+        "policy": "ACCEPT",
+        "enabled": true
+      },
+      "rules": [
+        {
+          "target": "GUESTOUT",
+          "logicalOut": {
+            "id": "br140"
+          }
+        }
+      ]
+    },
+    {
+      "config": {
+        "name": "REDIRECT_DNS",
+        "policy": "ACCEPT",
+        "enabled": true
+      },
+      "rules": [
+        {
+          "target": "mark",
+          "markOr": 16777216,
+          "markTarget": "CONTINUE"
+        },
+        {
+          "target": "redirect"
+        }
+      ]
+    },
+    {
+      "config": {
+        "name": "AUTHORIZED_GUESTS",
+        "policy": "RETURN",
+        "enabled": true
+      },
+      "rules": [
+        {
+          "target": "ACCEPT",
+          "set": "UBIOS_authorized_guests",
+          "setFlags": [
+            "src"
+          ]
+        }
+      ]
+    },
+    {
+      "config": {
+        "name": "REDIRECT_HTTP",
+        "policy": "ACCEPT",
+        "enabled": true
+      },
+      "rules": [
+        {
+          "target": "mark",
+          "markOr": 16777216,
+          "markTarget": "CONTINUE"
+        },
+        {
+          "target": "redirect"
+        }
+      ]
+    },
+    {
+      "config": {
+        "name": "GUESTIN",
+        "policy": "DROP",
+        "enabled": true
+      },
+      "rules": [
+        {
+          "target": "REDIRECT_HTTP",
+          "protocol": "0x800",
+          "ipProtocol": 6,
+          "ipDstPort": 8881,
+          "ipDst": "192.168.1.1"
+        },
+        {
+          "target": "ACCEPT",
+          "protocol": "0x800",
+          "pktType": "broadcast",
+          "ipProtocol": 17,
+          "ipSrcPort": 68,
+          "ipDstPort": 67
+        },
+        {
+          "target": "ACCEPT",
+          "protocol": "0x806"
+        },
+        {
+          "target": "GUEST_DNS",
+          "protocol": "0x800",
+          "ipProtocol": 17,
+          "ipDstPort": 53
+        },
+        {
+          "target": "GUEST_DNS",
+          "protocol": "0x800",
+          "ipProtocol": 6,
+          "ipDstPort": 53
+        },
+        {
+          "target": "ACCEPT",
+          "protocol": "0x800",
+          "set": "UBIOS_guest_pre_allow",
+          "setFlags": [
+            "dst"
+          ],
+          "setFamily": "inet"
+        },
+        {
+          "target": "DROP",
+          "pktType": "broadcast"
+        },
+        {
+          "target": "ACCEPT",
+          "protocol": "0x800",
+          "ipProtocol": 6,
+          "ipDstPort": 8880,
+          "ipDst": "192.168.1.1"
+        },
+        {
+          "target": "ACCEPT",
+          "protocol": "0x800",
+          "ipProtocol": 6,
+          "ipDstPort": 8843,
+          "ipDst": "192.168.1.1"
+        },
+        {
+          "target": "CAPTIVE_PORTAL",
+          "protocol": "0x800",
+          "ipProtocol": 6,
+          "ipDstPort": 443
+        },
+        {
+          "target": "DROP",
+          "protocol": "0x800",
+          "ipDst": "192.168.140.1",
+          "ipSrc": "192.168.140.0/24"
+        },
+        {
+          "target": "ACCEPT",
+          "protocol": "0x800",
+          "ipDst": "192.168.140.0/24",
+          "ipSrc": "192.168.140.0/24"
+        },
+        {
+          "target": "DROP",
+          "protocol": "0x800",
+          "set": "UBIOS_guest_restricted",
+          "setFlags": [
+            "dst"
+          ],
+          "setFamily": "inet"
+        },
+        {
+          "target": "AUTHORIZED_GUESTS",
+          "protocol": "0x800"
+        },
+        {
+          "target": "REDIRECT_HTTP",
+          "protocol": "0x800",
+          "ipProtocol": 6,
+          "ipDstPort": 80
+        },
+        {
+          "target": "REDIRECT_HTTP",
+          "protocol": "0x800",
+          "ipProtocol": 6,
+          "ipDstPort": 443
+        }
+      ]
+    },
+    {
+      "config": {
+        "name": "GUESTOUT",
+        "policy": "ACCEPT",
+        "enabled": true
+      },
+      "rules": [
+        {
+          "target": "ACCEPT",
+          "protocol": "0x800",
+          "pktType": "broadcast",
+          "ipProtocol": 17,
+          "ipSrcPort": 67,
+          "ipDstPort": 68
+        },
+        {
+          "target": "ACCEPT",
+          "protocol": "0x806"
+        },
+        {
+          "target": "DROP",
+          "pktType": "broadcast"
+        },
+        {
+          "target": "ACCEPT",
+          "protocol": "0x800",
+          "set": "UBIOS_guest_pre_allow",
+          "setFlags": [
+            "dst"
+          ],
+          "setFamily": "inet"
+        }
+      ]
+    },
+    {
+      "config": {
+        "name": "GUEST_DNS",
+        "policy": "DROP",
+        "enabled": true
+      },
+      "rules": [
+        {
+          "target": "AUTHORIZED_GUESTS",
+          "protocol": "0x800",
+          "ipProtocol": 17,
+          "ipDstPort": 53
+        },
+        {
+          "target": "AUTHORIZED_GUESTS",
+          "protocol": "0x800",
+          "ipProtocol": 6,
+          "ipDstPort": 53
+        },
+        {
+          "target": "REDIRECT_DNS",
+          "protocol": "0x800",
+          "ipProtocol": 17,
+          "ipDstPort": 53
+        },
+        {
+          "target": "REDIRECT_DNS",
+          "protocol": "0x800",
+          "ipProtocol": 6,
+          "ipDstPort": 53
+        }
+      ]
+    },
+    {
+      "config": {
+        "name": "CAPTIVE_PORTAL",
+        "policy": "RETURN",
+        "enabled": true
+      },
+      "rules": []
+    }
+  ],
+  "bridge-firewall/broute": [
+    {
+      "config": {
+        "name": "BROUTING",
+        "policy": "ACCEPT",
+        "enabled": true
+      },
+      "rules": [
+        {
+          "target": "DROP",
+          "protocol": "0x8100",
+          "vlanID": 160
+        },
+        {
+          "target": "DROP",
+          "protocol": "0x8100",
+          "vlanID": 130
+        },
+        {
+          "target": "DROP",
+          "protocol": "0x8100",
+          "vlanID": 100
+        },
+        {
+          "target": "DROP",
+          "protocol": "0x8100",
+          "vlanID": 150
+        },
+        {
+          "target": "DROP",
+          "protocol": "0x8100",
+          "vlanID": 151
+        },
+        {
+          "target": "DROP",
+          "protocol": "0x8100",
+          "vlanID": 120
+        },
+        {
+          "target": "DROP",
+          "protocol": "0x8100",
+          "vlanID": 152
+        },
+        {
+          "target": "DROP",
+          "protocol": "0x8100",
+          "vlanID": 153
+        },
+        {
+          "target": "DROP",
+          "protocol": "0x8100",
+          "vlanID": 154
+        },
+        {
+          "target": "DROP",
+          "protocol": "0x8100",
+          "vlanID": 155
+        },
+        {
+          "target": "DROP",
+          "protocol": "0x8100",
+          "vlanID": 140
+        },
+        {
+          "target": "DROP",
+          "protocol": "0x8100",
+          "vlanID": 110
+        }
+      ]
+    }
+  ]
+}

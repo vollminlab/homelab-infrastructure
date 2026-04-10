@@ -1,0 +1,70 @@
+[
+    {
+        "Name":  "Host-local PMem Default Storage Policy",
+        "Description":  "Storage policy used as default for Host-local PMem datastores"
+    },
+    {
+        "Name":  "Management Storage policy - Encryption",
+        "Description":  "Management Storage policy used for encrypting VM"
+    },
+    {
+        "Name":  "Management Storage Policy - Large",
+        "Description":  "Management Storage policy used for VMC large cluster"
+    },
+    {
+        "Name":  "Management Storage Policy - Regular",
+        "Description":  "Management Storage policy used for VMC regular cluster"
+    },
+    {
+        "Name":  "Management Storage Policy - Single Node",
+        "Description":  "Management Storage policy used for VMC single node cluster"
+    },
+    {
+        "Name":  "Management Storage Policy - Stretched",
+        "Description":  "Management Storage policy used for VMC stretched cluster"
+    },
+    {
+        "Name":  "Management Storage Policy - Stretched ESA",
+        "Description":  "Management Storage policy used for ESA stretched cluster"
+    },
+    {
+        "Name":  "Management Storage Policy - Stretched Lite",
+        "Description":  "Management Storage policy used for smaller VMC Stretched Cluster configuration."
+    },
+    {
+        "Name":  "Management Storage policy - Thin",
+        "Description":  "Management Storage policy used for VMC regular cluster which requires THIN provisioning"
+    },
+    {
+        "Name":  "VM Encryption Policy",
+        "Description":  "Sample storage policy for VMware\u0027s VM and virtual disk encryption"
+    },
+    {
+        "Name":  "vSAN Default Storage Policy",
+        "Description":  "Storage policy used as default for vSAN datastores"
+    },
+    {
+        "Name":  "vSAN ESA Default Policy - RAID5",
+        "Description":  "Default vSAN ESA RAID5 storage policy for vSAN datastore."
+    },
+    {
+        "Name":  "vSAN ESA Default Policy - RAID6",
+        "Description":  "Default vSAN ESA RAID6 storage policy for vSAN datastore."
+    },
+    {
+        "Name":  "vSAN Stretched ESA Default Policy",
+        "Description":  "Default vSAN Stretched ESA RAID1 storage policy for vSAN datastore."
+    },
+    {
+        "Name":  "vSAN Stretched ESA Default Policy - RAID5",
+        "Description":  "Default vSAN Stretched ESA RAID5 storage policy for vSAN datastore."
+    },
+    {
+        "Name":  "vSAN Stretched ESA Default Policy - RAID6",
+        "Description":  "Default vSAN Stretched ESA RAID6 storage policy for vSAN datastore."
+    },
+    {
+        "Name":  "VVol No Requirements Policy",
+        "Description":  "Allow the datastore to determine the best placement strategy for storage objects"
+    }
+]

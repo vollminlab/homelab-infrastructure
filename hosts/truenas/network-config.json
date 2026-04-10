@@ -1,0 +1,31 @@
+{
+  "id": 1,
+  "hostname": "truenas",
+  "domain": "vollminlab.com",
+  "ipv4gateway": "192.168.150.1",
+  "ipv6gateway": "",
+  "nameserver1": "192.168.100.4",
+  "nameserver2": "192.168.100.2",
+  "nameserver3": "192.168.100.3",
+  "httpproxy": "",
+  "hosts": [],
+  "domains": [],
+  "service_announcement": {
+    "mdns": true,
+    "wsd": true,
+    "netbios": false
+  },
+  "activity": {
+    "type": "DENY",
+    "activities": []
+  },
+  "hostname_local": "truenas",
+  "state": {
+    "ipv4gateway": "192.168.150.1",
+    "ipv6gateway": "",
+    "nameserver1": "192.168.100.4",
+    "nameserver2": "192.168.100.2",
+    "nameserver3": "192.168.100.3",
+    "hosts": []
+  }
+}

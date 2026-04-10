@@ -1,0 +1,3 @@
+# Enforce LF line endings for all text files.
+# These are Linux host configs — CRLF would corrupt scripts and systemd units.
+* text=auto eol=lf
