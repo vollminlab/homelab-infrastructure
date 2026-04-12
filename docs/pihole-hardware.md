@@ -163,6 +163,14 @@ These were discovered during the actual pihole2 migration and must be followed f
 - **The Argon NEO 5 M.2 case makes the SD card inaccessible** — do not plan to remove it. Leave the SD card in as a fallback boot device.
 - **`argonone-uninstall` will fail** on the NEO 5 M.2 — ignore it, it's for a different case model.
 
+### Additional lessons learned from pihole1 migration
+
+- **Static IP is set via NetworkManager**, not dhcpcd or netplan. The connection profile is at `/etc/NetworkManager/system-connections/RPI Pi-Hole Connection.nmconnection`. When cloning pihole2 → pihole1, copy pihole1's nmconnection file to the NVMe root and remove pihole2's (`Wired connection 1.nmconnection`) before first boot.
+- **`authorized_keys` comes from the clone** — after first NVMe boot, pihole1 will have pihole2's authorized key and reject your normal SSH key. Fix by using pihole2's key to add pihole1's key: `ssh -i ~/.ssh/pihole2_id_rsa.pub vollmin@192.168.100.2 "echo '$(cat ~/.ssh/pihole1_id_rsa.pub)' >> ~/.ssh/authorized_keys"`
+- **nebula-sync `app_sudo` required on replicas (Pi-hole v6)** — pihole2 needs `webserver.api.app_sudo = true` for nebula-sync to import configs. Set it with `sudo pihole-FTL --config webserver.api.app_sudo true` on pihole2. Without this, nebula-sync will authenticate successfully but get 403 on the teleporter endpoint.
+- **Network clone (pihole2 NVMe → pihole1 NVMe) runs at ~48 MB/s** — 238GB takes ~85 minutes. Significantly faster than SD card clone. Run via a temp SSH key rather than trying to pipe through a Windows intermediary host.
+- **Pi-hole app password must be reset after clone** — the clone brings pihole2's Pi-hole database including its app password hash. nebula-sync will get 401 on pihole1 until you reset the pihole1 admin password via the web UI and update the PRIMARY credential in `~/nebula-sync/.env` and 1Password.
+
 ---
 
 ### Phase 1 — Migrate pihole2
