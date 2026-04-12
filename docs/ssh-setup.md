@@ -50,12 +50,51 @@ Host *
   IdentitiesOnly no
 ```
 
-### Linux
+### Linux (with 1Password desktop app)
 
 ```
 Host *
   IdentityAgent ~/.1password/agent.sock
   IdentitiesOnly no
+```
+
+### Linux (CLI only / headless — no 1Password desktop app)
+
+The 1Password SSH agent socket requires the desktop app. On headless or dev VMs,
+use the `op` CLI to pull keys from 1Password and load them into a local ssh-agent.
+
+Run this at the start of each session (keys don't persist across reboots):
+
+```bash
+eval $(op signin)
+eval $(ssh-agent -s)
+
+for item in haproxydmz01_id_ed25519 haproxydmz02_id_ed25519; do
+  op item get "$item" --fields private_key --reveal --format json \
+    | python3 -c "
+import json,sys
+from cryptography.hazmat.primitives.serialization import load_pem_private_key, Encoding, PrivateFormat, NoEncryption
+key = load_pem_private_key(json.load(sys.stdin)['value'].encode(), None)
+sys.stdout.buffer.write(key.private_bytes(Encoding.PEM, PrivateFormat.OpenSSH, NoEncryption()))
+" > /tmp/sshkey && chmod 600 /tmp/sshkey && ssh-add /tmp/sshkey && rm /tmp/sshkey
+done
+```
+
+Then set the `IdentityAgent` in `~/.ssh/config` to the agent socket printed by `ssh-agent -s`:
+
+```bash
+sed -i "s|IdentityAgent.*|IdentityAgent $SSH_AUTH_SOCK|" ~/.ssh/config
+```
+
+**Why the conversion step?** 1Password stores Ed25519 keys in PKCS#8 format
+(`-----BEGIN PRIVATE KEY-----`). OpenSSH's `ssh-add` requires OpenSSH wire format
+(`-----BEGIN OPENSSH PRIVATE KEY-----`). The Python `cryptography` library handles
+the conversion in-memory without writing the raw key to disk.
+
+**Populate known_hosts** (first time on a new machine):
+
+```bash
+ssh-keyscan haproxydmz01.vollminlab.com haproxydmz02.vollminlab.com >> ~/.ssh/known_hosts
 ```
 
 ---
