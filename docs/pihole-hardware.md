@@ -100,7 +100,7 @@ If pihole1 is rebuilt or the SD card is replaced:
 
 1. Restore `pihole.toml` from this repo (`hosts/pihole1/configs/pihole/pihole.toml`)
 2. Restore keepalived config (`hosts/pihole1/configs/keepalived/keepalived.conf`)
-3. Restore pihole-flask-api systemd unit (`hosts/pihole1/systemd/pihole-flask-api.service` or `pihole2` as appropriate — runs on both hosts) and retrieve the API token from 1Password (`op read "op://Homelab/recordimporter-api-token/password"`)
+3. Restore pihole-flask-api systemd unit (`hosts/pihole1/systemd/pihole-flask-api.service` or `pihole2` as appropriate — runs on both hosts) and retrieve the API token from 1Password (`op read "op://Homelab/Recordimporter/credential"`)
 4. Restore nebula-sync: copy `hosts/pihole1/nebula-sync/docker-compose.yml`, create `.env` from 1Password, `docker compose up -d`
 5. Regenerate TLS cert — see [pihole-tls.md](pihole-tls.md)
 6. Verify VRRP failover works correctly before closing out

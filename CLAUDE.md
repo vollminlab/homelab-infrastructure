@@ -36,7 +36,7 @@ All records are A records. Three categories:
 | NPM-proxied infra | A | `192.168.152.2` (Nginx Proxy Manager) | pihole, plex, truenas, udm, vcenter, haproxy (stats) |
 | Externally-accessible DMZ | CNAME | `dynamic.vollminlab.com` → public WAN IP | bluemap |
 
-Managed via pihole-flask-api (port 5001, Bearer token from 1Password item `recordimporter-api-token`). Full record list in `hosts/pihole1/configs/pihole/pihole.toml`.
+Managed via pihole-flask-api (port 5001, Bearer token from 1Password item `Recordimporter` — `op read "op://Homelab/Recordimporter/credential"`). Full record list in `hosts/pihole1/configs/pihole/pihole.toml`.
 
 ## DR notes
 

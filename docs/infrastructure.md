@@ -121,7 +121,7 @@ Traffic between zones follows a default-deny model. Custom rules are documented 
 - ESNI blocking: enabled
 - Web UI: HTTPS, self-signed EC P-256 cert at `/etc/pihole/tls.pem` — see [pihole-tls.md](pihole-tls.md)
 - Config sync: nebula-sync (runs on pihole1, replicates to pihole2)
-- DNS record management API: pihole-flask-api (port 5001, Bearer token from 1Password `recordimporter-api-token`) — deployed on **both** pihole1 and pihole2
+- DNS record management API: pihole-flask-api (port 5001, Bearer token from 1Password `Recordimporter` — `op read "op://Homelab/Recordimporter/credential"`) — deployed on **both** pihole1 and pihole2
 
 **Root crontab (both hosts):**
 
