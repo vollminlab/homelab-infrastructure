@@ -18,7 +18,7 @@ mkdir -p "$OUT_DIR"
 # ── Auth ───────────────────────────────────────────────────────────────────────
 
 if command -v op &>/dev/null; then
-  TRUENAS_KEY=$(op item get 5n53chsckejehks7ke2arv2n6e --fields label=password --reveal)
+  TRUENAS_KEY=$(op item get h6j37dz65xsn2ggwaulez2aujq --fields label=credential --reveal)
 else
   read -rsp "TrueNAS API key: " TRUENAS_KEY
   echo
@@ -49,12 +49,15 @@ fetch() {
       "$py" -c "
 import sys, json
 
-REDACT_KEYS = {'privatekey', 'certificate', 'CSR'}
+REDACT_KEYS = {'privatekey', 'certificate'}
 
 def redact(obj):
     if isinstance(obj, dict):
         return {k: 'REDACTED' if k in REDACT_KEYS else redact(v) for k, v in obj.items()}
     if isinstance(obj, list):
+        # Redact lists that contain PEM certificate data
+        if any(isinstance(i, str) and '-----BEGIN' in i for i in obj):
+            return ['REDACTED']
         return [redact(i) for i in obj]
     return obj
 

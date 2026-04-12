@@ -411,7 +411,7 @@ collect_udm() {
   local py_script='
 import sys, json
 
-REDACT = {"password","secret","x_passphrase","x_wpa_psk","x_password","private_key","privateKey","token","key"}
+REDACT = {"password","secret","x_passphrase","x_wpa_psk","x_password","private_key","privateKey","token","key","username"}
 
 def redact(obj):
     if isinstance(obj, dict):

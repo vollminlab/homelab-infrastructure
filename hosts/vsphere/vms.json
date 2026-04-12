@@ -1,5 +1,34 @@
 [
     {
+        "Name":  "devsbx01",
+        "GuestId":  "ubuntu64Guest",
+        "NumCpu":  4,
+        "MemoryGB":  16,
+        "PowerState":  1,
+        "Folder":  "Linux VMs",
+        "Notes":  "",
+        "IPs":  [
+                    "192.168.152.3",
+                    "fe80::250:56ff:fe98:7011"
+                ],
+        "Disks":  {
+                      "Name":  "Hard disk 1",
+                      "CapacityGB":  60,
+                      "StorageFormat":  3,
+                      "Datastore":  "vmstore2"
+                  },
+        "Networks":  {
+                         "Name":  "Network adapter 1",
+                         "NetworkName":  "152-DPG-GuestNet",
+                         "Type":  6,
+                         "MacAddress":  "00:50:56:98:70:11",
+                         "MacAddressType":  null
+                     },
+        "Tags":  {
+
+                 }
+    },
+    {
         "Name":  "groupme01",
         "GuestId":  "ubuntu64Guest",
         "NumCpu":  1,
@@ -251,7 +280,7 @@
                 ],
         "Disks":  {
                       "Name":  "Hard disk 1",
-                      "CapacityGB":  50,
+                      "CapacityGB":  100,
                       "StorageFormat":  3,
                       "Datastore":  "vmstore2"
                   },
@@ -281,7 +310,7 @@
                 ],
         "Disks":  {
                       "Name":  "Hard disk 1",
-                      "CapacityGB":  50,
+                      "CapacityGB":  100,
                       "StorageFormat":  3,
                       "Datastore":  "vmstore1"
                   },
@@ -311,7 +340,7 @@
                 ],
         "Disks":  {
                       "Name":  "Hard disk 1",
-                      "CapacityGB":  50,
+                      "CapacityGB":  100,
                       "StorageFormat":  3,
                       "Datastore":  "vmstore2"
                   },
@@ -341,7 +370,7 @@
                 ],
         "Disks":  {
                       "Name":  "Hard disk 1",
-                      "CapacityGB":  50,
+                      "CapacityGB":  100,
                       "StorageFormat":  3,
                       "Datastore":  "vmstore1"
                   },
