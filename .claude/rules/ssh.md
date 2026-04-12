@@ -62,7 +62,7 @@ Use `op read` for clean values (no extra formatting):
 op read "op://Homelab/<item>/<field>"
 
 # Example — pihole-flask-api token
-op read "op://Homelab/recordimporter-api-token/password"
+op read "op://Homelab/Recordimporter/credential"
 ```
 
 Avoid `op item get --field password` — it may return extra formatting characters.
