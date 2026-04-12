@@ -24,14 +24,14 @@
         "Name":  "vmstore1",
         "Type":  "VMFS",
         "CapacityGB":  1433.5,
-        "FreeSpaceGB":  716.61,
+        "FreeSpaceGB":  709.59,
         "FileSystemVersion":  "6.82"
     },
     {
         "Name":  "vmstore2",
         "Type":  "VMFS",
         "CapacityGB":  1433.5,
-        "FreeSpaceGB":  826.30,
+        "FreeSpaceGB":  760.95,
         "FileSystemVersion":  "6.82"
     }
 ]

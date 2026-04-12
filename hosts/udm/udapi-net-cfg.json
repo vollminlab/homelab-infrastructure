@@ -460,22 +460,6 @@
     },
     {
       "identification": {
-        "id": "eth10.100",
-        "type": "vlan"
-      },
-      "status": {
-        "enabled": true,
-        "mtu": 9216
-      },
-      "vlan": {
-        "id": 100,
-        "interface": {
-          "id": "eth10"
-        }
-      }
-    },
-    {
-      "identification": {
         "id": "eth10.153",
         "type": "vlan"
       },
@@ -485,6 +469,22 @@
       },
       "vlan": {
         "id": 153,
+        "interface": {
+          "id": "eth10"
+        }
+      }
+    },
+    {
+      "identification": {
+        "id": "eth10.100",
+        "type": "vlan"
+      },
+      "status": {
+        "enabled": true,
+        "mtu": 9216
+      },
+      "vlan": {
+        "id": 100,
         "interface": {
           "id": "eth10"
         }
@@ -525,8 +525,8 @@
             "pvid": 1,
             "vid": [
               120,
-              140,
-              130
+              130,
+              140
             ]
           },
           {
@@ -561,8 +561,8 @@
               151,
               152,
               150,
-              140,
               130,
+              140,
               110,
               155,
               160,
@@ -599,8 +599,8 @@
             "pvid": 1,
             "vid": [
               120,
-              140,
-              130
+              130,
+              140
             ]
           },
           {
@@ -614,8 +614,8 @@
               151,
               152,
               150,
-              140,
               130,
+              140,
               110,
               155,
               160,
@@ -641,8 +641,8 @@
               151,
               152,
               150,
-              140,
               130,
+              140,
               110,
               155,
               160,
@@ -2310,7 +2310,7 @@
     "firewall/mangle": 7,
     "firewall/nat": 10,
     "firewall/pbr": 9,
-    "firewall/sets": 1,
+    "firewall/sets": 4,
     "firewall/settings": 1,
     "interfaces": 40,
     "peripherals": 1,
@@ -2990,6 +2990,16 @@
     },
     {
       "identification": {
+        "name": "69d9e0bd6c1c30cac8f55d01",
+        "type": "port"
+      },
+      "description": "customized-Masters League Nodeport",
+      "entries": [
+        "32567"
+      ]
+    },
+    {
+      "identification": {
         "name": "wireguard_ports",
         "type": "port"
       },
@@ -3562,7 +3572,7 @@
               "wireguard_ports"
             ]
           },
-          "ipVersion": "v4only",
+          "ipVersion": "both",
           "triggerTag": {
             "id": "684bcfb46a681001d80ca668",
             "type": "PREDEFINED_FIREWALL_RULE"
@@ -5235,7 +5245,7 @@
         {
           "id": 30001,
           "target": "ACCEPT",
-          "description": "Allow haproxydmz -[Minecraft]> k8sworker05 (Return)",
+          "description": "Allow haproxydmz -[Minecraft]> k8sworker0{5,6} (Return)",
           "protocol": "tcp_udp",
           "source": {
             "sets": [
@@ -5257,7 +5267,7 @@
         {
           "id": 30002,
           "target": "ACCEPT",
-          "description": "Allow haproxydmz -[Bluemap]> k8sworker05 (Return)",
+          "description": "Allow haproxydmz -[Bluemap]> k8sworker0{5,6} (Return)",
           "protocol": "all",
           "source": {
             "sets": [
@@ -5277,7 +5287,29 @@
           "ipVersion": "both"
         },
         {
-          "id": 30004,
+          "id": 30003,
+          "target": "ACCEPT",
+          "description": "Allow haproxydmz - [Masters League]> k8sworker0{5,6} (Return)",
+          "protocol": "all",
+          "source": {
+            "sets": [
+              "69d9e0bd6c1c30cac8f55d01",
+              "692354a5da2cf33f27f262c1"
+            ]
+          },
+          "destination": {
+            "sets": [
+              "68f32b635209c60a8c699866"
+            ]
+          },
+          "connectionState": [
+            "related",
+            "established"
+          ],
+          "ipVersion": "both"
+        },
+        {
+          "id": 30005,
           "target": "DROP",
           "description": "[LAN_DMZ]Isolated Networks",
           "log": false,
@@ -6598,7 +6630,7 @@
         {
           "id": 10001,
           "target": "ACCEPT",
-          "description": "Allow haproxydmz -[Minecraft]> k8sworker05",
+          "description": "Allow haproxydmz -[Minecraft]> k8sworker0{5,6}",
           "log": true,
           "protocol": "tcp_udp",
           "source": {
@@ -6618,7 +6650,7 @@
         {
           "id": 10002,
           "target": "ACCEPT",
-          "description": "Allow haproxydmz -[Bluemap]> k8sworker05",
+          "description": "Allow haproxydmz -[Bluemap]> k8sworker0{5,6}",
           "log": true,
           "protocol": "all",
           "source": {
@@ -6629,6 +6661,26 @@
           "destination": {
             "sets": [
               "690ee53e5209c60a8ce9bbc0",
+              "692354a5da2cf33f27f262c1"
+            ]
+          },
+          "connectionState": [],
+          "ipVersion": "both"
+        },
+        {
+          "id": 10003,
+          "target": "ACCEPT",
+          "description": "Allow haproxydmz - [Masters League]> k8sworker0{5,6}",
+          "log": true,
+          "protocol": "all",
+          "source": {
+            "sets": [
+              "68f32b635209c60a8c699866"
+            ]
+          },
+          "destination": {
+            "sets": [
+              "69d9e0bd6c1c30cac8f55d01",
               "692354a5da2cf33f27f262c1"
             ]
           },

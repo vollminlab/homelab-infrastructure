@@ -9,7 +9,7 @@
 # This file is copyright under the latest version of the EUPL.
 # Please see LICENSE file for your rights under this license.
 
-readonly PI_HOLE_SCRIPT_DIR="/opt/pihole"
+PI_HOLE_SCRIPT_DIR="/opt/pihole"
 
 # PI_HOLE_BIN_DIR is not readonly here because in some functions (checkout),
 # they might get set again when the installer is sourced. This causes an
@@ -17,24 +17,23 @@ readonly PI_HOLE_SCRIPT_DIR="/opt/pihole"
 PI_HOLE_BIN_DIR="/usr/local/bin"
 
 readonly colfile="${PI_HOLE_SCRIPT_DIR}/COL_TABLE"
+# shellcheck source=./advanced/Scripts/COL_TABLE
 source "${colfile}"
 
-readonly utilsfile="${PI_HOLE_SCRIPT_DIR}/utils.sh"
+utilsfile="${PI_HOLE_SCRIPT_DIR}/utils.sh"
+# shellcheck source=./advanced/Scripts/utils.sh
 source "${utilsfile}"
 
 # Source api functions
 readonly apifile="${PI_HOLE_SCRIPT_DIR}/api.sh"
+# shellcheck source=./advanced/Scripts/api.sh
 source "${apifile}"
 
 versionsfile="/etc/pihole/versions"
-if [ -f "${versionsfile}" ]; then
-    # Only source versionsfile if the file exits
-    # fixes a warning during installation where versionsfile does not exist yet
-    # but gravity calls `pihole -status` and thereby sourcing the file
-    source "${versionsfile}"
-fi
+# Load version variables without executing file content as shell code.
+# loadVersionFile() only assigns known keys with validated values.
+loadVersionFile "${versionsfile}"
 
-# TODO: We can probably remove the reliance on this function too, just tell people to pihole-FTL --config webserver.api.password "password"
 SetWebPassword() {
     if [ -n "$2" ] ; then
         readonly PASSWORD="$2"
@@ -92,8 +91,18 @@ flushFunc() {
   exit 0
 }
 
+# Deprecated function, should be removed in the future
+# use networkFlush instead
 arpFunc() {
-  "${PI_HOLE_SCRIPT_DIR}"/piholeARPTable.sh "$@"
+  shift
+  echo -e "  ${INFO} The 'arpflush' command is deprecated, use 'networkflush' instead"
+  "${PI_HOLE_SCRIPT_DIR}"/piholeNetworkFlush.sh "$@"
+  exit 0
+}
+
+networkFlush() {
+  shift
+  "${PI_HOLE_SCRIPT_DIR}"/piholeNetworkFlush.sh "$@"
   exit 0
 }
 
@@ -143,10 +152,11 @@ uninstallFunc() {
 
 versionFunc() {
   exec "${PI_HOLE_SCRIPT_DIR}"/version.sh
+  exit 0
 }
 
 reloadDNS() {
-  local svcOption svc str output status pid icon FTL_PID_FILE
+  local svcOption svc str output status pid icon FTL_PID_FILE sigrtmin
   svcOption="${1:-reload}"
 
   # get the current path to the pihole-FTL.pid
@@ -165,7 +175,10 @@ reloadDNS() {
       str="FTL is not running"
       icon="${INFO}"
     else
-      svc="kill -RTMIN ${pid}"
+      sigrtmin="$(pihole-FTL sigrtmin 2>/dev/null)"
+      # Make sure sigrtmin is a number, otherwise fallback to RTMIN
+      [[ "${sigrtmin}" =~ ^[0-9]+$ ]] || unset sigrtmin
+      svc="kill -${sigrtmin:-RTMIN} ${pid}"
       str="Reloading DNS lists"
       icon="${TICK}"
     fi
@@ -234,7 +247,7 @@ Time:
     fi
 
     if [[ ${error} == true ]];then
-      echo -e "  ${COL_LIGHT_RED}Unknown format for blocking timer!${COL_NC}"
+      echo -e "  ${COL_RED}Unknown format for blocking timer!${COL_NC}"
       echo -e "  Try 'pihole disable --help' for more information."
       exit 1
     fi
@@ -247,17 +260,20 @@ Time:
   data=$(PostFTLData "dns/blocking" "{ \"blocking\": ${1}, \"timer\": ${tt} }")
 
   # Check the response
-  local extra=" forever"
-  local timer="$(echo "${data}"| jq --raw-output '.timer' )"
+  local extra timer
+  extra=" forever"
+  timer="$(echo "${data}"| jq --raw-output '.timer' )"
   if [[ "${timer}" != "null" ]]; then
     extra=" for ${timer}s"
   fi
-  local str="Pi-hole $(echo "${data}" | jq --raw-output '.blocking')${extra}"
+  local str
+  str="Pi-hole $(echo "${data}" | jq --raw-output '.blocking')${extra}"
 
   # Logout from the API
   LogoutAPI
 
   echo -e "${OVER}  ${TICK} ${str}"
+  exit 0
 }
 
 piholeLogging() {
@@ -287,7 +303,7 @@ Options:
     echo -e "  ${INFO} Enabling logging..."
     local str="Logging has been enabled!"
   else
-    echo -e "  ${COL_LIGHT_RED}Invalid option${COL_NC}
+    echo -e "  ${COL_RED}Invalid option${COL_NC}
   Try 'pihole logging --help' for more information."
     exit 1
   fi
@@ -375,20 +391,22 @@ statusFunc() {
 
 tailFunc() {
   # Warn user if Pi-hole's logging is disabled
-  local logging_enabled=$(getFTLConfigValue dns.queryLogging)
+  local logging_enabled
+  logging_enabled=$(getFTLConfigValue dns.queryLogging)
   if [[ "${logging_enabled}" != "true" ]]; then
     echo "  ${CROSS} Warning: Query logging is disabled"
   fi
   echo -e "  ${INFO} Press Ctrl-C to exit"
 
   # Get logfile path
-  readonly LOGFILE=$(getFTLConfigValue files.log.dnsmasq)
+  LOGFILE=$(getFTLConfigValue files.log.dnsmasq)
+  readonly LOGFILE
 
   # Strip date from each line
   # Color blocklist/denylist/wildcard entries as red
   # Color A/AAAA/DHCP strings as white
   # Color everything else as gray
-  tail -f $LOGFILE | grep --line-buffered "${1}" | sed -E \
+  tail -f $LOGFILE | grep --line-buffered -- "${1}" | sed -E \
     -e "s,($(date +'%b %d ')| dnsmasq\[[0-9]*\]),,g" \
     -e "s,(.*(denied |gravity blocked ).*),${COL_RED}&${COL_NC}," \
     -e "s,.*(query\\[A|DHCP).*,${COL_NC}&${COL_NC}," \
@@ -423,6 +441,7 @@ piholeCheckoutFunc() {
       exit 0
     fi
 
+    #shellcheck source=./advanced/Scripts/piholeCheckout.sh
     source "${PI_HOLE_SCRIPT_DIR}"/piholeCheckout.sh
     shift
     checkout "$@"
@@ -484,6 +503,7 @@ Debugging Options:
                       Add an optional argument to filter the log
                       (regular expressions are supported)
   api <endpoint>      Query the Pi-hole API at <endpoint>
+                        Precede <endpoint> with 'verbose' option to show authentication and status messages
 
 
 Options:
@@ -509,7 +529,8 @@ Options:
   reloadlists         Update the lists WITHOUT flushing the cache or restarting the DNS server
   checkout            Switch Pi-hole subsystems to a different GitHub branch
                         Add '-h' for more info on checkout usage
-  arpflush            Flush information stored in Pi-hole's network tables";
+  networkflush        Flush information stored in Pi-hole's network tables
+                        Add '--arp' to additionally flush the ARP table ";
   exit 0
 }
 
@@ -518,7 +539,7 @@ if [[ $# = 0 ]]; then
 fi
 
 # functions that do not require sudo power
-need_root=1
+need_root=
 case "${1}" in
   "-h" | "help" | "--help"        ) helpFunc;;
   "-v" | "version"                ) versionFunc;;
@@ -526,31 +547,32 @@ case "${1}" in
   "-q" | "query"                  ) queryFunc "$@";;
   "status"                        ) statusFunc "$2";;
   "tricorder"                     ) tricorderFunc;;
+  "allow" | "allowlist"           ) listFunc "$@";;
+  "deny" | "denylist"             ) listFunc "$@";;
+  "--wild" | "wildcard"           ) listFunc "$@";;
+  "--regex" | "regex"             ) listFunc "$@";;
+  "--allow-regex" | "allow-regex" ) listFunc "$@";;
+  "--allow-wild" | "allow-wild"   ) listFunc "$@";;
+  "enable"                        ) piholeEnable true "$2";;
+  "disable"                       ) piholeEnable false "$2";;
+  "api"                           ) shift; apiFunc "$@"; exit 0;;
 
   # we need to add all arguments that require sudo power to not trigger the * argument
-  "allow" | "allowlist"           ) need_root=0;;
-  "deny" | "denylist"             ) need_root=0;;
-  "--wild" | "wildcard"           ) need_root=0;;
-  "--regex" | "regex"             ) need_root=0;;
-  "--allow-regex" | "allow-regex" ) need_root=0;;
-  "--allow-wild" | "allow-wild"   ) need_root=0;;
-  "-f" | "flush"                  ) ;;
-  "-up" | "updatePihole"          ) ;;
-  "-r"  | "repair"                ) ;;
-  "-l" | "logging"                ) ;;
-  "uninstall"                     ) ;;
-  "enable"                        ) need_root=0;;
-  "disable"                       ) need_root=0;;
-  "-d" | "debug"                  ) ;;
-  "-g" | "updateGravity"          ) ;;
-  "reloaddns"                     ) ;;
-  "reloadlists"                   ) ;;
-  "setpassword"                   ) ;;
-  "checkout"                      ) ;;
-  "updatechecker"                 ) ;;
-  "arpflush"                      ) ;;
-  "-t" | "tail"                   ) ;;
-  "api"                           ) need_root=0;;
+  "-f" | "flush"                  ) need_root=true;;
+  "-up" | "updatePihole"          ) need_root=true;;
+  "-r"  | "repair"                ) need_root=true;;
+  "-l" | "logging"                ) need_root=true;;
+  "uninstall"                     ) need_root=true;;
+  "-d" | "debug"                  ) need_root=true;;
+  "-g" | "updateGravity"          ) need_root=true;;
+  "reloaddns"                     ) need_root=true;;
+  "reloadlists"                   ) need_root=true;;
+  "setpassword"                   ) need_root=true;;
+  "checkout"                      ) need_root=true;;
+  "updatechecker"                 ) need_root=true;;
+  "arpflush"                      ) need_root=true;; # Deprecated, use networkflush instead
+  "networkflush"                  ) need_root=true;;
+  "-t" | "tail"                   ) need_root=true;;
   *                               ) helpFunc;;
 esac
 
@@ -560,22 +582,17 @@ if [[ -z ${USER} ]]; then
   USER=$(whoami)
 fi
 
-# Check if the current user is neither root nor pihole and if the command
+# Check if the current user is not root and if the command
 # requires root. If so, exit with an error message.
-if [[ $EUID -ne 0 && ${USER} != "pihole" && need_root -eq 1 ]];then
-  echo -e "  ${CROSS} The Pi-hole command requires root privileges, try:"
+# Add an exception for the user "pihole" to allow the webserver running gravity
+if [[ ( $EUID -ne 0 && ${USER} != "pihole" ) && -n "${need_root}" ]]; then
+  echo -e "  ${CROSS} This Pi-hole command requires root privileges, try:"
   echo -e "      ${COL_GREEN}sudo pihole $*${COL_NC}"
   exit 1
 fi
 
 # Handle redirecting to specific functions based on arguments
 case "${1}" in
-  "allow" | "allowlist"           ) listFunc "$@";;
-  "deny" | "denylist"             ) listFunc "$@";;
-  "--wild" | "wildcard"           ) listFunc "$@";;
-  "--regex" | "regex"             ) listFunc "$@";;
-  "--allow-regex" | "allow-regex" ) listFunc "$@";;
-  "--allow-wild" | "allow-wild"   ) listFunc "$@";;
   "-d" | "debug"                  ) debugFunc "$@";;
   "-f" | "flush"                  ) flushFunc "$@";;
   "-up" | "updatePihole"          ) updatePiholeFunc "$@";;
@@ -583,16 +600,14 @@ case "${1}" in
   "-g" | "updateGravity"          ) updateGravityFunc "$@";;
   "-l" | "logging"                ) piholeLogging "$@";;
   "uninstall"                     ) uninstallFunc;;
-  "enable"                        ) piholeEnable true "$2";;
-  "disable"                       ) piholeEnable false "$2";;
   "reloaddns"                     ) reloadDNS "reload";;
   "reloadlists"                   ) reloadDNS "reload-lists";;
   "setpassword"                   ) SetWebPassword "$@";;
   "checkout"                      ) piholeCheckoutFunc "$@";;
   "updatechecker"                 ) shift; updateCheckFunc "$@";;
-  "arpflush"                      ) arpFunc "$@";;
+  "arpflush"                      ) arpFunc "$@";; # Deprecated, use networkflush instead
+  "networkflush"                  ) networkFlush "$@";;
   "-t" | "tail"                   ) tailFunc "$2";;
-  "api"                           ) apiFunc "$2";;
   *                               ) helpFunc;;
 esac
 
