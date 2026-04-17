@@ -427,3 +427,28 @@ Verify NVMe health (no errors on either host):
 ssh pihole1 "sudo dmesg | grep -iE 'nvme|i/o error'"
 ssh pihole2 "sudo dmesg | grep -iE 'nvme|i/o error'"
 ```
+
+---
+
+## Pi-hole v6 configuration notes
+
+### Session timeout (homepage widget fix)
+
+Pi-hole v6 defaults to a 1800-second (30 min) session timeout. The homepage Pi-hole widget does not re-authenticate when the session expires, causing the widget to show "Failed to authenticate" every 30 minutes until the homepage pod is restarted.
+
+**Fix applied 2026-04-17** — session timeout set to 0 (no expiry) on both Pi-holes:
+```bash
+sudo pihole-FTL --config webserver.session.timeout 0
+```
+
+This setting is not exposed in the Pi-hole v6 web UI — it must be set via the CLI or the API (requires a web-password session, not an app-password session).
+
+If either Pi-hole is rebuilt or the config is reset, this must be re-applied.
+
+### app_sudo for nebula-sync
+
+pihole2 requires `webserver.api.app_sudo = true` for nebula-sync to import configs from pihole1. Without it, nebula-sync authenticates successfully but gets 403 on the teleporter endpoint.
+
+```bash
+sudo pihole-FTL --config webserver.api.app_sudo true
+```
