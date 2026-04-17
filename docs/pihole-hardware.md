@@ -452,3 +452,16 @@ pihole2 requires `webserver.api.app_sudo = true` for nebula-sync to import confi
 ```bash
 sudo pihole-FTL --config webserver.api.app_sudo true
 ```
+
+### Pi-hole watchdog CronJob (homepage pod auto-restart)
+
+Even with the session timeout set to 1 year, the homepage Pi-hole widget can still show 401 errors after Pi-hole FTL restarts or a VRRP failover invalidates the cached session ID. Homepage never re-authenticates on 401 — it must be restarted.
+
+A Kubernetes CronJob (`pihole-watchdog`) runs every 5 minutes in the `homepage` namespace and handles this automatically:
+
+1. Checks homepage pod logs for 401 errors in the last 5 minutes
+2. If found, validates Pi-hole is actually reachable (curl `POST /api/auth`)
+3. If Pi-hole is up, patches the homepage Deployment to trigger a rolling restart
+4. Waits for rollout to complete, then checks post-restart logs for residual errors
+
+The watchdog reads the Pi-hole API key from the existing `homepage-env-vars` secret at runtime — the key is never stored in committed YAML. Source: `clusters/vollminlab-cluster/homepage/homepage/app/pihole-watchdog-cronjob.yaml` in `k8s-vollminlab-cluster`.
