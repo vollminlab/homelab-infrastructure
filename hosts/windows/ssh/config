@@ -6,6 +6,7 @@
 # ==========================================================
 Host *
   IdentitiesOnly yes
+  ForwardAgent yes
 
 # -----------------------
 # Homelab hosts (direct)
@@ -29,7 +30,6 @@ Host devsbx01
   HostName devsbx01.vollminlab.com
   User vollmin
   IdentityFile ~/.ssh/devsbx01_id_ed25519.pub
-  ForwardAgent yes
 
 Host groupme01
   HostName groupme01.vollminlab.com
