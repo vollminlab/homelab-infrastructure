@@ -51,9 +51,9 @@ source ~/.bashrc
 
 ## Terminal font
 
-Icons in `eza` require a Nerd Font in the terminal client.
-Installed font: **CaskaydiaCove Nerd Font** (via Chocolatey on Windows).
-Set in Windows Terminal defaults and Cursor `terminal.integrated.fontFamily`.
+Icons in `eza` require a Nerd Font in the terminal client — this is a **client-side requirement only**, nothing to install on the VM.
+
+**DR note:** if icons appear as boxes after restoring this VM, the client terminal needs a Nerd Font (e.g. CaskaydiaCove NF) installed and selected — the VM config is correct as-is.
 
 ## Key shell bindings
 
