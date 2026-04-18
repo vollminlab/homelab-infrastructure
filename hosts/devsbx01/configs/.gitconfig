@@ -1,0 +1,16 @@
+[credential "https://github.com"]
+	helper = 
+	helper = !/home/vollmin/.local/bin/gh auth git-credential
+[credential "https://gist.github.com"]
+	helper = 
+	helper = !/home/vollmin/.local/bin/gh auth git-credential
+[user]
+	name = svollmi1
+	email = scottvollmin@gmail.com
+[core]
+	pager = delta
+[interactive]
+	diffFilter = delta --color-only
+[delta]
+	navigate = true
+	line-numbers = true
