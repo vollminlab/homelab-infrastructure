@@ -60,5 +60,11 @@ All credentials are retrieved from 1Password via the `op` CLI. No secrets are st
 
 ## Docs
 
-- [SSH setup](docs/ssh-setup.md) — 1Password SSH agent configuration
+- [Infrastructure reference](docs/infrastructure.md) — Full host inventory, network layout, and DR notes for every system
+- [SSH setup](docs/ssh-setup.md) — 1Password SSH agent configuration and host aliases
 - [Pi-hole TLS](docs/pihole-tls.md) — Self-signed cert generation for Pi-hole web UI
+- [Pi-hole hardware](docs/pihole-hardware.md) — Physical hardware and OS setup for the Pi-hole nodes
+- [etcd](docs/etcd.md) — etcd backup and restore procedures for the Kubernetes cluster
+- [Credential rotation](docs/credential-rotation.md) — Procedures for rotating secrets and API keys
+- [Maintenance day](docs/maintenance-day.md) — Routine maintenance checklist and procedures
+- [Syncthing](docs/syncthing.md) — Syncthing configuration for vault and file sync
