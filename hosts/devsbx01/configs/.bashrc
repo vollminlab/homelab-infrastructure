@@ -109,8 +109,10 @@ gfetch() {
     for dir in "$base"/*/; do
         [[ -d "$dir/.git" ]] || continue
         found=1
+        local output
+        output=$(git -C "$dir" fetch --all --prune 2>&1 | grep -v '^\s*- \[deleted\]')
         echo "→ $(basename "$dir")"
-        git -C "$dir" fetch --all --prune 2>&1 | sed 's/^/  /'
+        [[ -n "$output" ]] && echo "$output" | sed 's/^/  /'
     done
     (( found )) || echo "No git repos found in $base"
 }
