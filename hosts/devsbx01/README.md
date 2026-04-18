@@ -31,13 +31,14 @@ cp configs/.bashrc ~/
 cp configs/.fzf.bash ~/
 cp configs/.tmux.conf ~/
 cp configs/.gitconfig ~/
+cp configs/.blerc ~/
 source ~/.bashrc
 ```
 
 ## Tools installed
 
 | Tool | Purpose |
-|------|---------|
+| --- | --- |
 | `fzf` | Fuzzy finder — Ctrl-R history, Ctrl-T files |
 | `ble.sh` | Inline history autosuggestions as you type |
 | `eza` | Modern `ls` with git status and icons (requires Nerd Font in terminal) |
@@ -58,7 +59,7 @@ Icons in `eza` require a Nerd Font in the terminal client — this is a **client
 ## Key shell bindings
 
 | Key | Action |
-|-----|--------|
+| --- | --- |
 | `Ctrl-R` | fzf history search |
 | `Ctrl-T` | fzf file picker |
 | `→` / `End` | Accept ble.sh inline suggestion |

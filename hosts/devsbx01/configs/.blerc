@@ -1,0 +1,13 @@
+# Keep multiline editing behavior explicit in emacs mode:
+# RET inserts a newline in multiline mode, and C-j runs the buffer.
+function blerc/emacs-load-hook {
+  ble-bind -f 'C-j' accept-line
+  ble-bind -f 'C-RET' accept-line
+  ble-bind -f 'C-m' accept-single-line-or-newline
+  ble-bind -f 'RET' accept-single-line-or-newline
+
+  # Inline auto-complete has its own keymap, so bind C-j there too.
+  ble-bind -m auto_complete -f 'C-j' auto_complete/accept-line
+  ble-bind -m auto_complete -f 'C-RET' auto_complete/accept-line
+}
+blehook/eval-after-load keymap_emacs blerc/emacs-load-hook
