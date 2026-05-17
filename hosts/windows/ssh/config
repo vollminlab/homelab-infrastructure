@@ -133,3 +133,8 @@ Host k8sworker06
   HostName k8sworker06.vollminlab.com
   User vollmin
   IdentityFile ~/.ssh/k8sworker06_id_ed25519.pub
+
+Host ansible01
+  HostName ansible01.vollminlab.com
+  User vollmin
+  IdentityFile ~/.ssh/ansible01_id_ed25519.pub
