@@ -73,7 +73,7 @@ Traffic between zones follows a default-deny model. Custom rules are documented 
 | Chain     | Custom Rules                                                                |
 |-----------|-----------------------------------------------------------------------------|
 | LAN_WAN   | Allow Pihole → Internet (DNS); reject all other internal → external DNS; allow all |
-| LAN_LAN   | Allow IoT-WLAN → Pihole (DNS); allow Admin Devices → Management; allow IoT return; allow Plex ↔ IoT-WLAN; isolated networks; allow all |
+| LAN_LAN   | Allow IoT-WLAN → Pihole (DNS); allow Admin Devices → Management; allow IoT return; allow Plex ↔ IoT-WLAN; allow IoT-WLAN → MetalLB Ingress VIP:443 (Jellyfin + all ingress-nginx services); isolated networks; allow all |
 | LAN_DMZ   | Allow DMZ → Pihole DNS (return); allow haproxydmz → k8sworker05 Minecraft (return); allow haproxydmz → k8sworker05 Bluemap (return); isolated networks; allow all |
 | LAN_GUEST | Allow Pihole ↔ Hotspot (DNS); isolated networks; allow all                  |
 | LAN_VPN   | Allow VPN → Pihole DNS (return); allow all                                  |
