@@ -287,6 +287,85 @@ REMOTE
   prune_empty_crontabs "$host"
 }
 
+# ── ansible01 (Ansible control node) ──────────────────────────────────────────
+# Captures only host-specific runtime state that exists nowhere else. The
+# inventory, host_vars, project ansible.cfg, and playbooks live in the
+# ansible-playbooks repo — their single source of truth — and are NOT collected
+# here. No requirements.yml exists in that repo, so `ansible-galaxy ... list` is
+# the ONLY record of which collections/roles are installed (pure drift detection).
+collect_ansible01() {
+  echo ""
+  echo "==> ansible01"
+
+  ssh ansible01 bash << 'REMOTE' | parse_remote ansible01
+set -euo pipefail
+# pipx/venv installs land in ~/.local/bin, which a non-interactive shell may miss.
+export PATH="$HOME/.local/bin:/usr/local/bin:$PATH"
+
+SKIP='^(ssh|cron|rsyslog|syslog|networking|getty|serial-getty|plymouth|avahi|wpa_supplicant|systemd-|dbus|apparmor|ufw|snapd|multipathd|iscsi|vmtoolsd|open-vm-tools)'
+
+# emit <local_rel_path> <remote_abs_path> — stream a file (sudo -n, then plain cat).
+emit() {
+  local rel="$1" path="$2"
+  local content
+  content=$(sudo -n cat "$path" 2>/dev/null) \
+    || content=$(cat "$path" 2>/dev/null) \
+    || { echo "  SKIPPED (permission denied): $path" >&2; return 0; }
+  [[ -z "$content" ]] && return 0
+  printf '<<<FILE %s>>>\n' "$rel"
+  printf '%s\n' "$content"
+  printf '\n<<<ENDFILE>>>\n'
+}
+
+# emit_cmd <local_rel_path> <command> [args...] — stream a command's stdout.
+# Declares `content` separately so `local` doesn't mask the command's exit code.
+emit_cmd() {
+  local rel="$1"; shift
+  local content
+  content=$("$@" 2>/dev/null) || return 0   # command missing/failed → skip
+  [[ -z "$content" ]] && return 0
+  printf '<<<FILE %s>>>\n' "$rel"
+  printf '%s\n' "$content"
+  printf '\n<<<ENDFILE>>>\n'
+}
+
+# Ansible runtime identity + installed Galaxy content (the drift record).
+emit_cmd "ansible-version.txt"     ansible --version
+emit_cmd "galaxy-collections.txt"  ansible-galaxy collection list
+emit_cmd "galaxy-roles.txt"        ansible-galaxy role list
+
+# System-wide cfg ONLY (project ansible.cfg lives in the ansible-playbooks repo).
+emit "configs/ansible/ansible.cfg" "/etc/ansible/ansible.cfg"
+
+# Standard host set.
+emit "fstab" "/etc/fstab"
+
+{ ls /etc/systemd/system/*.service /etc/systemd/system/*.timer 2>/dev/null || true; } | sort | \
+while IFS= read -r f; do
+  name=$(basename "$f")
+  printf '%s\n' "$name" | grep -qE "$SKIP" && continue
+  emit "systemd/$name" "$f"
+done
+
+{ ls /usr/local/bin/ 2>/dev/null || true; } | sort | \
+while IFS= read -r name; do
+  f="/usr/local/bin/$name"
+  LC_ALL=C grep -qI '' "$f" 2>/dev/null || continue  # skip binaries
+  emit "scripts/$name" "$f"
+done
+
+printf '<<<FILE crontab-root>>>\n'
+sudo -n crontab -u root -l 2>/dev/null || true
+printf '\n<<<ENDFILE>>>\n'
+
+printf '<<<FILE crontab-vollmin>>>\n'
+crontab -l 2>/dev/null || true
+printf '\n<<<ENDFILE>>>\n'
+REMOTE
+
+  prune_empty_crontabs ansible01
+}
+
 # ── HAProxy hosts ─────────────────────────────────────────────────────────────
 # To unlock /etc/haproxy/haproxy.cfg and /etc/keepalived/keepalived.conf,
 # add on each host:
@@ -481,7 +560,7 @@ verify_pihole_sync() {
 
 # ── Main ──────────────────────────────────────────────────────────────────────
 if [[ $# -eq 0 ]]; then
-  HOSTS=(pihole1 pihole2 groupme01 haproxy01 haproxy02 haproxydmz01 haproxydmz02 nginx01 udm)
+  HOSTS=(pihole1 pihole2 groupme01 haproxy01 haproxy02 haproxydmz01 haproxydmz02 nginx01 ansible01 udm)
 else
   HOSTS=("$@")
 fi
@@ -504,6 +583,9 @@ for host in "${HOSTS[@]}"; do
         ;;
       nginx01)
         collect_nginx01
+        ;;
+      ansible01)
+        collect_ansible01
         ;;
       udm)
         collect_udm
