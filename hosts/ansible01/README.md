@@ -23,25 +23,34 @@ the homelab — primarily rolling Kubernetes / OS upgrades on the k8s nodes.
 No secrets are collected. The control node reaches managed hosts with a dedicated
 SSH key (see below) that is never committed.
 
+There is **no system-wide `/etc/ansible/ansible.cfg`** on this host — `ansible --version`
+run from `$HOME` reports `config file = None`. The active config is the project
+`ansible.cfg`, which lives in the `ansible-playbooks` repo and is only picked up when
+Ansible runs from inside that checkout. `galaxy-collections.txt` is the collection
+bundle shipped with the apt `ansible` package, installed at
+`/usr/lib/python3/dist-packages/ansible_collections`.
+
 ## Bootstrap / DR
 
 To rebuild ansible01:
 
-1. **Install Ansible** — match the version recorded in `ansible-version.txt`.
-   <!-- TODO: confirm install method on the host (apt / pipx / venv) and pin it here. -->
-2. **Clone the playbooks repo** — `git clone <ansible-playbooks remote> <path>`.
-   <!-- TODO: confirm the clone path on the host, e.g. ~/repos/ansible-playbooks. -->
+1. **Install Ansible via apt** — `sudo apt install ansible` (the full `ansible` package,
+   not `ansible-core`; it bundles the collections in `galaxy-collections.txt`). Match the
+   version in `ansible-version.txt` — currently `core 2.16.3`, executable `/usr/bin/ansible`,
+   Python 3.12.
+2. **Clone the playbooks repo** — `git clone https://github.com/vollminlab/ansible-playbooks.git ~/ansible-playbooks`.
+   Run all `ansible`/`ansible-playbook` commands from inside `~/ansible-playbooks` so the
+   project `ansible.cfg` (and its `inventory/hosts.ini`) is picked up.
 3. **Restore the SSH key** — the project `ansible.cfg` uses `~/.ssh/ansible_k8s_ed25519`
    (`remote_user = vollmin`) to reach the k8s nodes. Restore it from 1Password to
    `~/.ssh/ansible_k8s_ed25519`, then `chmod 600`. **Never commit this key.**
    <!-- TODO: save the key to 1Password (Homelab vault) and record the item name here. -->
-4. **Reinstall Galaxy content** — `ansible-galaxy collection install` / `role install`
-   to match `galaxy-collections.txt` and `galaxy-roles.txt`.
-5. **Verify** — `ansible all -m ping` against the inventory.
+4. **Reinstall any extra Galaxy content** — only needed if `galaxy-collections.txt` shows
+   collections outside the apt bundle (none currently). `ansible-galaxy role list` reports no
+   standalone roles installed.
+5. **Verify** — from `~/ansible-playbooks`, run `ansible all -m ping`.
 
 ## TODO — to finish this doc
 
-- [ ] Confirm the Ansible install method and pin it in step 1 (fill from `ansible-version.txt` after the first collection run).
-- [ ] Confirm the `ansible-playbooks` clone path on the host (step 2).
-- [ ] Save the `ansible_k8s_ed25519` key to 1Password (Homelab vault) and record the item name in step 3.
+- [ ] Save the `ansible_k8s_ed25519` key to 1Password (Homelab vault) and record the item name in step 3. The private key is present on the host (`~/.ssh/ansible_k8s_ed25519`, `0600`) — confirm it is backed up before relying on this DR path.
 - [ ] Add ansible01 to the VM inventory table in `docs/infrastructure.md` (vCPU / RAM / disk / IP — from a vSphere re-export).
