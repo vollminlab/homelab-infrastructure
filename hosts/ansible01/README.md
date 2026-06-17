@@ -41,10 +41,23 @@ To rebuild ansible01:
 2. **Clone the playbooks repo** — `git clone https://github.com/vollminlab/ansible-playbooks.git ~/ansible-playbooks`.
    Run all `ansible`/`ansible-playbook` commands from inside `~/ansible-playbooks` so the
    project `ansible.cfg` (and its `inventory/hosts.ini`) is picked up.
-3. **Restore the SSH key** — the project `ansible.cfg` uses `~/.ssh/ansible_k8s_ed25519`
-   (`remote_user = vollmin`) to reach the k8s nodes. Restore it from 1Password to
-   `~/.ssh/ansible_k8s_ed25519`, then `chmod 600`. **Never commit this key.**
-   <!-- TODO: save the key to 1Password (Homelab vault) and record the item name here. -->
+3. **Restore the outbound SSH key** — ansible authenticates to the k8s nodes with the
+   **on-disk** key `~/.ssh/ansible_k8s_ed25519`. The project `ansible.cfg` pins it via
+   `private_key_file` + `IdentitiesOnly=yes` (`remote_user = vollmin`), so this key — **not**
+   the 1Password SSH agent — is what the control node uses outbound. (The 1Password agent
+   only brokers *operator→host* logins; it is not in the ansible→k8s path. Verified by
+   connecting to a node with the agent disabled.) The matching public key is already in
+   `authorized_keys` on all 9 nodes, so only the private key needs restoring:
+
+   ```bash
+   op read "op://Homelab/ansible_k8s_ed25519/private key" > ~/.ssh/ansible_k8s_ed25519
+   chmod 600 ~/.ssh/ansible_k8s_ed25519
+   ```
+
+   The key is backed up in 1Password (Homelab vault, item **`ansible_k8s_ed25519`**, field
+   `private key`). It is stored as a concealed-field Secure Note rather than a native
+   SSH-Key item because the `op` CLI cannot import an existing key into the SSH-Key category
+   (it can only generate). **Never commit this key.**
 4. **Reinstall any extra Galaxy content** — only needed if `galaxy-collections.txt` shows
    collections outside the apt bundle (none currently). `ansible-galaxy role list` reports no
    standalone roles installed.
@@ -52,5 +65,4 @@ To rebuild ansible01:
 
 ## TODO — to finish this doc
 
-- [ ] Save the `ansible_k8s_ed25519` key to 1Password (Homelab vault) and record the item name in step 3. The private key is present on the host (`~/.ssh/ansible_k8s_ed25519`, `0600`) — confirm it is backed up before relying on this DR path.
 - [ ] Add ansible01 to the VM inventory table in `docs/infrastructure.md` (vCPU / RAM / disk / IP — from a vSphere re-export).
