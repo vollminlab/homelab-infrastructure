@@ -18,11 +18,18 @@ hosts/          Collected configs, one subdirectory per host/system
   udm/          UniFi Dream Machine SE (network config, redacted)
   k8s/          Kubernetes cluster (kubeadm config, kubelet config, nodes)
   vsphere/      vSphere/vCenter (VMs, hosts, networking, storage, permissions)
+  devsbx01/     Dev sandbox VM (manual bootstrap notes; single-user workstation)
   windows/      Windows admin workstation (SSH config)
 
 scripts/        Collection scripts
 docs/           Runbooks and setup notes
 ```
+
+> **Pending collection:** `ansible01` (the Ansible control-node VM, added after the
+> last collection run) is a known host but does not yet have a `hosts/` entry. Two
+> follow-ups remain: (1) define exactly which configs it needs collected and wire it
+> into `scripts/collect-host-configs.sh`, and (2) add it to the VM inventory in
+> [`docs/infrastructure.md`](docs/infrastructure.md).
 
 ## Collecting configs
 
