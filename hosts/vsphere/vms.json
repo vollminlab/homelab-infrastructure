@@ -1,5 +1,33 @@
 [
     {
+        "Name":  "ansible01",
+        "GuestId":  "ubuntu64Guest",
+        "NumCpu":  2,
+        "MemoryGB":  2,
+        "PowerState":  1,
+        "Folder":  "Linux VMs",
+        "Notes":  "Added manually 2026-07-02 pending next Export-VSphereConfigs.ps1 run; specs verified live from guest (nproc/free/lsblk/ip). Datastore unknown.",
+        "IPs":  [
+                    "192.168.152.4"
+                ],
+        "Disks":  {
+                      "Name":  "Hard disk 1",
+                      "CapacityGB":  50,
+                      "StorageFormat":  3,
+                      "Datastore":  "unknown"
+                  },
+        "Networks":  {
+                         "Name":  "Network adapter 1",
+                         "NetworkName":  "152-DPG-GuestNet",
+                         "Type":  6,
+                         "MacAddress":  null,
+                         "MacAddressType":  null
+                     },
+        "Tags":  {
+
+                 }
+    },
+    {
         "Name":  "devsbx01",
         "GuestId":  "ubuntu64Guest",
         "NumCpu":  4,
