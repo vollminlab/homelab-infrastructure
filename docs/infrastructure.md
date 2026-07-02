@@ -232,35 +232,45 @@ iSCSI target: `iscsi.vollminlab.com` / `192.168.150.2:3260`, software initiator 
 
 ### VM Inventory
 
-VM host placement is not tracked here — DRS manages placement dynamically.
+Specs (vCPU / RAM / disk / network / IP) are generated from the collected vSphere export
+(`hosts/vsphere/vms.json`) — **do not hand-edit the tables below.** Refresh the export with
+`scripts/Export-VSphereConfigs.ps1`, then regenerate with `scripts/generate-vm-inventory.py`.
+
+Placement (ESXi host **and** datastore) is intentionally not tracked here: DRS moves hosts
+dynamically and datastores move on manual storage migration, so pinning either in a doc only
+guarantees drift. vCenter appliance VMs (VCHA) are managed out-of-band and omitted.
+
+<!-- BEGIN GENERATED: vm-inventory (scripts/generate-vm-inventory.py) -->
+<!-- Generated from hosts/vsphere/vms.json — do not hand-edit. Regenerate with scripts/generate-vm-inventory.py. -->
 
 #### Kubernetes
 
-| VM          | vCPU | RAM   | Disk   | Datastore | Network    | IP (from nodes.yaml)  |
-|-------------|------|-------|--------|-----------|------------|-----------------------|
-| k8scp01     | 4    | 8 GB  | 50 GB  | vmstore1  | GuestNet   | 192.168.152.8         |
-| k8scp02     | 4    | 8 GB  | 50 GB  | vmstore1  | GuestNet   | 192.168.152.9         |
-| k8scp03     | 4    | 8 GB  | 50 GB  | vmstore2  | GuestNet   | 192.168.152.10        |
-| k8sworker01 | 4    | 8 GB  | 50 GB  | vmstore2  | GuestNet   | 192.168.152.11        |
-| k8sworker02 | 4    | 8 GB  | 50 GB  | vmstore1  | GuestNet   | 192.168.152.12        |
-| k8sworker03 | 4    | 8 GB  | 50 GB  | vmstore2  | GuestNet   | 192.168.152.13        |
-| k8sworker04 | 4    | 8 GB  | 50 GB  | vmstore1  | GuestNet   | 192.168.152.14        |
-| k8sworker05 | 8    | 32 GB | 100 GB | vmstore2  | GuestNet   | 192.168.152.15        |
-| k8sworker06 | 8    | 32 GB | 100 GB | vmstore2  | GuestNet   | 192.168.152.16        |
+| VM          | vCPU | RAM   | Disk   | Network  | IP             |
+|-------------|------|-------|--------|----------|----------------|
+| k8scp01     | 4    | 8 GB  | 50 GB  | GuestNet | 192.168.152.8  |
+| k8scp02     | 4    | 8 GB  | 50 GB  | GuestNet | 192.168.152.9  |
+| k8scp03     | 4    | 8 GB  | 50 GB  | GuestNet | 192.168.152.10 |
+| k8sworker01 | 4    | 8 GB  | 100 GB | GuestNet | 192.168.152.11 |
+| k8sworker02 | 4    | 8 GB  | 100 GB | GuestNet | 192.168.152.12 |
+| k8sworker03 | 4    | 8 GB  | 100 GB | GuestNet | 192.168.152.13 |
+| k8sworker04 | 4    | 8 GB  | 100 GB | GuestNet | 192.168.152.14 |
+| k8sworker05 | 8    | 32 GB | 100 GB | GuestNet | 192.168.152.15 |
+| k8sworker06 | 8    | 32 GB | 100 GB | GuestNet | 192.168.152.16 |
 
 #### Infrastructure VMs
 
-> IPs sourced from `hosts/vsphere/vms.json` guest data. Run `scripts/Export-VSphereConfigs.ps1` to refresh.
+| VM           | vCPU | RAM   | Disk  | Network  | IP             |
+|--------------|------|-------|-------|----------|----------------|
+| ansible01    | 2    | 2 GB  | 50 GB | GuestNet | 192.168.152.4  |
+| devsbx01     | 4    | 16 GB | 60 GB | GuestNet | 192.168.152.3  |
+| groupme01    | 1    | 2 GB  | 50 GB | GuestNet | 192.168.152.17 |
+| haproxy01    | 2    | 2 GB  | 20 GB | GuestNet | 192.168.152.5  |
+| haproxy02    | 2    | 2 GB  | 20 GB | GuestNet | 192.168.152.6  |
+| haproxydmz01 | 2    | 2 GB  | 50 GB | DMZ      | 192.168.160.2  |
+| haproxydmz02 | 2    | 2 GB  | 50 GB | DMZ      | 192.168.160.3  |
+| nginx01      | 1    | 2 GB  | 50 GB | GuestNet | 192.168.152.2  |
 
-| VM           | vCPU | RAM  | Disk   | Datastore | Network  | IP              |
-|--------------|------|------|--------|-----------|----------|-----------------|
-| devsbx01     | 4    | 16 GB | 60 GB  | vmstore2  | GuestNet | 192.168.152.3   |
-| haproxy01    | 2    | 2 GB | 20 GB  | vmstore1  | GuestNet | 192.168.152.5   |
-| haproxy02    | 2    | 2 GB | 20 GB  | vmstore2  | GuestNet | 192.168.152.6   |
-| haproxydmz01 | 2    | 2 GB | 50 GB  | vmstore2  | DMZ      | 192.168.160.2   |
-| haproxydmz02 | 2    | 2 GB | 50 GB  | vmstore2  | DMZ      | 192.168.160.3   |
-| nginx01      | 1    | 2 GB | 50 GB  | vmstore1  | GuestNet | 192.168.152.2   |
-| groupme01    | 1    | 2 GB | 50 GB  | vmstore1  | GuestNet | 192.168.152.17  |
+<!-- END GENERATED: vm-inventory -->
 
 ---
 
