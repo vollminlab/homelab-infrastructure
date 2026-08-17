@@ -7,3 +7,9 @@
 
 # Claude Code — ignore local settings but commit rules/commands
 .claude/settings.local.json
+
+# UPS shutdown credentials (deployed to TrueNAS, never committed)
+scripts/ups-shutdown/ups-shutdown.env
+
+# Git worktrees (org convention)
+.worktrees/
