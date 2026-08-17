@@ -251,11 +251,16 @@ kubectl -n kube-system exec etcd-k8scp01 -- etcdctl \
 
 ### 7. Kubernetes Version Upgrade
 
-After all node OS upgrades are complete. Requires `kubeadm upgrade plan` — do not mix with OS maintenance above.
+After all node OS upgrades are complete. Do not mix with OS maintenance above.
 
-Tracked in [k8s-vollminlab-cluster roadmap](../../k8s-vollminlab-cluster/docs/roadmap.md) as Phase 1.4.
+Tracked in the `k8s-vollminlab-cluster` repo's roadmap under **Phase 7 / 7.1, "Node Maintenance
+Window"** — *not* Phase 1.4, which is the Kyverno policy violations cleanup and unrelated.
 
-**High-level steps:**
+**In practice this is run by Ansible, not by hand.** The `k8s-upgrade.yml` playbook in
+`ansible-playbooks` is the upgrade executor and is what performed the completed 1.32 → 1.33 → 1.34
+hops. Reach for the manual walk below only if the playbook is unavailable.
+
+**High-level steps (manual fallback):**
 1. `kubeadm upgrade plan` — review available versions
 2. Upgrade control plane one node at a time (kubeadm → kubelet → kubectl)
 3. Upgrade workers one at a time with drain/uncordon cycle

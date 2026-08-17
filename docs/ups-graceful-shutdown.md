@@ -13,18 +13,28 @@ One CyberPower CP1500PFCRM2U feeds the three ESXi hosts and the TrueNAS box. It
 has no network management card, and its only signalling path is USB-HID to the
 NAS, which runs NUT in master mode.
 
-18 of the 22 running VMs — including vCenter itself — live on TrueNAS storage:
+**17 of the 20 running guest VMs — including vCenter itself — live on TrueNAS storage**
+(plus 2 vSphere-managed `vCLS` agents; verify with
+`govc find / -type m -runtime.powerState poweredOn` and
+`govc object.collect -s <vm> summary.config.vmPathName`):
 
 | Datastore | Backing | VMs |
 |---|---|---|
-| `vmstore1` / `vmstore2` | TrueNAS iSCSI, zvols `pool_1/vmstorage/vmstore{1,2}` | 17, incl. `vcenter` and workers 02–06 |
+| `vmstore1` / `vmstore2` | TrueNAS iSCSI, zvols `pool_1/vmstorage/vmstore{1,2}` | 17 — everything except the control plane, incl. `vcenter`, `vcenter-Passive`, `vcenter-Witness` and workers 01–06 |
 | `vm-lt-metrics` | TrueNAS NFS, `/mnt/pool_0/vm-lt-metrics` | second disk on `k8sworker01` |
-| `esxi0N-local` | local NVMe | `k8scp01/02/03` only |
+| `esxi0N-local` | local NVMe | `k8scp01/02/03` only — one per host |
+
+> The control plane sitting on **local** NVMe is the property this whole design leans on: losing
+> TrueNAS does not take etcd with it. `hosts/vsphere/vms.json` (collected 2026-07-02) still shows
+> the control plane on `vmstore1`/`vmstore2` — that snapshot predates the
+> [etcd local-NVMe migration](https://github.com/vollminlab/k8s-vollminlab-cluster/blob/main/docs/runbooks/etcd-local-nvme-migration.md)
+> and is stale. Live vCenter confirms `k8scp01 → esxi01-local`, `k8scp02 → esxi02-local`,
+> `k8scp03 → esxi03-local`. The same snapshot omits `vm-lt-metrics`, which does exist (13.4 TB).
 
 The stock UPS config is `shutdown=LOWBATT`, `shutdowntimer=30`, `powerdown=true`.
 So on a long outage the NAS reaches low battery, shuts *itself* down first, and
 then tells the UPS to cut the outlets feeding the still-running hosts. Storage
-disappears from underneath 18 live guests, and moments later they are hard-killed.
+disappears from underneath the 17 shared-storage guests, and moments later they are hard-killed.
 
 That is an all-paths-down event on mounted filesystems followed by a power cut —
 a manufactured version of the ext4 damage that cost ~200 Audiobookshelf covers in
@@ -200,10 +210,53 @@ Logs land in `/mnt/pool_0/scripts/ups-shutdown/logs/ups-shutdown.log`.
 | `shutdown` | unchanged, `LOWBATT` | moving to `BATT` fires earlier, with battery to spare |
 | `shutdowntimer` | unchanged, `30` | only meaningful once `shutdown=BATT` |
 
+**Verified live on 2026-08-17** via `GET /api/v2.0/ups` on TrueNAS — the repo's
+`hosts/truenas/services.json` (2026-04-12) still records the UPS service as
+`enable: false, STOPPED` and is simply stale:
+
+| Field | Live value |
+|---|---|
+| service | `enable: true`, `state: RUNNING` |
+| `mode` | `MASTER` |
+| `driver` | `usbhid-ups$CP1500EPFCLCD` |
+| `shutdown` | `LOWBATT` |
+| `shutdowntimer` | `30` |
+| `shutdowncmd` | `/mnt/pool_0/scripts/ups-shutdown/ups-graceful-shutdown.sh` (exists, 11 KB, mode 0755) |
+| `hostsync` | `15` |
+
+`collect-truenas-configs.sh` never fetches `/api/v2.0/ups`, which is why none of this is
+captured in `hosts/` — worth adding to the collector.
+
+The unit is a **CyberPower CP1500PFCRM2U** — PFC Sinewave, 1500 VA / 1000 W, 8 outlets, AVR,
+short-depth 2U rackmount. NUT confirms this from the device itself:
+
+```
+$ upsc ups@localhost
+device.model: CP1500PFCRM2U        ups.realpower.nominal: 1000
+device.mfr:   CPS                  ups.load: 32
+ups.status:   OL                   battery.charge: 100
+battery.runtime: 1300              battery.runtime.low: 300
+driver.version.data: CyberPower HID 0.6
+```
+
+> **The TrueNAS driver dropdown reads `usbhid-ups$CP1500EPFCLCD`, which is a different model — and
+> that is fine.** `usbhid-ups` identifies the device over HID at runtime; the dropdown entry only
+> seeds VID/PID matching. The proof is above: it reports the correct model and a correct 1000 W
+> nominal. There is no `CP1500PFCRM2U` entry in NUT's driver list, so this is the closest
+> selectable option and nothing needs changing.
+>
+> The one thing that *is* wrong is cosmetic: the TrueNAS `description` field says
+> "CyberPower 3000VA". It is free text and affects nothing, but it should read 1500 VA / 1000 W.
+
+**Runtime budget, measured 2026-08-17:** 1300 s of runtime at 32 % load, with
+`battery.runtime.low` at 300 s. So LOWBATT fires with roughly **5 minutes** of battery left —
+which is the real deadline the shutdown sequence below has to fit inside, and it is why
+`TOTAL_DEADLINE` is 240 s rather than something more generous.
+
 **Setting `shutdowncmd` alone is strictly safer than the stock config and adds no
 new trigger risk.** It changes *what runs*, not *when*. Same LOWBATT trigger, but
 the action becomes guests-first / NAS-last instead of the bare `/sbin/shutdown -P
-now` that yanks iSCSI out from under 18 live guests. Verified after setting it:
+now` that yanks iSCSI out from under the 17 shared-storage guests. Verified after setting it:
 
 ```
 $ grep SHUTDOWNCMD /etc/nut/upsmon.conf
