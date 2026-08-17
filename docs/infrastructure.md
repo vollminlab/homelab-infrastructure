@@ -415,9 +415,10 @@ them from a source that maintains itself instead:
 | VIP           | 192.168.152.7/24 (VRRP ID 51)          |
 | haproxy01     | 192.168.152.5 — MASTER (priority 110)  |
 | haproxy02     | 192.168.152.6 — BACKUP (priority 100)  |
-| Health check  | `pidof haproxy`, weight -5              |
+| Health check  | `pidof haproxy` — interval 2, weight -5, fall 2, rise 1 |
 | Notify master | `/usr/local/bin/haproxy-start.sh`       |
 | Notify backup | `/usr/local/bin/haproxy-stop.sh`        |
+| Notify fault  | `/usr/local/bin/haproxy-stop.sh`        |
 
 **Backends:**
 
@@ -438,7 +439,7 @@ Backend defaults: `inter 10s downinter 5s rise 2 fall 2 slowstart 60s maxconn 25
 | VIP           | 192.168.160.4/24 (VRRP ID 60)           |
 | haproxydmz01  | 192.168.160.2 — MASTER (priority 200)   |
 | haproxydmz02  | 192.168.160.3 — BACKUP (priority 180)   |
-| Health check  | `pgrep -x haproxy`, fall 2, rise 2       |
+| Health check  | `/usr/bin/pgrep -x haproxy` — interval 2, fall 2, rise 2 (no weight, no notify hooks) |
 
 **Frontends and backends:**
 
@@ -508,8 +509,9 @@ Used/free figures are deliberately omitted; they move daily. Read them from
 
 **`pool_1` is the iSCSI datastore pool.** `pool_1/vmstorage/vmstore1` and `.../vmstore2` are ZFS
 **volumes** (zvols), exported over iSCSI, and formatted VMFS by ESXi as the `vmstore1` / `vmstore2`
-shared datastores in the [Datastores](#datastores) table. Every VM in this homelab lives on this
-one 2-disk mirror.
+shared datastores in the [Datastores](#datastores) table. Shared VM storage for the whole homelab
+therefore rests on this one 2-disk mirror; the three `esxi0*-local` datastores were essentially
+empty at the last export.
 
 ### SMB Shares
 
