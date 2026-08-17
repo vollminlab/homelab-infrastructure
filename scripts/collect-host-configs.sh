@@ -62,13 +62,18 @@ parse_remote() {
 }
 
 # Redact key=value secrets (handles both quoted and unquoted values).
+#
+# A quoted TOML value keeps its quotes and any trailing "### CHANGED" comment;
+# a bare KEY=value line (as in .env) is replaced wholesale. An empty value is
+# left alone — "" is meaningful (e.g. totp_secret unset), and rewriting it to
+# REDACTED would falsely imply a secret is configured.
 redact_kv() {
   local file=$1; shift
   [[ -f "$file" ]] || return 0
   for key in "$@"; do
     sed -i -E \
-      -e "s|^([[:space:]]*${key}[[:space:]]*=[[:space:]]*\")([^\"]+)\"|\1REDACTED\"|" \
-      -e "s|^([[:space:]]*${key}[[:space:]]*=[[:space:]]*)([^\"\n#][^\n#]*)|\1REDACTED|" \
+      -e "s|^([[:space:]]*${key}[[:space:]]*=[[:space:]]*\")[^\"]+\"|\1REDACTED\"|" \
+      -e "s|^([[:space:]]*${key}[[:space:]]*=[[:space:]]*)[^\"[:space:]#][^#]*|\1REDACTED|" \
       "$file"
   done
 }
@@ -144,8 +149,10 @@ printf '\n<<<ENDFILE>>>\n'
 REMOTE
 
   # Redact secrets locally after pulling.
+  # redact_kv anchors each key at start-of-line, so "pwhash" does NOT also cover
+  # "app_pwhash" (the admin app-password hash) — list every key explicitly.
   for toml in "$HOSTS_DIR/$host/configs/pihole/"*.toml; do
-    [[ -f "$toml" ]] && redact_kv "$toml" "pwhash"
+    [[ -f "$toml" ]] && redact_kv "$toml" "pwhash" "app_pwhash" "totp_secret"
   done
   redact_kv "$HOSTS_DIR/$host/configs/pihole-flask-api/.env" "PIHOLE_API_KEY"
   local kc="$HOSTS_DIR/$host/configs/keepalived/keepalived.conf"

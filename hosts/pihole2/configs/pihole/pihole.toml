@@ -1,7 +1,7 @@
 # Pi-hole configuration file (v6.6)
 # Encoding: UTF-8
 # This file is managed by pihole-FTL
-# Last updated on 2026-04-12 13:22:22 EDT
+# Last updated on 2026-08-16 20:29:47 EDT
 
 [dns]
   # Upstream DNS Servers to be used by Pi-hole. If this is not set, Pi-hole will not
@@ -141,7 +141,6 @@
     "192.168.200.1 vpn.vollminlab.com",
     "192.168.155.4 vcenter-witness.vollminlab.com",
     "192.168.155.3 vcenter-passive.vollminlab.com",
-    "192.168.152.2 plex.vollminlab.com",
     "192.168.152.2 truenas.vollminlab.com",
     "192.168.150.2 iscsi.vollminlab.com",
     "192.168.152.2 npm.vollminlab.com",
@@ -158,7 +157,6 @@
     "192.168.152.244 prometheus.vollminlab.com",
     "192.168.152.244 grafana.vollminlab.com",
     "192.168.152.244 prowlarr.vollminlab.com",
-    "192.168.152.244 capacitor.vollminlab.com",
     "192.168.152.8 k8scp01.vollminlab.com",
     "192.168.152.244 longhorn.vollminlab.com",
     "192.168.152.13 k8sworker03.vollminlab.com",
@@ -181,15 +179,31 @@
     "192.168.160.4 haproxydmzvip.vollminlab.com",
     "192.168.152.17 groupme01.vollminlab.com",
     "192.168.152.16 k8sworker06.vollminlab.com",
-    "192.168.255.1 garbage1.test.local",
     "192.168.152.244 go.vollminlab.com",
     "192.168.152.244 shlink.vollminlab.com",
-    "192.168.152.244 vl",
-    "192.168.152.244 vl.vollminlab.com",
     "192.168.152.244 vollm.in",
     "192.168.152.244 minio.vollminlab.com",
-    "192.168.152.244 harbor.vollminlab.com",
-    "192.168.152.244 s3.vollminlab.com"
+    "192.168.152.244 s3.vollminlab.com",
+    "192.168.152.3 devsbx01.vollminlab.com",
+    "192.168.152.244 alertmanager.vollminlab.com",
+    "192.168.152.244 headlamp.vollminlab.com",
+    "192.168.152.244 plex.vollminlab.com",
+    "192.168.152.244 audiobookshelf.vollminlab.com",
+    "192.168.152.244 authentik.vollminlab.com",
+    "192.168.152.244 seerr.vollminlab.com",
+    "192.168.152.244 jellystat.vollminlab.com",
+    "192.168.152.245 harbor.vollminlab.com",
+    "192.168.152.2 haproxy.vollminlab.com",
+    "192.168.152.2 haproxydmz.vollminlab.com",
+    "192.168.152.4 ansible01.vollminlab.com",
+    "192.168.152.244 filebrowser.vollminlab.com",
+    "192.168.152.244 readarr.vollminlab.com",
+    "192.168.152.244 qbittorrent.vollminlab.com",
+    "192.168.152.244 goldilocks.vollminlab.com",
+    "192.168.152.244 jellyfin.vollminlab.com",
+    "192.168.150.2 nfs.vollminlab.com",
+    "192.168.152.244 vollmint.vollminlab.com",
+    "192.168.152.244 karma.vollminlab.com"
   ] ### CHANGED, default = []
 
   # If set, queries for plain names, without dots or domain parts, are never forwarded to
@@ -994,7 +1008,7 @@
   #
   # Allowed values are:
   #     A comma-separated list of <[ip_address:]port>
-  port = "80o,443os,[::]:80o,[::]:443os"
+  port = "80o,[::]:80o" ### CHANGED, default = "80o,443os,[::]:80o,[::]:443os"
 
   # Maximum number of worker threads allowed.
   #
@@ -1091,7 +1105,7 @@
     #
     # Allowed values are:
     #     A positive integer value in seconds
-    timeout = 1800
+    timeout = 300 ### CHANGED, default = 1800
 
     # Should Pi-hole backup and restore sessions from the database?
     #
@@ -1199,7 +1213,7 @@
     #
     # Allowed values are:
     #     A positive integer value
-    max_sessions = 16
+    max_sessions = 64 ### CHANGED, default = 16
 
     # Should FTL prettify the API output (add extra spaces, newlines and indentation)?
     #
@@ -1211,7 +1225,7 @@
     #
     # Allowed values are:
     #     A valid Pi-hole password hash
-    pwhash =REDACTED### CHANGED, default = ""
+    pwhash = ""
 
     # Pi-hole 2FA TOTP secret. When set to something different than an empty string, 2FA
     # authentication will be enforced for the API and the web interface. This setting is
@@ -1237,7 +1251,7 @@
     #
     # Allowed values are:
     #     A valid Pi-hole password hash
-    app_pwhash = "$BALLOON-SHA256$v=1$s=1024,t=32$1qWIajFupxHb8FzcCBTwzQ==$ZxOvtnmjl6fqyN/Ae5x0CB1BnqbZ3fdZZh7/XELg8EA=" ### CHANGED, default = ""
+    app_pwhash = "REDACTED" ### CHANGED, default = ""
 
     # Should application password API sessions be allowed to modify config settings?
     #
@@ -1484,7 +1498,13 @@
   #
   # Allowed values are:
   #     Array of valid dnsmasq config line options
-  dnsmasq_lines = []
+  dnsmasq_lines = [
+    "address=/jellyfin.vollminlab.com/192.168.152.244",
+    "local=/jellyfin.vollminlab.com/",
+    "local=/authentik.vollminlab.com/",
+    "local=/audiobookshelf.vollminlab.com/",
+    "local=/filebrowser.vollminlab.com/"
+  ] ### CHANGED, default = []
 
   # Log additional information about queries and replies to pihole.log
   #
@@ -1800,7 +1820,7 @@
   all = false
 
 # Configuration statistics:
-# 167 total entries out of which 152 entries are default
-# --> 15 entries are modified
+# 167 total entries out of which 149 entries are default
+# --> 18 entries are modified
 
 
