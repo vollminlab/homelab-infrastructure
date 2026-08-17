@@ -13,18 +13,28 @@ One CyberPower CP1500PFCRM2U feeds the three ESXi hosts and the TrueNAS box. It
 has no network management card, and its only signalling path is USB-HID to the
 NAS, which runs NUT in master mode.
 
-18 of the 22 running VMs — including vCenter itself — live on TrueNAS storage:
+**17 of the 20 running guest VMs — including vCenter itself — live on TrueNAS storage**
+(plus 2 vSphere-managed `vCLS` agents; verify with
+`govc find / -type m -runtime.powerState poweredOn` and
+`govc object.collect -s <vm> summary.config.vmPathName`):
 
 | Datastore | Backing | VMs |
 |---|---|---|
-| `vmstore1` / `vmstore2` | TrueNAS iSCSI, zvols `pool_1/vmstorage/vmstore{1,2}` | 17, incl. `vcenter` and workers 02–06 |
+| `vmstore1` / `vmstore2` | TrueNAS iSCSI, zvols `pool_1/vmstorage/vmstore{1,2}` | 17 — everything except the control plane, incl. `vcenter`, `vcenter-Passive`, `vcenter-Witness` and workers 01–06 |
 | `vm-lt-metrics` | TrueNAS NFS, `/mnt/pool_0/vm-lt-metrics` | second disk on `k8sworker01` |
-| `esxi0N-local` | local NVMe | `k8scp01/02/03` only |
+| `esxi0N-local` | local NVMe | `k8scp01/02/03` only — one per host |
+
+> The control plane sitting on **local** NVMe is the property this whole design leans on: losing
+> TrueNAS does not take etcd with it. `hosts/vsphere/vms.json` (collected 2026-07-02) still shows
+> the control plane on `vmstore1`/`vmstore2` — that snapshot predates the
+> [etcd local-NVMe migration](https://github.com/vollminlab/k8s-vollminlab-cluster/blob/main/docs/runbooks/etcd-local-nvme-migration.md)
+> and is stale. Live vCenter confirms `k8scp01 → esxi01-local`, `k8scp02 → esxi02-local`,
+> `k8scp03 → esxi03-local`. The same snapshot omits `vm-lt-metrics`, which does exist (13.4 TB).
 
 The stock UPS config is `shutdown=LOWBATT`, `shutdowntimer=30`, `powerdown=true`.
 So on a long outage the NAS reaches low battery, shuts *itself* down first, and
 then tells the UPS to cut the outlets feeding the still-running hosts. Storage
-disappears from underneath 18 live guests, and moments later they are hard-killed.
+disappears from underneath the 17 shared-storage guests, and moments later they are hard-killed.
 
 That is an all-paths-down event on mounted filesystems followed by a power cut —
 a manufactured version of the ext4 damage that cost ~200 Audiobookshelf covers in
@@ -200,10 +210,32 @@ Logs land in `/mnt/pool_0/scripts/ups-shutdown/logs/ups-shutdown.log`.
 | `shutdown` | unchanged, `LOWBATT` | moving to `BATT` fires earlier, with battery to spare |
 | `shutdowntimer` | unchanged, `30` | only meaningful once `shutdown=BATT` |
 
+**Verified live on 2026-08-17** via `GET /api/v2.0/ups` on TrueNAS — the repo's
+`hosts/truenas/services.json` (2026-04-12) still records the UPS service as
+`enable: false, STOPPED` and is simply stale:
+
+| Field | Live value |
+|---|---|
+| service | `enable: true`, `state: RUNNING` |
+| `mode` | `MASTER` |
+| `driver` | `usbhid-ups$CP1500EPFCLCD` |
+| `shutdown` | `LOWBATT` |
+| `shutdowntimer` | `30` |
+| `shutdowncmd` | `/mnt/pool_0/scripts/ups-shutdown/ups-graceful-shutdown.sh` (exists, 11 KB, mode 0755) |
+| `hostsync` | `15` |
+
+`collect-truenas-configs.sh` never fetches `/api/v2.0/ups`, which is why none of this is
+captured in `hosts/` — worth adding to the collector.
+
+> **Model mismatch worth resolving.** This doc and the NUT driver both say **CP1500**
+> (`CP1500PFCRM2U` here, `CP1500EPFCLCD` in the driver), but the TrueNAS `description` field reads
+> "CyberPower 3000VA". At most one is right. The driver choice is the one that affects battery
+> reporting, so check the label on the unit before changing anything.
+
 **Setting `shutdowncmd` alone is strictly safer than the stock config and adds no
 new trigger risk.** It changes *what runs*, not *when*. Same LOWBATT trigger, but
 the action becomes guests-first / NAS-last instead of the bare `/sbin/shutdown -P
-now` that yanks iSCSI out from under 18 live guests. Verified after setting it:
+now` that yanks iSCSI out from under the 17 shared-storage guests. Verified after setting it:
 
 ```
 $ grep SHUTDOWNCMD /etc/nut/upsmon.conf

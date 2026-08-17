@@ -109,7 +109,14 @@ sudo mv /etc/kubernetes/manifests/kube-scheduler.yaml /tmp/
 
 ### 2. Restore the snapshot on each node
 
-Run on **each** control plane node, adjusting `--name` and `--initial-advertise-peer-urls` per node:
+Run on **each** control plane node, adjusting `--name` and `--initial-advertise-peer-urls` per node.
+
+> **Do not pass `--initial-cluster-token`.** kubeadm does not set it, so the live cluster runs on
+> etcd's default token — confirmed with
+> `kubectl get pod -n kube-system -l component=etcd -o jsonpath='{.items[0].spec.containers[0].command}'`,
+> which contains no such flag. Restoring with a token that production does not use produces a
+> cluster whose members refuse to peer, and it fails *silently* — the restore succeeds and etcd
+> simply never forms quorum. Earlier revisions of this runbook specified `etcd-cluster-1`.
 
 ```bash
 # On k8scp01
@@ -117,7 +124,6 @@ sudo rm -rf /var/lib/etcd
 sudo ETCDCTL_API=3 etcdctl snapshot restore /path/to/snapshot.db \
   --name k8scp01 \
   --initial-cluster k8scp01=https://192.168.152.8:2380,k8scp02=https://192.168.152.9:2380,k8scp03=https://192.168.152.10:2380 \
-  --initial-cluster-token etcd-cluster-1 \
   --initial-advertise-peer-urls https://192.168.152.8:2380 \
   --data-dir /var/lib/etcd
 
@@ -126,7 +132,6 @@ sudo rm -rf /var/lib/etcd
 sudo ETCDCTL_API=3 etcdctl snapshot restore /path/to/snapshot.db \
   --name k8scp02 \
   --initial-cluster k8scp01=https://192.168.152.8:2380,k8scp02=https://192.168.152.9:2380,k8scp03=https://192.168.152.10:2380 \
-  --initial-cluster-token etcd-cluster-1 \
   --initial-advertise-peer-urls https://192.168.152.9:2380 \
   --data-dir /var/lib/etcd
 
@@ -135,7 +140,6 @@ sudo rm -rf /var/lib/etcd
 sudo ETCDCTL_API=3 etcdctl snapshot restore /path/to/snapshot.db \
   --name k8scp03 \
   --initial-cluster k8scp01=https://192.168.152.8:2380,k8scp02=https://192.168.152.9:2380,k8scp03=https://192.168.152.10:2380 \
-  --initial-cluster-token etcd-cluster-1 \
   --initial-advertise-peer-urls https://192.168.152.10:2380 \
   --data-dir /var/lib/etcd
 ```

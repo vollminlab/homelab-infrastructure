@@ -1,6 +1,19 @@
 # Pi-hole Hardware Diagnostics
 
-pihole1 has shown signs of potential SD card degradation (observed issues with `lsblk`). This runbook covers how to assess the storage health and decide on a remediation path before it causes an unplanned outage.
+> **DONE — both hosts now boot from NVMe.** Verified live on 2026-08-17: `pihole1` and `pihole2`
+> both report `/` on `/dev/nvme0n1p2` (Argon NEO 5 M.2, `AR-256`, 238.5 GB). The 119.4 GB
+> `mmcblk0` SD cards are still physically present but are no longer the root device.
+>
+> ```bash
+> ssh vollmin@192.168.100.2 'findmnt -no SOURCE /; lsblk -dn -o NAME,SIZE,TRAN,MODEL'
+> ```
+>
+> The SD-degradation diagnostics below are kept as a reference procedure — they apply to any
+> future SD-booted host — but the pihole1 risk they were written for is closed. Nothing in
+> `hosts/` records a block device, which is why the repo could not settle this; only the live
+> hosts can.
+
+This runbook was written when pihole1 showed signs of SD card degradation (observed issues with `lsblk`). It covers how to assess storage health and decide on a remediation path before it causes an unplanned outage.
 
 > **Context:** Both Pi-holes run `log2ram` to reduce SD card write wear by keeping logs in RAM. Its presence means SD card longevity has already been a concern. A degraded card can manifest as read errors, filesystem going read-only, or silent data corruption.
 
@@ -175,7 +188,8 @@ These were discovered during the actual pihole2 migration and must be followed f
 
 ### Phase 1 — Migrate pihole2
 
-> **pihole2 is already complete.** This section is kept for reference. Proceed to Phase 2 for pihole1.
+> **Both phases are complete** (verified 2026-08-17 — see the note at the top of this file).
+> Everything below is kept as the reference procedure for repeating it on another host.
 
 pihole1 holds the VIP and serves DNS throughout. pihole2 is offline only during its reboot.
 
@@ -267,7 +281,7 @@ pihole1 holds the VIP and serves DNS throughout. pihole2 is offline only during 
 
 ---
 
-### Phase 2 — Migrate pihole1
+### Phase 2 — Migrate pihole1 *(completed)*
 
 Fail over to pihole2 first. pihole2 (NVMe) handles all DNS while pihole1 is migrated. The failing SD card is no longer load-bearing.
 
@@ -337,7 +351,7 @@ Fail over to pihole2 first. pihole2 (NVMe) handles all DNS while pihole1 is migr
 
 ---
 
-### Phase 2 continued — Fix pihole1 config post-clone
+### Phase 2 continued — Fix pihole1 config post-clone *(completed)*
 
 pihole1 has booted with pihole2's identity. Fix each difference:
 

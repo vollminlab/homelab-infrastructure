@@ -276,16 +276,31 @@ Each `.155.x` address is a UDM static DHCP lease bound to that MAC, so they are 
 rebuilds. Whichever of `vcenter` / `vcenter-Passive` is currently **active** additionally holds the
 floating `192.168.151.5`.
 
-> **The VM named `vcenter` is not necessarily the active node.** In the collected export
-> (`hosts/vsphere/vms.json`, 2026-07-02) it was `vcenter-Passive` that reported `192.168.151.5`,
-> meaning the VM named "Passive" was the one actually serving. Never infer role from VM name —
-> check which node holds `192.168.151.5`.
+> **The VM named `vcenter` is not the active node.** Confirmed against the VCHA API on
+> 2026-08-17: `node1` = VM `vcenter` = **PASSIVE**, `node2` = VM `vcenter-Passive` = **ACTIVE**,
+> witness = VM `vcenter-Witness`. Cluster state `ENABLED` / `HEALTHY` / `CONFIGURED`.
+>
+> The names are deployment-time labels and do not track the roles — VCHA has failed over at some
+> point since. Never infer role from VM name; ask the API:
+>
+> ```bash
+> TOK=$(curl -sk -u "$USER:$PASS" -X POST https://vcenter.vollminlab.com/api/session | tr -d '"')
+> curl -sk -H "vmware-api-session-id: $TOK" -X POST \
+>   'https://vcenter.vollminlab.com/rest/vcenter/vcha/cluster?action=get' \
+>   -H 'Content-Type: application/json' -d '{"vcha_cluster":{}}' \
+>   | jq '.value | {node1:.node1.runtime.role, node2:.node2.runtime.role}'
+> ```
+>
+> A quicker sanity check: the active node is whichever additionally holds `192.168.151.5`.
 
 ### Cluster
 
 - Name: `vollminlab-ESXi-Cluster`
 - HA: enabled, failover level 1, admission control enabled
-- DRS: enabled, partially automated (level 1)
+- DRS: enabled, **fully automated**, vMotion rate 3
+  <br>Verify: `govc object.collect -json <cluster> configuration` → `drsConfig.defaultVmBehavior`.
+  The `DrsAutomationLevel: 1` in `hosts/vsphere/cluster.json` is not the DRS behaviour enum and
+  should not be read as "partially automated" — the live cluster reports `fullyAutomated`.
 - EVC: not configured
 
 **DRS Separation Rules** (must-run-on-separate-hosts):
