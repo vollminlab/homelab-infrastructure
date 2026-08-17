@@ -7,3 +7,6 @@
 
 # Claude Code — ignore local settings but commit rules/commands
 .claude/settings.local.json
+
+# Git worktrees (org convention)
+.worktrees/
