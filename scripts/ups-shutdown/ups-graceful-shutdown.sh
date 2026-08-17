@@ -37,18 +37,20 @@ LOG_FILE="${LOG_FILE:-$LOG_DIR/ups-shutdown.log}"
 ESXI_HOSTS_DEFAULT="esxi01=192.168.151.2 esxi02=192.168.151.3 esxi03=192.168.151.4"
 
 # Seconds to wait for a host's guests to finish a Tools-initiated shutdown
-# before forcing them off. Measured worst case is well under this.
-GUEST_TIMEOUT_DEFAULT=240
+# before forcing them off.
+GUEST_TIMEOUT_DEFAULT=120
 
 # Seconds to wait for an ESXi host to drop off the network after poweroff.
-HOST_TIMEOUT_DEFAULT=120
+HOST_TIMEOUT_DEFAULT=60
 
 # Hard ceiling on the whole orchestration. When it expires the NAS powers off
 # regardless of what is still running. This bound is the single most important
 # safety property here: a hung host or a bug must never leave the NAS up until
 # the battery dies, because that ends in the exact uncontrolled power loss this
-# script exists to prevent. Keep it comfortably under the UPS runtime.
-TOTAL_DEADLINE_DEFAULT=600
+# script exists to prevent. It must fit inside the window the trigger leaves:
+# firing at LOWBATT means battery.runtime.low (300 s) of projected runtime, so
+# the whole sequence has to finish well inside that.
+TOTAL_DEADLINE_DEFAULT=240
 
 DRY_RUN="${DRY_RUN:-0}"
 
