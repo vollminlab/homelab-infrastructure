@@ -235,5 +235,7 @@ If rebuilding a control plane node, the `enc.yaml` must be restored from 1Passwo
 
 - `hosts/k8s/kubeadm-config.yaml` — authoritative cluster configuration (etcd data dir, networking, API server args)
 - `hosts/k8s/kubelet-config.yaml` — kubelet configuration on all nodes
-- `docs/infrastructure.md` — Kubernetes section (version, endpoints, node IPs)
-- `k8s-vollminlab-cluster` repo — Sealed Secrets sealing key backup, Flux workloads
+- `docs/infrastructure.md` — Kubernetes section (endpoints, node IPs)
+- `k8s-vollminlab-cluster` repo — Flux workloads, and the `onepassword-connect` bootstrap Secret
+  that External Secrets Operator needs before any other Secret can be materialized. Sealed Secrets
+  was retired 2026-05-31; there is no sealing key to back up any more.

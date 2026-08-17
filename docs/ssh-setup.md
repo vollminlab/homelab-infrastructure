@@ -19,23 +19,33 @@ No private key files on disk.
 4. Copy the public key files from `hosts/windows/ssh/*.pub` to `~/.ssh/`.
    (Safe to commit — public keys only. Private keys stay in 1Password.)
 
+   **Two are missing from that directory**: the config's `devsbx01` and `ansible01` blocks
+   reference `~/.ssh/devsbx01_id_ed25519.pub` and `~/.ssh/ansible01_id_ed25519.pub`, neither of
+   which is committed. Export them from 1Password before using those two host aliases.
+
 ---
 
-## SSH Config — OS-specific `IdentityAgent` line
+## SSH Config — the global `Host *` block
 
-The host entries are identical across platforms. Only the `IdentityAgent` line
-in the global `Host *` block differs.
+The host entries are identical across platforms. What differs is how the client reaches the
+1Password agent.
 
-### Windows
-
-Uses the OpenSSH named pipe. **Must use System32 OpenSSH**, not Git Bash's
-bundled ssh — Git Bash cannot reach the named pipe.
+**What is actually in [`hosts/windows/ssh/config`](../hosts/windows/ssh/config):**
 
 ```
 Host *
-  IdentityAgent \\.\pipe\openssh-ssh-agent
-  IdentitiesOnly no
+  IdentitiesOnly yes
+  ForwardAgent yes
 ```
+
+There is **no `IdentityAgent` line** — on Windows the OpenSSH client finds the named pipe on its
+own, so the line is unnecessary there. macOS and Linux must **add** one; there is nothing to
+replace.
+
+### Windows
+
+Nothing to add. **Must use System32 OpenSSH**, not Git Bash's bundled ssh — Git Bash cannot reach
+the named pipe.
 
 To use System32 OpenSSH from Git Bash (e.g. in scripts):
 ```bash
@@ -44,18 +54,18 @@ export PATH="/c/Windows/System32/OpenSSH:$PATH"
 
 ### macOS
 
+Add to the `Host *` block:
+
 ```
-Host *
   IdentityAgent ~/Library/Group\ Containers/2BUA8C4S2C.com.1password/t/agent.sock
-  IdentitiesOnly no
 ```
 
 ### Linux (with 1Password desktop app)
 
+Add to the `Host *` block:
+
 ```
-Host *
   IdentityAgent ~/.1password/agent.sock
-  IdentitiesOnly no
 ```
 
 ### Linux (CLI only / headless — no 1Password desktop app)
@@ -80,10 +90,12 @@ sys.stdout.buffer.write(key.private_bytes(Encoding.PEM, PrivateFormat.OpenSSH, N
 done
 ```
 
-Then set the `IdentityAgent` in `~/.ssh/config` to the agent socket printed by `ssh-agent -s`:
+Then point `~/.ssh/config` at the agent socket printed by `ssh-agent -s`. The shipped config has no
+`IdentityAgent` line, so this **inserts** one rather than replacing it — a `sed
+"s|IdentityAgent.*|…|"` is a silent no-op against the committed file:
 
 ```bash
-sed -i "s|IdentityAgent.*|IdentityAgent $SSH_AUTH_SOCK|" ~/.ssh/config
+sed -i "/^Host \*/a\\  IdentityAgent $SSH_AUTH_SOCK" ~/.ssh/config
 ```
 
 **Why the conversion step?** 1Password stores Ed25519 keys in PKCS#8 format
@@ -102,14 +114,14 @@ ssh-keyscan haproxydmz01.vollminlab.com haproxydmz02.vollminlab.com >> ~/.ssh/kn
 ## Full config
 
 See [`hosts/windows/ssh/config`](../hosts/windows/ssh/config) for the complete
-host list. Replace the `IdentityAgent` line for your OS as shown above.
+host list. Add the `IdentityAgent` line for your OS as shown above — the file ships without one.
 
 Copy to `~/.ssh/config`:
 
 ```bash
 # macOS / Linux
 cp hosts/windows/ssh/config ~/.ssh/config
-# then edit the IdentityAgent line for your OS
+# then add the IdentityAgent line for your OS to the Host * block
 ```
 
 ---

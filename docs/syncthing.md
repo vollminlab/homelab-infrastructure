@@ -10,13 +10,14 @@ Syncthing runs on `devsbx01` and syncs the Obsidian vault to the Windows PC (`GL
 
 ## Device inventory
 
-| Device | Role | Syncthing |
-|--------|------|-----------|
-| devsbx01 | Linux dev VM — vault source | Always on, runs cron |
-| GLaDOS | Windows PC — always-on relay | **Needs setup** (see below) |
-| vollminxps | Laptop — not always on | **Remove from Syncthing** once GLaDOS is set up; use Obsidian Sync instead |
+| Device | Role | Status in `~/.local/state/syncthing/config.xml` on devsbx01 |
+|--------|------|-------------------------------------------------------------|
+| devsbx01 | Linux dev VM — vault source | Configured; shares `homelab-vault`. Always on, runs cron |
+| GLaDOS | Windows PC — always-on relay | **Configured and sharing `homelab-vault`** — the setup below is already done |
+| vollminxps | Laptop — not always on | Still a configured *device*, but **no longer shares `homelab-vault`** — it gets the vault through Obsidian Sync |
 
-Note: `~/obsidian/homelab/` is a separate stale directory — not watched by Syncthing.
+`homelab-vault` is shared with exactly two devices: devsbx01 and GLaDOS. There is a second folder,
+`default` (`~/Sync`), shared with devsbx01 only; it is unrelated to the vault.
 
 ## Intended sync flow
 
@@ -45,9 +46,10 @@ systemctl --user restart syncthing
 http://127.0.0.1:8384
 ```
 
-## Setting up GLaDOS (one-time)
+## Setting up GLaDOS (one-time — already completed, kept for rebuilds)
 
 **devsbx01 device ID:** `LCMBZJE-WWJQ3MM-P7M37A2-QGOW777-NE67R72-BLXFRB7-O4IURUL-FR7ZJQO`
+**GLaDOS device ID:** `WBNIPO5-UIFASPU-…` (full value in devsbx01's `config.xml`)
 
 1. Install [SyncTrayzor](https://github.com/canton7/SyncTrayzor/releases) on GLaDOS
 2. In SyncTrayzor: Add Remote Device → paste devsbx01's device ID above
@@ -58,18 +60,27 @@ http://127.0.0.1:8384
 7. Set up Obsidian on GLaDOS to open the vault at that path
 8. Enable Obsidian Sync on GLaDOS — this pushes to vollminxps and mobile
 
-## Removing vollminxps from Syncthing (after GLaDOS is set up)
+## Removing vollminxps from Syncthing
+
+**Partly done already:** vollminxps no longer shares `homelab-vault`, so it is already off the
+Syncthing path for the vault and receives it via Obsidian Sync from GLaDOS. It is still listed as a
+configured device. To finish:
 
 1. On devsbx01: Syncthing UI → Devices → vollminxps → Remove
 2. On vollminxps: unshare or uninstall SyncTrayzor
-3. vollminxps gets the vault via Obsidian Sync from GLaDOS instead
 
 ## .stignore (what Syncthing skips)
 
 ```
 .git
-.obsidian/graph.json
+.obsidian
+!.obsidian/graph.json
 ```
+
+**Read the third line carefully — it is a negation.** The whole `.obsidian` directory is excluded,
+and `graph.json` is then explicitly *un*-ignored, so the graph configuration **does** sync while the
+rest of the Obsidian workspace state does not. (This doc previously listed
+`.obsidian/graph.json` as an ignore, which is the opposite of what the file does.)
 
 `repos/*/docs/` and `repos/*/diagrams/` are gitignored in the vault repo but NOT excluded from Syncthing — they sync to all devices normally.
 

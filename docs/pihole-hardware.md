@@ -167,7 +167,7 @@ These were discovered during the actual pihole2 migration and must be followed f
 
 - **Static IP is set via NetworkManager**, not dhcpcd or netplan. The connection profile is at `/etc/NetworkManager/system-connections/RPI Pi-Hole Connection.nmconnection`. When cloning pihole2 → pihole1, copy pihole1's nmconnection file to the NVMe root and remove pihole2's (`Wired connection 1.nmconnection`) before first boot.
 - **`authorized_keys` comes from the clone** — after first NVMe boot, pihole1 will have pihole2's authorized key and reject your normal SSH key. Fix by using pihole2's key to add pihole1's key: `ssh -i ~/.ssh/pihole2_id_rsa.pub vollmin@192.168.100.2 "echo '$(cat ~/.ssh/pihole1_id_rsa.pub)' >> ~/.ssh/authorized_keys"`
-- **nebula-sync `app_sudo` required on replicas (Pi-hole v6)** — pihole2 needs `webserver.api.app_sudo = true` for nebula-sync to import configs. Set it with `sudo pihole-FTL --config webserver.api.app_sudo true` on pihole2. Without this, nebula-sync will authenticate successfully but get 403 on the teleporter endpoint.
+- **nebula-sync `app_sudo` required (Pi-hole v6)** — `webserver.api.app_sudo = true` is needed for nebula-sync to import configs. Set it with `sudo pihole-FTL --config webserver.api.app_sudo true`. Without this, nebula-sync will authenticate successfully but get 403 on the teleporter endpoint. It is currently set on **both** hosts, not just the replica.
 - **Network clone (pihole2 NVMe → pihole1 NVMe) runs at ~48 MB/s** — 238GB takes ~85 minutes. Significantly faster than SD card clone. Run via a temp SSH key rather than trying to pipe through a Windows intermediary host.
 - **Pi-hole app password must be reset after clone** — the clone brings pihole2's Pi-hole database including its app password hash. nebula-sync will get 401 on pihole1 until you reset the pihole1 admin password via the web UI and update the PRIMARY credential in `~/nebula-sync/.env` and 1Password.
 
@@ -432,22 +432,38 @@ ssh pihole2 "sudo dmesg | grep -iE 'nvme|i/o error'"
 
 ## Pi-hole v6 configuration notes
 
-### Session timeout (homepage widget fix)
+### Session timeout — the 1-year setting is no longer in place
 
-Pi-hole v6 defaults to a 1800-second (30 min) session timeout. The homepage Pi-hole widget does not re-authenticate when the session expires, causing the widget to show "Failed to authenticate" every 30 minutes until the homepage pod is restarted.
+Pi-hole v6 defaults to a 1800-second (30 min) session timeout. The homepage Pi-hole widget does not re-authenticate when the session expires, causing the widget to show "Failed to authenticate" until the homepage pod is restarted.
 
-**Fix applied 2026-04-17** — session timeout set to 1 year on both Pi-holes:
+A 1-year timeout (`webserver.session.timeout 31536000`) was applied on 2026-04-17 to work around
+this. **It is not the live value any more.** Both Pi-holes currently read:
+
+```toml
+timeout = 300 ### CHANGED, default = 1800
+```
+
+— 300 seconds, which is *shorter* than the v6 default, not longer
+(`hosts/pihole{1,2}/configs/pihole/pihole.toml`, collected 2026-08-17). Whatever reverted or
+replaced it, the widget's 30-minute failure mode is now a 5-minute one, and the mitigation that is
+actually load-bearing is the **watchdog CronJob** described below — not this setting.
+
+Decide deliberately before changing it back. If you do want the long timeout again:
+
 ```bash
 sudo pihole-FTL --config webserver.session.timeout 31536000
 ```
 
-This setting is not exposed in the Pi-hole v6 web UI — it must be set via the CLI or the API (requires a web-password session, not an app-password session).
-
-If either Pi-hole is rebuilt or the config is reset, this must be re-applied.
+This setting is not exposed in the Pi-hole v6 web UI — it must be set via the CLI or the API (requires a web-password session, not an app-password session). It also does not survive a rebuild or config reset.
 
 ### app_sudo for nebula-sync
 
-pihole2 requires `webserver.api.app_sudo = true` for nebula-sync to import configs from pihole1. Without it, nebula-sync authenticates successfully but gets 403 on the teleporter endpoint.
+`webserver.api.app_sudo = true` is required for nebula-sync to import configs. Without it,
+nebula-sync authenticates successfully but gets 403 on the teleporter endpoint.
+
+**It is set on both hosts**, not on pihole2 alone — `app_sudo = true ### CHANGED, default = false`
+appears in both `hosts/pihole1/configs/pihole/pihole.toml` and `hosts/pihole2/...`. Set it on
+whichever host is missing it:
 
 ```bash
 sudo pihole-FTL --config webserver.api.app_sudo true

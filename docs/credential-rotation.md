@@ -10,9 +10,16 @@ All three were created 2026-04-10 with 365-day expiration.
 
 | Credential | 1Password Item | Used By | Expires |
 |---|---|---|---|
-| GitHub Org PAT | `Github-Org-PAT` | Terraform CI, git push in workflows | ~2027-04-10 |
-| Renovate PAT | `Renovate-Org-PAT` | Renovate Bot PRs | ~2027-04-10 |
+| GitHub Org PAT | `Github-Org-PAT` | **Not referenced by any workflow in the org** — interactive use only (`gh` CLI, GitHub MCP) | ~2027-04-10 |
+| GitHub Admin token | `Github-Admin-Token` | `github-admin` CI — `GITHUB_TOKEN` in `plan.yml` / `apply.yml`, and the Terraform `github_token` variable | not tracked here |
+| Renovate PAT | `Renovate-Org-PAT` | Renovate Bot PRs, via the `renovate-token` ExternalSecret | ~2027-04-10 |
 | HCP Terraform token | `Terraform-Cloud-Token` | `github-admin` CI — `TF_TOKEN_app_terraform_io` | ~2027-04-10 |
+
+**The credential that breaks Terraform CI is `Github-Admin-Token`, not `Github-Org-PAT`.** Both
+`github-admin/.github/workflows/plan.yml:23` and `apply.yml:23` resolve
+`op://Homelab/Github-Admin-Token/password`; a search across every workflow in the org returns no
+reference to `Github-Org-PAT` at all. Rotating the Org PAT will not affect CI, and rotating only
+the Org PAT will not fix a CI auth failure.
 
 ---
 
@@ -36,27 +43,23 @@ All three were created 2026-04-10 with 365-day expiration.
 4. **Permissions:** Actions, Contents, Issues, Pull requests, Workflows — all Read/Write
 5. **Expiration:** 365 days
 6. Update value in 1Password: `Homelab` vault → `Renovate-Org-PAT` → `password` field
-7. Re-seal the Renovate k8s secret:
+7. **No Kubernetes step.** Updating 1Password is the whole rotation.
+
+   The cluster consumes this PAT through `renovate-token-externalsecret.yaml`, an ExternalSecret
+   that External Secrets Operator resolves from 1Password on a `refreshInterval: 24h`. There is
+   nothing to re-seal, commit, or push — the new value propagates on the next refresh.
+
+   To take effect immediately rather than within 24h:
    ```bash
-   # Get new token value
-   NEW_TOKEN=$(op read "op://Homelab/Renovate-Org-PAT/password")
-   
-   # Create new sealed secret
-   kubectl create secret generic renovate-token \
-     --from-literal=RENOVATE_TOKEN=$NEW_TOKEN \
-     --namespace renovate \
-     --dry-run=client -o yaml | \
-   kubeseal --controller-namespace sealed-secrets \
-     --controller-name sealed-secrets \
-     --format yaml > \
-   /c/git/k8s-vollminlab-cluster/clusters/vollminlab-cluster/renovate/renovate/app/renovate-token-sealedsecret.yaml
-   
-   # Commit and push
-   cd /c/git/k8s-vollminlab-cluster
-   git add clusters/vollminlab-cluster/renovate/renovate/app/renovate-token-sealedsecret.yaml
-   git commit -m "chore: rotate Renovate PAT"
-   git push
+   kubectl annotate externalsecret renovate-token -n renovate \
+     force-sync="$(date +%s)" --overwrite
+   kubectl get externalsecret renovate-token -n renovate   # expect READY=True, SecretSynced
    ```
+
+   > This step previously described a `kubeseal` re-seal into
+   > `renovate-token-sealedsecret.yaml`. The Sealed Secrets controller was removed on 2026-05-31
+   > and no such file exists; running that procedure now would produce a manifest nothing
+   > reconciles.
 
 ### Terraform-Cloud-Token (HCP Terraform)
 
