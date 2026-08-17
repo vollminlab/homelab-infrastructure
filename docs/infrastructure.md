@@ -2,28 +2,53 @@
 
 Source of truth for all infrastructure configuration. Configs are collected from live hosts via `scripts/collect-all.sh` and stored in this repo. All data in this document is derived directly from collected configs — no assumptions.
 
+**This doc can only be as fresh as the snapshot underneath it.** Collection is manual and per-area,
+so the directories under `hosts/` age at different rates. Before trusting a section, check when its
+source was last collected:
+
+```bash
+git log --format='%ad %h' --date=short -1 -- hosts/<area>
+```
+
+Numbers that move on their own — software versions, free space, certificate expiry dates — are
+deliberately **not** written into this document. They are named with the command or file that
+yields the live value instead, because a number recorded here goes stale silently and reads as
+authoritative while it does so.
+
 ---
 
 ## Network (UniFi Dream Machine SE)
 
 ### VLANs / Networks
 
-| VLAN | Name          | Subnet               | DHCP   | Notes                              |
-|------|---------------|----------------------|--------|------------------------------------|
-| 1    | Default       | 192.168.1.0/24       | Server |                                    |
-| 100  | Management    | 192.168.100.0/24     | Server | Pi-hole, internal DNS              |
-| 110  | Trusted-Wired | 192.168.110.0/24     | Server |                                    |
-| 120  | Trusted-WLAN  | 192.168.120.0/24     | Server | SSID: 20-Gardner                   |
-| 130  | IoT-WLAN      | 192.168.130.0/24     | Server | SSID: 20GIoT                       |
-| 140  | Guest-WLAN    | 192.168.140.0/24     | Server | SSID: 20-Gardner-Guest, portal auth |
-| 150  | Lab           | 192.168.150.0/24     | Server | TrueNAS, Plex                      |
-| 151  | VMWMgmt       | 192.168.151.0/24     | Server | ESXi host management               |
-| 152  | VMWGuestNet   | 192.168.152.0/24     | /180   | VM workloads, Kubernetes           |
-| 153  | VMWvMotion    | 192.168.153.0/24     | Server | ESXi vMotion                       |
-| 154  | VMWStorage    | 192.168.154.0/24     | Server | iSCSI storage                      |
-| 155  | VMWVCHA       | 192.168.155.0/28     | /13    | vCenter HA heartbeat               |
-| 160  | DMZ           | 192.168.160.0/24     | /101   | Internet-facing proxy VMs          |
-| —    | WireGuard VPN | 192.168.200.0/24     | —      | Tunnel-only, not a UDM VLAN        |
+Every VLAN's gateway is `.1` of its own subnet, every DHCP server is enabled, and every lease is
+86400s (24h).
+
+| VLAN | Name          | Subnet               | DHCP pool             | Notes                              |
+|------|---------------|----------------------|-----------------------|------------------------------------|
+| 1    | Default       | 192.168.1.0/24       | .6 – .254             |                                    |
+| 100  | Management    | 192.168.100.0/24     | .6 – .254             | Pi-hole, internal DNS              |
+| 110  | Trusted-Wired | 192.168.110.0/24     | .6 – .254             |                                    |
+| 120  | Trusted-WLAN  | 192.168.120.0/24     | .6 – .254             | SSID: 20-Gardner                   |
+| 130  | IoT-WLAN      | 192.168.130.0/24     | .6 – .254             | SSID: 20GIoT                       |
+| 140  | Guest-WLAN    | 192.168.140.0/24     | .6 – .254             | SSID: 20-Gardner-Guest, portal auth |
+| 150  | Lab           | 192.168.150.0/24     | .6 – .254             | TrueNAS, Plex                      |
+| 151  | VMWMgmt       | 192.168.151.0/24     | .6 – .254             | ESXi host management               |
+| 152  | VMWGuestNet   | 192.168.152.0/24     | **.20 – .199**        | VM workloads, Kubernetes           |
+| 153  | VMWvMotion    | 192.168.153.0/24     | .6 – .254             | ESXi vMotion                       |
+| 154  | VMWStorage    | 192.168.154.0/24     | .6 – .254             | iSCSI storage                      |
+| 155  | VMWVCHA       | 192.168.155.0/28     | .2 – .14              | vCenter HA heartbeat               |
+| 160  | DMZ           | 192.168.160.0/24     | **.100 – .200**       | Internet-facing proxy VMs          |
+| —    | WireGuard VPN | 192.168.200.0/24     | —                     | Tunnel-only, not a UDM VLAN        |
+
+VLAN 152's pool is the one to check before assigning an address: it runs `.20`–`.199` only, so the
+statically assigned infrastructure VMs at `.2`–`.17` and the MetalLB VIPs at `.244` / `.245` both
+sit outside it.
+
+**DHCP hands out `192.168.100.4` (the Pi-hole VIP) as the DNS server on every network except the
+DMZ**, where `br160` hands out `192.168.160.1` — the UDM itself. DMZ hosts do not get Pi-hole by
+default; the `DMZ_LAN` "Allow DMZ → Pihole (DNS)" rule exists for the ones configured to use it
+explicitly.
 
 ### WiFi SSIDs
 
@@ -32,6 +57,11 @@ Source of truth for all infrastructure configuration. Configs are collected from
 | 20-Gardner       | Trusted-WLAN  | 2.4 GHz, 5 GHz | WPA2    |
 | 20GIoT           | IoT-WLAN      | 2.4 GHz        | WPA2    |
 | 20-Gardner-Guest | Guest-WLAN    | 2.4 GHz, 5 GHz | WPA2    |
+
+The collector only pulls `/data/udapi-config/udapi-net-cfg.json`, whose `unifi` key is empty — so
+**SSID names, radio bands, and security modes are the one table here with no backing file in this
+repo.** They come from the UniFi controller UI. The VLAN each WLAN maps to *is* verifiable, from the
+DHCP server names (`net_Trusted_WLAN_br120`, `net_IoT_WLAN_br130`, `net_Guest_WLAN_br140`).
 
 ### Port Forwards (WAN → Internal)
 
@@ -74,19 +104,36 @@ Traffic between zones follows a default-deny model. Custom rules are documented 
 |-----------|-----------------------------------------------------------------------------|
 | LAN_WAN   | Allow Pihole → Internet (DNS); reject all other internal → external DNS; allow all |
 | LAN_LAN   | Allow IoT-WLAN → Pihole (DNS); allow Admin Devices → Management; allow IoT return; allow Plex ↔ IoT-WLAN; allow IoT-WLAN → MetalLB Ingress VIP:443 (Jellyfin + all ingress-nginx services); isolated networks; allow all |
-| LAN_DMZ   | Allow DMZ → Pihole DNS (return); allow haproxydmz → k8sworker05 Minecraft (return); allow haproxydmz → k8sworker05 Bluemap (return); isolated networks; allow all |
+| LAN_DMZ   | Allow DMZ → Pihole DNS (return); allow haproxydmz → k8sworker05/06 Minecraft (return); allow haproxydmz → k8sworker05/06 Bluemap (return); allow haproxydmz → k8sworker05/06 Masters League (return); isolated networks; allow all |
 | LAN_GUEST | Allow Pihole ↔ Hotspot (DNS); isolated networks; allow all                  |
 | LAN_VPN   | Allow VPN → Pihole DNS (return); allow all                                  |
+
+> The IoT-WLAN → MetalLB Ingress VIP:443 rule is **not present** in the collected
+> `hosts/udm/udapi-net-cfg.json`, which was last pulled 2026-04-12 — before the rule was added.
+> It is left listed here as the intended state; re-run `collect-host-configs.sh udm` to confirm it
+> against the live UDM.
 
 **DMZ → Zones**
 
 | Chain    | Custom Rules                                                                |
 |----------|-----------------------------------------------------------------------------|
-| DMZ_LAN  | Allow DMZ → Pihole (DNS); allow haproxydmz → k8sworker05 (Minecraft); allow haproxydmz → k8sworker05 (Bluemap); allow return; block all |
+| DMZ_LAN  | Allow DMZ → Pihole (DNS); allow haproxydmz → k8sworker05/06 (Minecraft); allow haproxydmz → k8sworker05/06 (Bluemap); allow haproxydmz → k8sworker05/06 (Masters League); allow return; block all |
 | DMZ_WAN  | Reject DMZ → external DNS; block invalid; allow all                         |
 | DMZ_DMZ  | Block all                                                                   |
 | DMZ_VPN  | Allow return; block all                                                     |
-| DMZ_LOCAL| Allow DNS, ICMP, DHCP, return; block all                                    |
+| DMZ_LOCAL| Allow DNS, ICMP, DHCP (v4 and v6), return; block all                        |
+
+The three haproxydmz → k8s rules are **mirror pairs** — one in `DMZ_LAN` (forward) and one in
+`LAN_DMZ` (return) — and every one of them resolves the same two address objects, so a change to
+either side must be made twice:
+
+| Address object            | Entries                              |
+|---------------------------|--------------------------------------|
+| `HAProxy DMZ Hosts`       | 192.168.160.2, 192.168.160.3         |
+| `k8s DMZ Hosts`           | 192.168.152.15, 192.168.152.16       |
+| `Minecraft Nodeport`      | 32565                                |
+| `Bluemap Nodeport`        | 32566                                |
+| `Masters League Nodeport` | 32567                                |
 
 **Guest → Zones**
 
@@ -119,7 +166,13 @@ Traffic between zones follows a default-deny model. Custom rules are documented 
 - Upstream resolver: `127.0.0.1#5335` (Unbound, local on each host)
 - CNAME deep inspection: enabled
 - ESNI blocking: enabled
-- Web UI: HTTPS, self-signed EC P-256 cert at `/etc/pihole/tls.pem` — see [pihole-tls.md](pihole-tls.md)
+- Reverse server: `192.168.1.0/24` → `192.168.1.1` (the UDM) for the `vollminlab.com` domain
+- DNS listening mode: `SINGLE`, port 53
+- Web UI: **HTTP only** — `webserver.port` is `"80o,[::]:80o"`, i.e. the stock `443os` HTTPS
+  listeners have been removed. External access is through NPM
+  (`pihole.vollminlab.com` → `http://192.168.100.4:80`), which terminates TLS with the wildcard
+  cert. The self-signed EC P-256 cert at `/etc/pihole/tls.pem` is still documented in
+  [pihole-tls.md](pihole-tls.md) and is needed only if the HTTPS listener is re-enabled.
 - Config sync: nebula-sync (runs on pihole1, replicates to pihole2)
 - DNS record management API: pihole-flask-api (port 5001, Bearer token from 1Password `Recordimporter` — `op read "op://Homelab/Recordimporter/credential"`) — deployed on **both** pihole1 and pihole2
 
@@ -131,34 +184,62 @@ Traffic between zones follows a default-deny model. Custom rules are documented 
 | 01:10 on 15th, */3mo | Restart Unbound                             |
 | Every 15 minutes    | `pihole-healthcheck.sh` (FTL status, disk, NTP) |
 
-**Local DNS A records** (from `pihole.toml`, managed on pihole1, synced to pihole2):
+### Local DNS records
 
-| Hostname                        | IP / Notes               |
-|---------------------------------|--------------------------|
-| pihole1.vollminlab.com          | 192.168.100.2            |
-| pihole2.vollminlab.com          | 192.168.100.3            |
-| esxi01–03.vollminlab.com        | 192.168.151.2–4          |
-| vcenter.vollminlab.com          | 192.168.151.5            |
-| haproxy01/02.vollminlab.com     | 192.168.152.5/6          |
-| haproxyvip.vollminlab.com       | 192.168.152.7            |
-| haproxydmz01/02.vollminlab.com  | 192.168.160.2/3          |
-| haproxydmzvip.vollminlab.com    | 192.168.160.4            |
-| nginx01 / npm.vollminlab.com    | 192.168.152.2            |
-| truenas.vollminlab.com          | 192.168.150.2            |
-| iscsi.vollminlab.com            | 192.168.150.2            |
-| k8scp01–03.vollminlab.com       | 192.168.152.8–10         |
-| k8sworker01–06.vollminlab.com   | 192.168.152.11–16        |
+Managed on pihole1 (`pihole.toml` `dns.hosts`), synced to pihole2 by nebula-sync. **The complete,
+authoritative list is `hosts/pihole1/configs/pihole/pihole.toml`** — every new cluster Ingress adds
+a record, so an inline copy of it here is stale within a week. What follows is the addressing
+*model* plus the records that do not churn.
+
+**Targets, and what each one means:**
+
+| Target            | Meaning                        | Records pointed at it                                |
+|-------------------|--------------------------------|------------------------------------------------------|
+| own IP            | Machine hostname               | esxi0*, k8scp0*, k8sworker0*, haproxy0*, haproxydmz0*, groupme01, devsbx01, ansible01 |
+| `192.168.152.244` | ingress-nginx VIP (MetalLB)    | every cluster app subdomain — and `vollm.in`, `go`, `shlink`, `plex` |
+| `192.168.152.245` | Harbor VIP (MetalLB)           | `harbor`                                             |
+| `192.168.152.2`   | nginx01 / Nginx Proxy Manager  | `pihole`, `npm`, `nginx01`, `udm`, `truenas`, `haproxy`, `haproxydmz` |
+| `192.168.150.2`   | TrueNAS, addressed directly    | `iscsi`, `smb`, `nfs`                                |
+| `192.168.100.x`   | `*.mgmt.vollminlab.com` — out-of-band management namespace | `pihole.mgmt` .4, `pihole1.mgmt` .2, `pihole2.mgmt` .3, `truenas.mgmt` .5, `esxi01–03.mgmt` .6–.8 |
+
+**Stable infrastructure records:**
+
+| Hostname                        | IP                          |
+|---------------------------------|-----------------------------|
+| esxi01–03.vollminlab.com        | 192.168.151.2–4             |
+| vcenter.vollminlab.com          | 192.168.151.5               |
+| vcenter-passive.vollminlab.com  | 192.168.155.3               |
+| vcenter-witness.vollminlab.com  | 192.168.155.4               |
+| nginx01.vollminlab.com          | 192.168.152.2               |
+| devsbx01.vollminlab.com         | 192.168.152.3               |
+| ansible01.vollminlab.com        | 192.168.152.4               |
+| haproxy01/02.vollminlab.com     | 192.168.152.5/6             |
+| haproxyvip.vollminlab.com       | 192.168.152.7               |
 | k8sapi.vollminlab.com           | 192.168.152.7 (HAProxy VIP) |
-| groupme01.vollminlab.com        | 192.168.152.17           |
-| plex.vollminlab.com             | 192.168.150.2            |
-| go.vollminlab.com               | 192.168.152.244 (ingress-nginx) — Shlink short URL domain |
-| vl.vollminlab.com               | 192.168.152.244 (ingress-nginx) — Shlink short URL domain |
-| shlink.vollminlab.com           | 192.168.152.244 (ingress-nginx) — Shlink web UI |
-| (+ app records)                 | sabnzbd, radarr, sonarr, overseerr, prowlarr, bazarr, tautulli, longhorn, prometheus, grafana, portainer, bookstack, homepage, capacitor, policyreporter, shlink |
+| k8scp01–03.vollminlab.com       | 192.168.152.8–10            |
+| k8sworker01–06.vollminlab.com   | 192.168.152.11–16           |
+| groupme01.vollminlab.com        | 192.168.152.17              |
+| haproxydmz01/02.vollminlab.com  | 192.168.160.2/3             |
+| haproxydmzvip.vollminlab.com    | 192.168.160.4               |
+| vpn.vollminlab.com              | 192.168.200.1               |
+| glados.vollminlab.com           | 192.168.110.173             |
 
-Full list in `hosts/pihole1/configs/pihole/pihole.toml`.
+**Two CNAMEs** (`dns.cnameRecords`), the only non-A records configured:
+`pihole1.vollminlab.com` → `pihole1.mgmt.vollminlab.com`, and the same for `pihole2`. The Pi-holes
+therefore have **no** direct `pihole1/2.vollminlab.com` A record — the `.mgmt.` name is the A record.
 
-**Note:** `vollm.in` is an externally-registered domain used as a Shlink short link base. It resolves via public DNS (Let's Encrypt cert) and is not a Pi-hole record. Short links are accessible as `vollm.in/<slug>`, `go.vollminlab.com/<slug>`, and `vl.vollminlab.com/<slug>`.
+**Traps in this table:**
+
+- `truenas.vollminlab.com` resolves to **192.168.152.2 (NPM)**, not to the NAS. Only
+  `iscsi` / `smb` / `nfs.vollminlab.com` address 192.168.150.2 directly.
+- `plex.vollminlab.com` resolves to **192.168.152.244 (ingress-nginx)**, not to the NAS.
+- `vollm.in` **is** a Pi-hole record (`192.168.152.244`) — a split-horizon override so LAN clients
+  reach the Shlink Ingress directly instead of leaving the network. It is also an externally
+  registered domain resolving via public DNS, which is what off-LAN clients get.
+- There is **no `vl.vollminlab.com` record.** Shlink short links are `vollm.in/<slug>` and
+  `go.vollminlab.com/<slug>`.
+- `bluemap` and `mastersleague` are **not** Pi-hole records. They are public-DNS only and are
+  reached through the DMZ HAProxy — see [Load Balancing](#dmz-haproxy-haproxydmz01--haproxydmz02).
 
 ---
 
@@ -172,7 +253,9 @@ Full list in `hosts/pihole1/configs/pihole/pihole.toml`.
 | esxi02 | 192.168.151.3   | 192.168.153.3   | 192.168.154.3   | 192.168.154.6   | 8.0.3   | 24859861 |
 | esxi03 | 192.168.151.4   | 192.168.153.4   | 192.168.154.4   | 192.168.154.7   | 8.0.3   | 24859861 |
 
-Hardware: Minisforum MS-01. NTP: pool.ntp.org.
+Hardware: Minisforum MS-01 (vSphere reports manufacturer `Micro Computer (HK) Tech Limited`, model
+`Venus Series`). NTP: `pool.ntp.org`, service running, policy `on`. Host DNS: `192.168.100.4`,
+`192.168.100.3`; search domain `vollminlab.com`.
 vSphere reports 6 CPUs (P-cores only) / 12 logical processors per host, 95.74 GB usable RAM (96 GB physical). E-cores not presented to the hypervisor.
 
 ### vCenter (VCHA)
@@ -181,11 +264,22 @@ Three-node vCenter HA cluster — active, passive, witness — one per ESXi host
 
 `vcenter.vollminlab.com` = `192.168.151.5` — floating management IP held by whichever node is currently active. Gateway: `192.168.151.1`. DNS: `192.168.100.4, 192.168.100.3`.
 
-| Node    | VCHA IP (fixed) | Management IP (floating) |
-|---------|-----------------|--------------------------|
-| Active  | 192.168.155.3   | 192.168.151.5 (live)     |
-| Passive | 192.168.155.2   | 192.168.151.5 (standby)  |
-| Witness | 192.168.155.4   | —                        |
+Indexed by **VM name**, not by role — the role floats on failover, the VM name does not:
+
+| VM                | VCHA IP (fixed) | VCHA NIC MAC        |
+|-------------------|-----------------|---------------------|
+| `vcenter`         | 192.168.155.2   | `00:50:56:98:f0:f7` |
+| `vcenter-Passive` | 192.168.155.3   | `00:50:56:98:57:03` |
+| `vcenter-Witness` | 192.168.155.4   | `00:50:56:98:dd:09` |
+
+Each `.155.x` address is a UDM static DHCP lease bound to that MAC, so they are stable across
+rebuilds. Whichever of `vcenter` / `vcenter-Passive` is currently **active** additionally holds the
+floating `192.168.151.5`.
+
+> **The VM named `vcenter` is not necessarily the active node.** In the collected export
+> (`hosts/vsphere/vms.json`, 2026-07-02) it was `vcenter-Passive` that reported `192.168.151.5`,
+> meaning the VM named "Passive" was the one actually serving. Never infer role from VM name —
+> check which node holds `192.168.151.5`.
 
 ### Cluster
 
@@ -204,29 +298,35 @@ Three-node vCenter HA cluster — active, passive, witness — one per ESXi host
 
 ### Distributed vSwitch
 
-- Name: `DSwitch0`, MTU 9000 (jumbo frames), 2 uplinks, all 3 hosts connected
+- Name: `DSwitch0`, version 8.0.3, MTU 9000 (jumbo frames), 2 uplinks (`Uplink 1` / `Uplink 2`),
+  all 3 hosts connected
 
 ### Port Groups
 
-| Port Group          | VLAN | Purpose              |
-|---------------------|------|----------------------|
-| 151-DPG-Management  | 151  | ESXi / vCenter mgmt  |
-| 152-DPG-GuestNet    | 152  | VM workloads         |
-| 153-DPG-vMotion     | 153  | vMotion              |
-| 154-DPG-iSCSI-1     | 154  | iSCSI path 1         |
-| 154-DPG-iSCSI-2     | 154  | iSCSI path 2         |
-| 155-DPG-VCHA        | 155  | vCenter HA           |
-| 160-DPG-DMZ         | 160  | DMZ VMs              |
+| Port Group           | VLAN            | Purpose              |
+|----------------------|-----------------|----------------------|
+| 151-DPG-Management   | 151             | ESXi / vCenter mgmt  |
+| 152-DPG-GuestNet     | 152             | VM workloads         |
+| 153-DPG-vMotion      | 153             | vMotion              |
+| 154-DPG-iSCSI-1      | 154             | iSCSI path 1         |
+| 154-DPG-iSCSI-2      | 154             | iSCSI path 2         |
+| 155-DPG-VCHA         | 155             | vCenter HA           |
+| 160-DPG-DMZ          | 160             | DMZ VMs              |
+| DSwitch0-DVUplinks   | trunk 0–4094    | Uplink port group    |
 
 ### Datastores
 
-| Name         | Type | Capacity    | Free       | Notes              |
-|--------------|------|-------------|------------|--------------------|
-| vmstore1     | VMFS | 1433.5 GB   | ~716 GB    | Shared iSCSI       |
-| vmstore2     | VMFS | 1433.5 GB   | ~826 GB    | Shared iSCSI       |
-| esxi01-local | VMFS | 825.75 GB   | —          | Local to esxi01    |
-| esxi02-local | VMFS | 825.75 GB   | —          | Local to esxi02    |
-| esxi03-local | VMFS | 825.75 GB   | —          | Local to esxi03    |
+| Name         | Type | Capacity  | Backing                                       |
+|--------------|------|-----------|-----------------------------------------------|
+| vmstore1     | VMFS | 1433.5 GB | Shared iSCSI — zvol `pool_1/vmstorage/vmstore1` |
+| vmstore2     | VMFS | 1433.5 GB | Shared iSCSI — zvol `pool_1/vmstorage/vmstore2` |
+| esxi01-local | VMFS | 825.75 GB | Local to esxi01                               |
+| esxi02-local | VMFS | 825.75 GB | Local to esxi02                               |
+| esxi03-local | VMFS | 825.75 GB | Local to esxi03                               |
+
+All five are VMFS 6.82. Free space is not recorded here — it changes with every VM operation; read
+`FreeSpaceGB` from `hosts/vsphere/datastores.json` after a fresh `Export-VSphereConfigs.ps1` run.
+There are no datastore clusters (`hosts/vsphere/datastore-clusters.json` is empty).
 
 iSCSI target: `iscsi.vollminlab.com` / `192.168.150.2:3260`, software initiator (vmhba64), dual-path on all ESXi hosts.
 
@@ -276,17 +376,33 @@ guarantees drift. vCenter appliance VMs (VCHA) are managed out-of-band and omitt
 
 ## Kubernetes
 
-- Version: 1.32.3
+- Topology: 3 control plane (k8scp01–03) + 6 workers (k8sworker01–06), kubeadm-installed
 - Control plane endpoint: `192.168.152.7:6443` (HAProxy VIP)
 - Pod subnet: `172.18.0.0/16`
 - Service subnet: `10.96.0.0/12`
 - etcd: stacked, 3 members (k8scp01–03), local at `/var/lib/etcd` — see [etcd.md](etcd.md)
-- API server encryption: enabled
-- CNI: Calico v3.29.1
+- API server encryption: enabled (`--encryption-provider-config /etc/kubernetes/enc/enc.yaml`)
+- CNI: Calico, installed via the Tigera operator (**not** Flux-managed)
 - GitOps: Flux (repo: `k8s-vollminlab-cluster`)
-- Storage: Longhorn v1.8.1
+- Storage: Longhorn (Flux-managed HelmRelease)
 
 Node pod CIDRs are assigned sequentially from 172.18.0.0/16 (e.g., k8scp01 = 172.18.0.0/24).
+
+**No version numbers are recorded here, deliberately.** Kubernetes, Calico, and Longhorn all move
+on their own schedules, and a number written into this file is wrong the moment the next upgrade
+lands — this section claimed 1.32.3 and Longhorn v1.8.1 for months after both had moved on. Read
+them from a source that maintains itself instead:
+
+| Component     | Where the live version comes from                                          |
+|---------------|----------------------------------------------------------------------------|
+| Kubernetes    | `kubectl get nodes` — or `hosts/k8s/kubeadm-config.yaml` after a fresh collection |
+| Calico        | `k8s-vollminlab-cluster` → `bootstrap/calico/README.md` (pinned there, not Flux-managed) |
+| Longhorn      | `k8s-vollminlab-cluster` → the Longhorn HelmRelease `spec.chart.spec.version` |
+| Flux          | `flux version`                                                              |
+
+> **`hosts/k8s/` is the stalest snapshot in this repo.** It has not been re-collected since the
+> initial commit (2026-04-10), so `kubeadm-config.yaml` and `nodes.yaml` still show the cluster as
+> it was then. Run `scripts/collect-k8s-configs.sh` before trusting anything in that directory.
 
 ---
 
@@ -305,10 +421,15 @@ Node pod CIDRs are assigned sequentially from 172.18.0.0/16 (e.g., k8scp01 = 172
 
 **Backends:**
 
-| Frontend     | Backend                                     | Mode |
-|--------------|---------------------------------------------|------|
-| `*:6443`     | k8scp01/02/03 at .8/.9/.10:6443            | TCP  |
-| `*:8404`     | Stats page (authenticated)                  | HTTP |
+| Frontend             | Backend                          | Mode |
+|----------------------|----------------------------------|------|
+| `192.168.152.7:6443` | k8scp01/02/03 at .8/.9/.10:6443  | TCP  |
+| `*:8404`             | Stats page (authenticated)       | HTTP |
+
+The `kube-apiserver` frontend binds the **VIP only** (`bind 192.168.152.7:6443`), not `*:6443`.
+This pairs with the keepalived notify hooks — `haproxy-start.sh` and `haproxy-stop.sh` are plain
+`systemctl start/stop haproxy` — so HAProxy runs on exactly the node currently holding the VIP.
+Backend defaults: `inter 10s downinter 5s rise 2 fall 2 slowstart 60s maxconn 250 maxqueue 256`.
 
 ### DMZ HAProxy (haproxydmz01 / haproxydmz02)
 
@@ -319,16 +440,29 @@ Node pod CIDRs are assigned sequentially from 172.18.0.0/16 (e.g., k8scp01 = 172
 | haproxydmz02  | 192.168.160.3 — BACKUP (priority 180)   |
 | Health check  | `pgrep -x haproxy`, fall 2, rise 2       |
 
-**Backends:**
+**Frontends and backends:**
 
-| Frontend           | Backend / Action                             |
-|--------------------|----------------------------------------------|
-| `*:80`             | Redirect to HTTPS                            |
-| `*:443` (default)  | 404                                          |
-| `bluemap.vollminlab.com:443` | NodePort 32566              |
-| `*:25565`          | NodePort 32565 (Minecraft)                   |
+| Frontend                            | Backend       | Targets                                    | Mode |
+|-------------------------------------|---------------|--------------------------------------------|------|
+| `ft_http` — `*:80`                  | —             | 301 redirect to HTTPS                      | HTTP |
+| `ft_https` — `bluemap.vollminlab.com` | `bk_bluemap`  | k8sworker05 **and** 06 — `.15/.16:32566`   | HTTP |
+| `ft_https` — `mastersleague.vollminlab.com` | `bk_masters` | k8sworker05 **and** 06 — `.15/.16:32567` | HTTP |
+| `ft_https` — any other host         | `bk_404`      | returns `404 Not found`                    | HTTP |
+| `ft_minecraft` — `*:25565`          | `bk_minecraft`| k8sworker05 **and** 06 — `.15/.16:32565`   | TCP  |
+| `listen stats` — `*:8404`           | —             | stats page (authenticated)                 | HTTP |
 
-Rate limit: 100 connections/sec. Connection limit: 200 per backend server.
+**Every backend is a two-server round-robin across k8sworker05 (192.168.152.15) and k8sworker06
+(192.168.152.16)** — not a single node. Health checks are `inter 3000 fall 3 rise 2` on all three,
+with `option httpchk GET /` (bluemap), `GET /api/health` (masters), and `option tcp-check`
+(minecraft). `haproxydmz01` and `haproxydmz02` carry byte-identical configs apart from whitespace.
+
+**Rate limiting** applies to the Minecraft frontend only: a stick table keyed on source IP stores
+`conn_rate(10s)`, and a source exceeding **100 connections per 10s window** is rejected at connect
+time. There is no `maxconn` anywhere in the DMZ config — the internal HAProxy's `maxconn 250` is a
+separate thing and does not apply here.
+
+TLS: `ft_https` binds `*:443 ssl crt /etc/haproxy/certs/`, TLS 1.2 minimum, Mozilla intermediate
+cipher suite, `no-tls-tickets`. It sets `X-Forwarded-Proto: https` and `option forwardfor`.
 
 **Certificate sync:** `sync-haproxy-cert.sh` on haproxydmz01 — merges Let's Encrypt fullchain + key, deploys to both DMZ proxies via SSH, reloads HAProxy.
 
@@ -339,7 +473,11 @@ Rate limit: 100 connections/sec. Connection limit: 200 per backend server.
 - Host: nginx01 (192.168.152.2)
 - Docker Compose on Debian, MariaDB backend
 - Admin: `https://npm.vollminlab.com` (port 81, self-proxied)
-- Wildcard cert: `*.vollminlab.com` via Let's Encrypt (expires 2026-06-10)
+- Wildcard cert: `*.vollminlab.com` via Let's Encrypt, auto-renewed by NPM. The expiry date is not
+  recorded here — it moves every ~60 days; read `expires_on` from
+  `hosts/nginx01/npm/certificates.json` after a fresh `collect-npm-configs.sh` run.
+- All six proxy hosts use that one certificate and have `ssl_forced` enabled.
+- No redirection hosts and no streams are configured.
 
 | Domain                 | Backend                    |
 |------------------------|----------------------------|
@@ -360,20 +498,30 @@ Rate limit: 100 connections/sec. Connection limit: 200 per backend server.
 
 ### Pools
 
-| Pool   | Layout | Raw    | Allocated | Free    | Disks              |
-|--------|--------|--------|-----------|---------|--------------------|
-| pool_0 | RaidZ2 | 40 TB  | ~13.8 TB  | ~26 TB  | 5× (sda2–sde2)     |
-| pool_1 | Mirror | 4 TB   | ~761 GB   | ~3.3 TB | 2× (sdf1, sdg1)    |
+| Pool   | Layout | Raw    | Disks           | Holds                                          |
+|--------|--------|--------|-----------------|------------------------------------------------|
+| pool_0 | RaidZ2 | 40 TB  | 5× (sda2–sde2)  | `plex-media`, `smb-generic`, `vcenter_backups` |
+| pool_1 | Mirror | 4 TB   | 2× (sdf1, sdg1) | `vmstorage` — the `vmstore1` / `vmstore2` zvols |
+
+Used/free figures are deliberately omitted; they move daily. Read them from
+`hosts/truenas/pools.json` after a fresh `collect-truenas-configs.sh` run.
+
+**`pool_1` is the iSCSI datastore pool.** `pool_1/vmstorage/vmstore1` and `.../vmstore2` are ZFS
+**volumes** (zvols), exported over iSCSI, and formatted VMFS by ESXi as the `vmstore1` / `vmstore2`
+shared datastores in the [Datastores](#datastores) table. Every VM in this homelab lives on this
+one 2-disk mirror.
 
 ### SMB Shares
 
-| Share                | Path                                  |
-|----------------------|---------------------------------------|
-| movies               | /mnt/pool_0/movies                    |
-| tv                   | /mnt/pool_0/tv                        |
-| completed-downloads  | /mnt/pool_0/completed-downloads       |
-| incomplete-downloads | /mnt/pool_0/incomplete-downloads      |
-| smb-generic          | /mnt/pool_0/smb-generic              |
+Everything media-related is nested under `pool_0/plex-media`, **not** at the pool root:
+
+| Share                | Path                                              |
+|----------------------|---------------------------------------------------|
+| movies               | /mnt/pool_0/plex-media/movies                     |
+| tv                   | /mnt/pool_0/plex-media/tv                         |
+| completed-downloads  | /mnt/pool_0/plex-media/SABnzbd/completed-downloads |
+| incomplete-downloads | /mnt/pool_0/plex-media/SABnzbd/incomplete-downloads |
+| smb-generic          | /mnt/pool_0/smb-generic                           |
 
 ### NFS Shares
 
@@ -399,10 +547,26 @@ Rate limit: 100 connections/sec. Connection limit: 200 per backend server.
 
 ### GroupMe Bridge (groupme01)
 
-- VM on GuestNet (192.168.152.x — see vms.json)
-- Systemd service: `groupme-daemon.service` (Python, 30s poll interval)
-- Hardened: `NoNewPrivileges`, `ProtectSystem=strict`, `PrivateTmp`
-- Auto-restarts on failure
+- VM on GuestNet (192.168.152.17)
+- Systemd service: `groupme-daemon.service` — `/opt/groupme/venv/bin/python groupme_ingest.py
+  --daemon --interval 30 --head-pages 6 --reconcile-head 6 --verbose`
+- Hardened: `NoNewPrivileges=true`, `ProtectSystem=full`, `ProtectHome=true`, `PrivateTmp=true`
+- Auto-restarts on failure (`Restart=always`, `RestartSec=5`)
+- Config from `/etc/groupme.env` — see `hosts/groupme01/configs/groupme.env.example`
+
+### Ansible control node (ansible01)
+
+- VM on GuestNet (192.168.152.4). Collected state: `ansible --version` and the Galaxy collection
+  inventory only — playbooks and inventory live in the `ansible-playbooks` repo.
+- Bootstrap and DR procedure, including the on-disk outbound SSH key, is in
+  `hosts/ansible01/README.md`.
+
+### Dev sandbox (devsbx01)
+
+- VM on GuestNet (192.168.152.3). Collected state: shell configs (`.bashrc`, `.tmux.conf`,
+  `.gitconfig`, `.blerc`, `.fzf.bash`).
+- Bootstrap steps in `hosts/devsbx01/README.md`. Also runs Syncthing for the Obsidian vault —
+  see [syncthing.md](syncthing.md).
 
 ---
 
@@ -425,5 +589,5 @@ All secrets stored in **1Password** (Homelab vault), retrieved at runtime via `o
 - **HAProxy:** Stateless — restore from `haproxy.cfg` + `keepalived.conf` in this repo.
 - **NPM:** Restore via docker-compose + import proxy config from `hosts/nginx01/npm/`.
 - **TrueNAS:** Pool layout and share config in this repo. Pools depend on physical disk layout.
-- **Kubernetes:** Flux repo re-bootstraps all workloads. Sealed Secrets sealing key backup documented in `k8s-vollminlab-cluster` bootstrap dir. etcd backup/restore and member replacement procedures in [etcd.md](etcd.md). API server encryption key (`enc.yaml`) must be restored from 1Password before API server starts on a rebuilt control plane node.
+- **Kubernetes:** Flux repo re-bootstraps all workloads. Secrets are **no longer** SealedSecrets — that controller was removed 2026-05-31 and `k8s-vollminlab-cluster/bootstrap/sealed-secrets/` is historical reference only. The DR-critical root secret is now the `onepassword-connect` Secret (`1password-credentials.json` + `token`) in the `1password` namespace, which is not Flux-managed and must be applied **before** Flux bootstrap so External Secrets Operator can materialize every other Secret from the 1Password Homelab vault. etcd backup/restore and member replacement procedures in [etcd.md](etcd.md). API server encryption key (`enc.yaml`) must be restored from 1Password before API server starts on a rebuilt control plane node.
 - **vSphere:** Full config snapshot in `hosts/vsphere/`. vCSA file-based backup target: `/mnt/pool_0/vcenter_backups` on TrueNAS (NFS, accessible from 192.168.151.0/24).
