@@ -1,0 +1,47 @@
+name: CI
+
+on:
+  push:
+    branches: [main]
+  pull_request:
+    branches: [main]
+  workflow_dispatch:
+
+jobs:
+  docs:
+    name: Doc Drift
+    # Escape hatch: set the CI_RUNNER repository variable to redirect off the
+    # self-hosted fleet without editing this file. A required check that cannot
+    # run is unmergeable under enforce_admins.
+    runs-on: ${{ vars.CI_RUNNER || 'vollminlab' }}
+    steps:
+      - uses: actions/checkout@v6
+        with:
+          # Ages are measured from the last commit that touched each file, so
+          # the freshness check needs real history, not a depth-1 clone.
+          fetch-depth: 0
+
+      - name: Set up Python
+        uses: actions/setup-python@v6
+        with:
+          python-version: '3.12'
+
+      # Proves the doc matches the snapshot it is generated from.
+      - name: VM inventory is regenerated
+        run: python3 scripts/generate-vm-inventory.py --check
+
+      # Proves the snapshot itself is worth generating from. These are separate
+      # properties: a doc generated from a 128-day-old export is perfectly
+      # consistent and perfectly wrong, which is exactly how this repo ended up
+      # asserting the wrong DRS mode, the wrong UPS service state, and the wrong
+      # control-plane datastores all at once.
+      - name: Collected snapshots are fresh
+        run: ./scripts/check-collected-freshness.sh
+
+      - name: Shell scripts parse
+        run: |
+          fail=0
+          while IFS= read -r f; do
+            bash -n "$f" || { echo "::error file=$f::bash -n failed"; fail=1; }
+          done < <(find scripts -name '*.sh')
+          exit $fail
