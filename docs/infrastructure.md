@@ -276,22 +276,31 @@ Each `.155.x` address is a UDM static DHCP lease bound to that MAC, so they are 
 rebuilds. Whichever of `vcenter` / `vcenter-Passive` is currently **active** additionally holds the
 floating `192.168.151.5`.
 
-> **The VM named `vcenter` is not the active node.** Confirmed against the VCHA API on
-> 2026-08-17: `node1` = VM `vcenter` = **PASSIVE**, `node2` = VM `vcenter-Passive` = **ACTIVE**,
-> witness = VM `vcenter-Witness`. Cluster state `ENABLED` / `HEALTHY` / `CONFIGURED`.
+> **Never infer the VCHA role from the VM name.** The names are deployment-time labels and do
+> not track the roles — a failover swaps which VM is active and leaves the names behind. As of
+> 2026-08-17 the VM named `vcenter` was PASSIVE and `vcenter-Passive` was ACTIVE, but that is
+> expected to change and this document deliberately does not pin it.
 >
-> The names are deployment-time labels and do not track the roles — VCHA has failed over at some
-> point since. Never infer role from VM name; ask the API:
+> Ask the API instead:
 >
 > ```bash
 > TOK=$(curl -sk -u "$USER:$PASS" -X POST https://vcenter.vollminlab.com/api/session | tr -d '"')
 > curl -sk -H "vmware-api-session-id: $TOK" -X POST \
 >   'https://vcenter.vollminlab.com/rest/vcenter/vcha/cluster?action=get' \
 >   -H 'Content-Type: application/json' -d '{"vcha_cluster":{}}' \
->   | jq '.value | {node1:.node1.runtime.role, node2:.node2.runtime.role}'
+>   | jq '.value | {n1:{vm:.node1.runtime.placement.vm_name, role:.node1.runtime.role},
+>                   n2:{vm:.node2.runtime.placement.vm_name, role:.node2.runtime.role},
+>                   health:.health_state, mode:.mode}'
 > ```
 >
-> A quicker sanity check: the active node is whichever additionally holds `192.168.151.5`.
+> Quicker sanity check: the active node is whichever additionally holds `192.168.151.5`.
+
+> **Two vCLS VMs on three hosts is correct, not a fault.** vSphere 8.0 Update 3 replaced the old
+> vCLS with [Embedded vCLS](https://techdocs.broadcom.com/us/en/vmware-cis/vsphere/vsphere/8-0/vsphere-resource-management/vsphere-cluster-services-vcls/embedded-vcls.html),
+> which reduced the count from up to three to **two** for any cluster with two or more hosts, and
+> moved the agents into host memory. They have **no storage footprint** — their `vmPathName` is
+> `[] /var/run/crx/infra/…` with an empty datastore, which is expected and not a placement failure.
+> They are `vCLS-<uuid>` VMs and must not be managed by hand.
 
 ### Cluster
 

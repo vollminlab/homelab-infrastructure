@@ -227,10 +227,31 @@ Logs land in `/mnt/pool_0/scripts/ups-shutdown/logs/ups-shutdown.log`.
 `collect-truenas-configs.sh` never fetches `/api/v2.0/ups`, which is why none of this is
 captured in `hosts/` — worth adding to the collector.
 
-> **Model mismatch worth resolving.** This doc and the NUT driver both say **CP1500**
-> (`CP1500PFCRM2U` here, `CP1500EPFCLCD` in the driver), but the TrueNAS `description` field reads
-> "CyberPower 3000VA". At most one is right. The driver choice is the one that affects battery
-> reporting, so check the label on the unit before changing anything.
+The unit is a **CyberPower CP1500PFCRM2U** — PFC Sinewave, 1500 VA / 1000 W, 8 outlets, AVR,
+short-depth 2U rackmount. NUT confirms this from the device itself:
+
+```
+$ upsc ups@localhost
+device.model: CP1500PFCRM2U        ups.realpower.nominal: 1000
+device.mfr:   CPS                  ups.load: 32
+ups.status:   OL                   battery.charge: 100
+battery.runtime: 1300              battery.runtime.low: 300
+driver.version.data: CyberPower HID 0.6
+```
+
+> **The TrueNAS driver dropdown reads `usbhid-ups$CP1500EPFCLCD`, which is a different model — and
+> that is fine.** `usbhid-ups` identifies the device over HID at runtime; the dropdown entry only
+> seeds VID/PID matching. The proof is above: it reports the correct model and a correct 1000 W
+> nominal. There is no `CP1500PFCRM2U` entry in NUT's driver list, so this is the closest
+> selectable option and nothing needs changing.
+>
+> The one thing that *is* wrong is cosmetic: the TrueNAS `description` field says
+> "CyberPower 3000VA". It is free text and affects nothing, but it should read 1500 VA / 1000 W.
+
+**Runtime budget, measured 2026-08-17:** 1300 s of runtime at 32 % load, with
+`battery.runtime.low` at 300 s. So LOWBATT fires with roughly **5 minutes** of battery left —
+which is the real deadline the shutdown sequence below has to fit inside, and it is why
+`TOTAL_DEADLINE` is 240 s rather than something more generous.
 
 **Setting `shutdowncmd` alone is strictly safer than the stock config and adds no
 new trigger risk.** It changes *what runs*, not *when*. Same LOWBATT trigger, but
