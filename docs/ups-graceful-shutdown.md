@@ -208,10 +208,33 @@ against `devsbx01` on the real host API returned `OK` in 0.2 s, the guest shut d
 cleanly via Tools, and came back healthy. That is the same call the orchestrator
 issues for every VM.
 
-**What is still unproven:** `host.shutdown`, which cannot be exercised without
-downing a host. Its failure mode is benign — by the time it runs, the guests are
-already safely off, so the storage-yank scenario is already prevented; the host
-would simply stay powered.
+**`host.shutdown` was proven live on 2026-09-16** and nothing in the path is
+inferred any more. esxi03 was put in maintenance mode, and the orchestrator's exact
+call was issued **as `ups-shutdown`, against the host's own API**:
+
+```
+govc host.shutdown -f /ha-datacenter/host/esxi03.vollminlab.com/esxi03...  OK  rc=0
+ 5s still answering on 443
+host down after 10s
+```
+
+The `nc -z 443` confirmation loop behaved as designed. In the same window,
+`vm.power -s k8scp03` as `ups-shutdown` powered that guest off in under 10 seconds,
+so the least-privilege role's ShutdownGuest is verified in practice too.
+
+**Getting a host into maintenance mode is not free, and the reason is worth
+recording.** `EnterMaintenanceMode` stalled at 23 % with no error because
+`k8scp03` sits on `esxi03-local`: DRS performs only *compute* vMotion, so a guest
+on host-local storage can never be evacuated automatically. It was **not** the
+anti-affinity rules — all four cluster rules carry no `mandatory` field, so DRS is
+free to violate them. `vcenter-Passive` also had to be migrated by hand. The
+recipe is: drain and power off the local-storage guest, hand-migrate any VCHA node
+that will not move, and remember that a powered-off guest can stay *registered*
+without blocking anything.
+
+When restoring afterwards, **exit maintenance mode before powering the CP back
+on** — HA admission control reserves 33 %, and with one host out the cluster sits
+close enough to its limit to refuse the power-on.
 
 **What is still unmeasured:** how long a real graceful shutdown takes, and the true
 battery runtime. Both come from one planned power-down whenever that is
