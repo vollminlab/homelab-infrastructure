@@ -54,6 +54,7 @@ run() {
       UPSMON_CONF="$S/upsmon.conf" STAMP_FILE="$S/logs/stamp" \
       UPSC="$S/upsc" MIDCLT="$S/midclt" CURL="$S/curl" \
       STARTUP_SCRIPT="$S/startup.sh" STARTUP_SHA_FILE="$S/startup.sha256" \
+      STUB_ARMED="${BASELINE_ARMED:-1}" \
       "$@" bash "$SCRIPT" 2>&1
 }
 
@@ -136,7 +137,7 @@ out=$(run)
 check "startup script checked"  "$out" "startup orchestrator present and executable"
 check "startup sha checked"     "$out" "startup orchestrator matches its pinned sha256"
 check "startup VERIFY run"      "$out" "startup VERIFY run passed"
-check "arming state reported"   "$out" "NOT armed at boot"
+check "arming state reported"   "$out" "POSTINIT hook is registered"
 teardown
 
 echo "== a hand-edited startup script is caught =="
@@ -154,17 +155,19 @@ check "failure reported" "$out" "startup VERIFY run failed"
 if (( rc != 0 )); then ok "exit non-zero"; else bad "exit was 0"; fi
 teardown
 
-echo "== an armed hook is recognised =="
+echo "== a hook that has gone missing is now a FAILURE, not a note =="
 setup
-out=$(run STUB_ARMED=1)
-check "arming detected" "$out" "POSTINIT hook is registered"
+out=$(run STUB_ARMED=0); rc=$?
+check "absence enforced by default" "$out" "no init hook references"
+if (( rc != 0 )); then ok "exit non-zero"; else bad "exit was 0"; fi
+check "alert sent"                  "$(cat "$CALLS")" "curl"
 teardown
 
-echo "== once arming is expected, its absence fails =="
+echo "== EXPECT_STARTUP_ARMED=0 downgrades it back to a note =="
 setup
-out=$(run EXPECT_STARTUP_ARMED=1); rc=$?
-check "absence enforced" "$out" "no init hook references"
-if (( rc != 0 )); then ok "exit non-zero"; else bad "exit was 0"; fi
+out=$(run STUB_ARMED=0 EXPECT_STARTUP_ARMED=0); rc=$?
+check "reported as a note" "$out" "NOT armed at boot"
+if (( rc == 0 )); then ok "exit 0 — a note does not fail the run"; else bad "exit was $rc"; fi
 teardown
 
 echo
