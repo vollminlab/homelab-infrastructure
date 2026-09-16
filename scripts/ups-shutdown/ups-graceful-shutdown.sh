@@ -2,7 +2,7 @@
 # ups-graceful-shutdown.sh — orchestrate a clean lab power-down from TrueNAS.
 #
 # Runs ON TrueNAS, invoked as the UPS service's `shutdowncmd`. Because
-# shutdowncmd REPLACES NUT's default `/sbin/shutdown -p now`, this script is
+# shutdowncmd REPLACES TrueNAS's default `/sbin/shutdown -P now`, this script is
 # solely responsible for powering the NAS off — see poweroff_nas() and the
 # hard deadline below.
 #
@@ -20,8 +20,19 @@
 # Usage:
 #   ups-graceful-shutdown.sh            # real run (as invoked by NUT)
 #   DRY_RUN=1 ups-graceful-shutdown.sh  # enumerate and print the plan only
+#   VERIFY=1  ups-graceful-shutdown.sh  # DRY_RUN plus a live probe for every
+#                                       # action the real run would take;
+#                                       # exits non-zero if any probe fails
 #
 # Config: ups-shutdown.env next to this script (0600, root) — see .example.
+#
+# NOTE ON THE POWEROFF FLAG: on TrueNAS SCALE /sbin/shutdown is systemd's
+# compat interface, which accepts -P (poweroff) but NOT lowercase -p. NUT's
+# upstream docs show the BSD-style `-p`; using it here made the final step fail
+# with "invalid option -- 'p'" and exit 1, leaving the NAS running on battery
+# after every guest and host had already been shut down cleanly. DRY_RUN could
+# never catch it, because poweroff_nas() returns before reaching the command —
+# which is why VERIFY mode exists and probes this flag for real.
 
 set -uo pipefail
 
@@ -52,7 +63,17 @@ HOST_TIMEOUT_DEFAULT=60
 # the whole sequence has to finish well inside that.
 TOTAL_DEADLINE_DEFAULT=240
 
+# How the NAS powers itself off. Overridable only so the test suite can stub it;
+# it is deliberately NOT in the env file, and its value is logged on every run so
+# a wrong one is visible in the log rather than discovered during an outage.
+POWEROFF_CMD="${POWEROFF_CMD:-/sbin/shutdown -P now}"
+
 DRY_RUN="${DRY_RUN:-0}"
+# VERIFY implies DRY_RUN: it must never power anything off. What it adds is that
+# every branch DRY_RUN merely *describes* also runs a read-only probe proving the
+# real action would have worked.
+VERIFY="${VERIFY:-0}"
+(( VERIFY )) && DRY_RUN=1
 
 # ── Logging ───────────────────────────────────────────────────────────────────
 
@@ -71,6 +92,15 @@ die_but_poweroff() {
 # ── Setup ─────────────────────────────────────────────────────────────────────
 
 mkdir -p "$LOG_DIR" 2>/dev/null
+
+# A failed append is reported by the *shell* before the command runs, so the
+# `2>/dev/null` inside log() never suppressed it: a non-root VERIFY run emitted a
+# "Permission denied" line per log call and buried the actual output. Decide once,
+# here, and fall back to stdout only.
+if [[ -n "${LOG_FILE:-}" ]] && ! { : >> "$LOG_FILE"; } 2>/dev/null; then
+  echo "WARNING: $LOG_FILE is not writable — logging to stdout only" >&2
+  LOG_FILE=""
+fi
 
 # The env file uses plain assignments, so sourcing it would overwrite anything
 # passed in the environment — an override for a test run would be silently
@@ -107,6 +137,75 @@ deadline_remaining() {
   local left=$(( TOTAL_DEADLINE - elapsed ))
   (( left < 0 )) && left=0
   echo "$left"
+}
+
+# ── VERIFY probes ─────────────────────────────────────────────────────────────
+#
+# Each probe proves one real action would work, without performing it. The rule
+# that matters: VERIFY must EXECUTE something for every line the real run
+# executes. A rehearsal that only prints what it would do cannot catch a bad flag
+# — which is exactly how `shutdown -p` survived five weeks of green dry runs.
+#
+# Background host jobs are subshells, so a counter cannot propagate. Each failure
+# drops a file in VERIFY_DIR and the main shell tallies them at the end.
+
+VERIFY_DIR=""
+if (( VERIFY )); then
+  VERIFY_DIR="$(mktemp -d "${TMPDIR:-/tmp}/ups-verify.XXXXXX")"
+  trap 'rm -rf "$VERIFY_DIR"' EXIT
+fi
+
+probe_ok()   { log "  PROBE PASS  $*"; }
+probe_fail() {
+  log "  PROBE FAIL  $*"
+  [[ -n "$VERIFY_DIR" ]] && echo "$*" >> "$VERIFY_DIR/failures"
+  return 0
+}
+
+# Does the poweroff command's flag set actually parse? Substituting --show for
+# the time argument makes systemd parse every flag and then only report pending
+# state. Exit status is useless here (`-P --show` exits 1 with "No scheduled
+# shutdown."), so the signal is the option-parsing error text.
+probe_poweroff_cmd() {
+  local bin out flags=()
+  # shellcheck disable=SC2086
+  set -- $POWEROFF_CMD
+  bin=$1; shift
+  local a
+  for a in "$@"; do
+    [[ "$a" == "now" || "$a" == "+0" ]] && continue
+    flags+=("$a")
+  done
+  if [[ ! -x "$bin" ]]; then
+    probe_fail "poweroff: $bin is not executable"
+    return
+  fi
+  out=$("$bin" "${flags[@]}" --show 2>&1)
+  if grep -qiE 'invalid option|unrecognized option|unknown option' <<< "$out"; then
+    probe_fail "poweroff: '$bin ${flags[*]}' rejected by $bin — $out"
+  else
+    probe_ok "poweroff: '$POWEROFF_CMD' flags accepted by $bin"
+  fi
+}
+
+# Can the configured principal actually power off guests and the host? On a
+# standalone ESXi host the only role that permits either is Admin, so this reads
+# the granted role rather than guessing from a successful login.
+probe_host_privilege() {
+  local label=$1 addr=$2 hostsys=$3 perms role
+  perms=$(govc_host "$addr" permissions.ls "$hostsys" 2>/dev/null)
+  if [[ -z "$perms" ]]; then
+    probe_fail "[$label] privilege: could not read permissions on $hostsys"
+    return
+  fi
+  role=$(awk -v u="$ESXI_USER" '$3==u {print $1}' <<< "$perms" | head -1)
+  if [[ -z "$role" ]]; then
+    probe_fail "[$label] privilege: principal '$ESXI_USER' has no permission entry"
+  elif [[ "$role" == "Admin" ]]; then
+    probe_ok "[$label] privilege: '$ESXI_USER' holds Admin"
+  else
+    probe_fail "[$label] privilege: '$ESXI_USER' holds '$role', which cannot power off a host"
+  fi
 }
 
 # ── ESXi helpers ──────────────────────────────────────────────────────────────
@@ -162,6 +261,14 @@ shutdown_host() {
         tools_count=$((tools_count + 1))
         if (( DRY_RUN )); then
           log "[$label] DRY-RUN would ShutdownGuest: $name"
+          if (( VERIFY )); then
+            # The real call addresses the guest by name; prove that name still
+            # resolves on this host rather than trusting the enumeration that
+            # produced it.
+            govc_host "$addr" vm.info "$name" >/dev/null 2>&1 \
+              && probe_ok "[$label] guest '$name' resolves" \
+              || probe_fail "[$label] guest '$name' does not resolve"
+          fi
         else
           log "[$label] ShutdownGuest: $name"
           govc_host "$addr" vm.power -s "$name" >/dev/null 2>&1 \
@@ -214,6 +321,21 @@ shutdown_host() {
 
   if (( DRY_RUN )); then
     log "[$label] DRY-RUN would power off host ${hostsys:-<lookup failed>}"
+    if (( VERIFY )); then
+      if [[ -n "$hostsys" ]]; then
+        probe_ok "[$label] HostSystem path resolves ($hostsys)"
+        probe_host_privilege "$label" "$addr" "$hostsys"
+      else
+        probe_fail "[$label] HostSystem path did not resolve"
+      fi
+      # The real run confirms the host is down by polling 443, so prove that
+      # mechanism answers now, while the host is definitely up.
+      if timeout 5 nc -z "$addr" 443 2>/dev/null; then
+        probe_ok "[$label] reachable on 443 (host-down poll will work)"
+      else
+        probe_fail "[$label] not reachable on 443 — host-down poll cannot work"
+      fi
+    fi
     return 0
   fi
 
@@ -244,18 +366,47 @@ shutdown_host() {
 
 poweroff_nas() {
   local elapsed=$(( $(date +%s) - START_EPOCH ))
+  if (( VERIFY )); then
+    local failures=0
+    [[ -s "$VERIFY_DIR/failures" ]] && failures=$(wc -l < "$VERIFY_DIR/failures")
+    if (( failures == 0 )); then
+      log "VERIFY PASSED after ${elapsed}s — every probed step would work"
+      exit 0
+    fi
+    log "VERIFY FAILED after ${elapsed}s — $failures probe(s) failed:"
+    while IFS= read -r line; do log "  - $line"; done < "$VERIFY_DIR/failures"
+    exit 1
+  fi
   if (( DRY_RUN )); then
     log "DRY-RUN complete after ${elapsed}s — would now power off the NAS"
     exit 0
   fi
-  log "powering off the NAS after ${elapsed}s"
-  /sbin/shutdown -p now
+  log "powering off the NAS after ${elapsed}s using: $POWEROFF_CMD"
+  local rc=0
+  # shellcheck disable=SC2086
+  $POWEROFF_CMD || rc=$?
+  if (( rc != 0 )); then
+    # Never exit 0 on a failed poweroff. The NAS staying up on battery with the
+    # pools imported is the one uncontrolled loss this script exists to prevent,
+    # so say so loudly and try the direct systemd path before giving up.
+    log "FATAL: '$POWEROFF_CMD' failed (rc=$rc) — falling back to systemctl"
+    if systemctl --force poweroff; then
+      exit 0
+    fi
+    log "FATAL: fallback 'systemctl --force poweroff' also failed — NAS IS STILL RUNNING"
+    exit 1
+  fi
   exit 0
 }
 
 # ── Main ──────────────────────────────────────────────────────────────────────
 
-log "=== UPS graceful shutdown starting (DRY_RUN=$DRY_RUN, deadline=${TOTAL_DEADLINE}s) ==="
+log "=== UPS graceful shutdown starting (DRY_RUN=$DRY_RUN, VERIFY=$VERIFY, deadline=${TOTAL_DEADLINE}s) ==="
+log "poweroff command: $POWEROFF_CMD"
+
+# Probe this first: it is the last thing the real run does and the only step with
+# no in-cluster consequence, so there is no reason to learn about it last.
+(( VERIFY )) && probe_poweroff_cmd
 
 if [[ ! -x "$GOVC" ]]; then
   die_but_poweroff "govc not executable at $GOVC"
