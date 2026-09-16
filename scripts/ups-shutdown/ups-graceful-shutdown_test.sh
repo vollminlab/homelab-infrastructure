@@ -38,7 +38,8 @@ JSON
     ;;
   *"vm.info testvm"*) echo "Name: testvm" ;;
   *"find / -type h"*) echo "/ha-datacenter/host/esxi-test/esxi-test" ;;
-  *permissions.ls*) printf 'Role   Entity  Principal  Propagate\nAdmin  /       root       Yes\n' ;;
+  *permissions.ls*) printf 'Role   Entity  Principal  Propagate\n%s  /       root       Yes\n' "${STUB_ROLE:-Admin}" ;;
+  *role.ls*) printf '%s\n' ${STUB_ROLE_PRIVS-Host.Config.Maintenance VirtualMachine.Interact.PowerOff System.View} ;;
 esac
 exit 0
 STUB
@@ -135,6 +136,29 @@ setup
 out=$(run VERIFY=1 ESXI_HOSTS="h1=203.0.113.9" NC_EXIT=1)
 check "unreachable host is reported" "$out" "host-down poll cannot work"
 check "verdict is FAILED"            "$out" "VERIFY FAILED"
+teardown
+
+echo "== privilege is judged by capability, not by role name =="
+setup
+# A least-privilege custom role that holds what the orchestrator needs must pass.
+out=$(run VERIFY=1 ESXI_HOSTS="h1=203.0.113.9" STUB_ROLE=ups-shutdown)
+check "custom role accepted"  "$out" "role 'ups-shutdown' holds"
+check "verdict is PASSED"     "$out" "VERIFY PASSED"
+teardown
+
+setup
+# ...and a role missing one of them must fail, however it is named.
+out=$(run VERIFY=1 ESXI_HOSTS="h1=203.0.113.9" STUB_ROLE=ups-shutdown \
+          STUB_ROLE_PRIVS="System.View VirtualMachine.Interact.PowerOff"); rc=$?
+check "missing privilege named"  "$out" "missing Host.Config.Maintenance"
+check "verdict is FAILED"        "$out" "VERIFY FAILED"
+if (( rc != 0 )); then ok "exit status is non-zero ($rc)"; else bad "exit status was 0"; fi
+teardown
+
+setup
+# Admin holds everything by definition and must still pass without enumerating.
+out=$(run VERIFY=1 ESXI_HOSTS="h1=203.0.113.9" STUB_ROLE=Admin)
+check "Admin still accepted" "$out" "holds Admin (every privilege)"
 teardown
 
 echo "== VERIFY fails loudly when a probe fails =="

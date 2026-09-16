@@ -188,11 +188,19 @@ probe_poweroff_cmd() {
   fi
 }
 
-# Can the configured principal actually power off guests and the host? On a
-# standalone ESXi host the only role that permits either is Admin, so this reads
-# the granted role rather than guessing from a successful login.
+# Can the configured principal actually power off guests and the host?
+#
+# This asks what the granted role *contains*, not what it is called. Asserting
+# `role == Admin` was wrong in both directions: it fails a correct least-privilege
+# role, and it would pass an "Admin" role that someone had edited to remove a
+# privilege. Capability is the property that matters.
+#
+# ShutdownHost_Task requires Host.Config.Maintenance; ShutdownGuest and the forced
+# power-off both require VirtualMachine.Interact.PowerOff.
+REQUIRED_PRIVILEGES="${REQUIRED_PRIVILEGES:-Host.Config.Maintenance VirtualMachine.Interact.PowerOff}"
+
 probe_host_privilege() {
-  local label=$1 addr=$2 hostsys=$3 perms role
+  local label=$1 addr=$2 hostsys=$3 perms role privs missing=""
   perms=$(govc_host "$addr" permissions.ls "$hostsys" 2>/dev/null)
   if [[ -z "$perms" ]]; then
     probe_fail "[$label] privilege: could not read permissions on $hostsys"
@@ -201,10 +209,26 @@ probe_host_privilege() {
   role=$(awk -v u="$ESXI_USER" '$3==u {print $1}' <<< "$perms" | head -1)
   if [[ -z "$role" ]]; then
     probe_fail "[$label] privilege: principal '$ESXI_USER' has no permission entry"
-  elif [[ "$role" == "Admin" ]]; then
-    probe_ok "[$label] privilege: '$ESXI_USER' holds Admin"
+    return
+  fi
+  # Admin holds every privilege by definition and does not enumerate usefully.
+  if [[ "$role" == "Admin" ]]; then
+    probe_ok "[$label] privilege: '$ESXI_USER' holds Admin (every privilege)"
+    return
+  fi
+  privs=$(govc_host "$addr" role.ls "$role" 2>/dev/null)
+  if [[ -z "$privs" ]]; then
+    probe_fail "[$label] privilege: could not read the privileges of role '$role'"
+    return
+  fi
+  local p
+  for p in $REQUIRED_PRIVILEGES; do
+    grep -qxF "$p" <<< "$privs" || missing="$missing $p"
+  done
+  if [[ -z "$missing" ]]; then
+    probe_ok "[$label] privilege: role '$role' holds$(printf ' %s' $REQUIRED_PRIVILEGES)"
   else
-    probe_fail "[$label] privilege: '$ESXI_USER' holds '$role', which cannot power off a host"
+    probe_fail "[$label] privilege: role '$role' is missing$missing"
   fi
 }
 
