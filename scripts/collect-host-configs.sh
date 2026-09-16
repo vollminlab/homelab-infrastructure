@@ -120,6 +120,22 @@ done
 emit "configs/pihole-flask-api/.env"       "/etc/pihole-flask-api/.env"
 emit "configs/keepalived/keepalived.conf"  "/etc/keepalived/keepalived.conf"
 
+# NUT client config. These hosts have no USB connection to the UPS; they learn its
+# state over the network from the TrueNAS primary, so upsmon.conf is part of how the
+# host behaves in a power event and belongs in the snapshot.
+#
+# The MONITOR line carries the upsd password as a POSITIONAL field
+# ("MONITOR ups@host 1 user PASSWORD secondary"), so redact_kv cannot reach it —
+# redact the fifth field specifically, before the file ever leaves the host.
+if [[ -f /etc/nut/upsmon.conf ]]; then
+  _nut_tmp=$(mktemp)
+  sed -E 's|^([[:space:]]*MONITOR[[:space:]]+[^[:space:]]+[[:space:]]+[0-9]+[[:space:]]+[^[:space:]]+[[:space:]]+)[^[:space:]]+|\1REDACTED|' \
+    /etc/nut/upsmon.conf > "$_nut_tmp"
+  emit "nut/upsmon.conf" "$_nut_tmp"
+  rm -f "$_nut_tmp"
+fi
+emit "nut/nut.conf" "/etc/nut/nut.conf"
+
 # Custom systemd units and timers (skip stock OS/pihole units).
 { ls /etc/systemd/system/*.service /etc/systemd/system/*.timer 2>/dev/null || true; } | sort | \
 while IFS= read -r f; do

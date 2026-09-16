@@ -36,6 +36,11 @@ PUSHOVER_ENV="${PUSHOVER_ENV:-$SCRIPT_DIR/pushover.env}"
 UPSMON_CONF="${UPSMON_CONF:-/etc/nut/upsmon.conf}"
 STAMP_FILE="${STAMP_FILE:-$SCRIPT_DIR/logs/last-preflight-ok}"
 UPSC="${UPSC:-upsc}"
+SS="${SS:-ss}"
+# pihole1 and pihole2 run upsmon as NUT secondaries over the network — they have no
+# USB connection to the UPS. If one stops connecting it is silently back to being
+# hard-cut when the outlets are killed, so the count is checked rather than assumed.
+EXPECT_SECONDARIES="${EXPECT_SECONDARIES:-2}"
 MIDCLT="${MIDCLT:-midclt}"
 CURL="${CURL:-curl}"
 UPS_IDENT="${UPS_IDENT:-ups@localhost}"
@@ -148,6 +153,18 @@ if [[ -x "$SHUTDOWN_SCRIPT" ]]; then
   fi
 else
   skip "VERIFY not run — orchestrator not executable"
+fi
+
+# NUT secondaries: hosts that depend on this NAS to tell them about a power event.
+if (( EXPECT_SECONDARIES > 0 )); then
+  secs=$("$SS" -tn state established '( sport = :3493 )' 2>/dev/null \
+         | grep -cvE '127\.0\.0\.1|\[::1\]|Address' || true)
+  secs=${secs:-0}
+  if (( secs >= EXPECT_SECONDARIES )); then
+    pass "$secs NUT secondary connection(s) established (expected $EXPECT_SECONDARIES)"
+  else
+    fail "only $secs NUT secondary connection(s), expected $EXPECT_SECONDARIES — a host that cannot see the UPS gets hard-cut"
+  fi
 fi
 
 # ── The startup path gets the same treatment ─────────────────────────────────
