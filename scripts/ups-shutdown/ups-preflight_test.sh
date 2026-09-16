@@ -18,6 +18,9 @@ setup() {
   printf '#!/usr/bin/env bash\nexit ${VERIFY_EXIT:-0}\n' > "$S/orchestrator.sh"
   chmod +x "$S/orchestrator.sh"
   sha256sum "$S/orchestrator.sh" > "$S/orchestrator.sha256"
+  printf '#!/usr/bin/env bash\nexit ${STARTUP_VERIFY_EXIT:-0}\n' > "$S/startup.sh"
+  chmod +x "$S/startup.sh"
+  sha256sum "$S/startup.sh" > "$S/startup.sha256"
   : > "$S/govc"; chmod +x "$S/govc"
   echo "ESXI_USER=root" > "$S/ups-shutdown.env"; chmod 600 "$S/ups-shutdown.env"
   printf 'PUSHOVER_TOKEN=t\nPUSHOVER_USER=u\n' > "$S/pushover.env"; chmod 600 "$S/pushover.env"
@@ -27,6 +30,15 @@ setup() {
   cat > "$S/midclt" <<MID
 #!/usr/bin/env bash
 echo "midclt \$*" >> "$CALLS"
+case "\$*" in
+  *initshutdownscript.query*)
+      if [[ "\${STUB_ARMED:-0}" == 1 ]]; then
+        echo '[{"type":"SCRIPT","script":"/x/ups-graceful-startup.sh","when":"POSTINIT"}]'
+      else
+        echo '[{"type":"COMMAND","command":"other","when":"POSTINIT"}]'
+      fi
+      exit 0 ;;
+esac
 cat <<JSON
 {"shutdowncmd": "\${CFG_CMD_OVERRIDE:-$S/orchestrator.sh}", "mode": "\${CFG_MODE_OVERRIDE:-MASTER}", "powerdown": true, "shutdown": "LOWBATT"}
 JSON
@@ -41,6 +53,7 @@ run() {
       GOVC_BIN="$S/govc" ENV_FILE="$S/ups-shutdown.env" PUSHOVER_ENV="$S/pushover.env" \
       UPSMON_CONF="$S/upsmon.conf" STAMP_FILE="$S/logs/stamp" \
       UPSC="$S/upsc" MIDCLT="$S/midclt" CURL="$S/curl" \
+      STARTUP_SCRIPT="$S/startup.sh" STARTUP_SHA_FILE="$S/startup.sha256" \
       "$@" bash "$SCRIPT" 2>&1
 }
 
@@ -115,6 +128,43 @@ setup
 grep -v '^MONITOR ' "$S/upsmon.conf" > "$S/u2" && mv "$S/u2" "$S/upsmon.conf"
 out=$(run)
 check "MONITOR failure reported" "$out" "watching nothing"
+teardown
+
+echo "== the startup path is checked to the same standard =="
+setup
+out=$(run)
+check "startup script checked"  "$out" "startup orchestrator present and executable"
+check "startup sha checked"     "$out" "startup orchestrator matches its pinned sha256"
+check "startup VERIFY run"      "$out" "startup VERIFY run passed"
+check "arming state reported"   "$out" "NOT armed at boot"
+teardown
+
+echo "== a hand-edited startup script is caught =="
+setup
+echo "# edit" >> "$S/startup.sh"
+out=$(run); rc=$?
+check "mismatch reported" "$out" "startup orchestrator sha256 mismatch"
+if (( rc != 0 )); then ok "exit non-zero"; else bad "exit was 0"; fi
+teardown
+
+echo "== a failing startup VERIFY is caught =="
+setup
+out=$(run STARTUP_VERIFY_EXIT=1); rc=$?
+check "failure reported" "$out" "startup VERIFY run failed"
+if (( rc != 0 )); then ok "exit non-zero"; else bad "exit was 0"; fi
+teardown
+
+echo "== an armed hook is recognised =="
+setup
+out=$(run STUB_ARMED=1)
+check "arming detected" "$out" "POSTINIT hook is registered"
+teardown
+
+echo "== once arming is expected, its absence fails =="
+setup
+out=$(run EXPECT_STARTUP_ARMED=1); rc=$?
+check "absence enforced" "$out" "no init hook references"
+if (( rc != 0 )); then ok "exit non-zero"; else bad "exit was 0"; fi
 teardown
 
 echo

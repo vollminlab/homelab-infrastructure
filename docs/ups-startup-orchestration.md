@@ -258,8 +258,9 @@ Recorded rather than dropped, so it is not re-proposed.)*
 | Stubbed test suite (45 assertions) | **done**, wired into CI |
 | Live rehearsal of the power-on path | **done** — see below |
 | `RESCAN_STORAGE` (needs `Host.Config.Storage`) | implemented, **default off** — your call |
-| AMT fallback | hook + log line only, **default off** — needs a decision on credentials |
-| HA restart priorities mirroring the tiers | **not done** — live cluster-behaviour change, deliberately left to you |
+| AMT out-of-band power-on fallback | **implemented and credentials deployed**; validated read-only from the NAS. See below |
+| HA restart priorities mirroring the tiers | **dropped** — see *Why HA priorities were dropped* |
+| Preflight covers the startup path too | **done** — 14 checks, incl. the startup sha and its VERIFY |
 | Arming it (boot hook) | **not done** — see *Arming* |
 
 ### What was actually exercised, 2026-09-16
@@ -305,6 +306,74 @@ leftover files.
 
 **Still unexercised:** a real multi-tier sequence, which by definition needs guests
 that are actually off. The next planned power-down is the honest place for it.
+
+## The AMT fallback
+
+The MS-01s have no BMC, so Intel AMT is their only lights-out path. If a host never
+answers on 443 within `HOST_WAIT`, and `AMT_FALLBACK=1`, the orchestrator asks AMT to
+power it on and then keeps waiting for `AMT_WAIT`.
+
+**Where it runs matters, and the first implementation had it wrong.** The fallback
+originally lived in the per-guest host gate — which can never fire for the host it
+exists to rescue, because a host that is down has no guests in the inventory, so
+nothing ever calls the gate for them. It now runs in a `wait_for_hosts` phase
+*before* enumeration. The stubbed test for "a host that never comes back" is what
+exposed this.
+
+Safety properties, all asserted by tests:
+
+- **`PowerState` is hardcoded to 2 (On) and never parameterised**, so no caller and
+  no config value can turn this into a reset of a running hypervisor. CIM values
+  5, 9, 10, 15 and 16 are resets or power cycles; none appears anywhere in the file.
+- **A host reporting `PowerState=2` is left alone.** Powered on but not serving is a
+  booting or broken host, not a powered-off one, and anything stronger would reset it.
+- **At most one attempt per host per run.**
+- With `AMT_FALLBACK=0` (the default), AMT is never contacted at all.
+
+Two things that make AMT awkward from Linux, both handled in the script and worth
+knowing if you ever debug it by hand:
+
+- **OpenSSL 3 refuses AMT's handshake** with `unsafe legacy renegotiation disabled`.
+  The script generates a temporary `OPENSSL_CONF` enabling
+  `UnsafeLegacyRenegotiation` with `SECLEVEL=0`. Without it every request returns
+  `http_code 000`, which reads like a firewall rather than a TLS policy.
+- **The WS-Man Get and invoke actions are in the `2004/09` transfer namespace.**
+  Using the `2004/08` addressing namespace returns `ActionNotSupported`.
+
+Validated from the NAS, read-only:
+
+```
+PROBE PASS  AMT credentials file mode 600
+PROBE PASS  [esxi01] AMT at 192.168.100.6 reachable and authenticated, PowerState=2
+PROBE PASS  [esxi02] AMT at 192.168.100.7 reachable and authenticated, PowerState=2
+PROBE PASS  [esxi03] AMT at 192.168.100.8 reachable and authenticated, PowerState=2
+```
+
+That proves routing, TLS, digest auth and the envelope for the read path. **The
+power-on request itself is still unexercised**, because it needs a host that is
+actually off — the BIOS work is the place to do it.
+
+`AMT_FALLBACK` is still `0` by default. Set it in the environment or the env file
+once the power-on has been proven once.
+
+## Why HA priorities were dropped
+
+The plan proposed mirroring the tiers into vSphere HA restart priorities, to give the
+dirty-outage path the same ordering. On review that was overstated and it is **not
+being done**.
+
+HA restart priority applies only when a host *fails* with guests running — never on
+a normal power-on, a cold boot after a clean shutdown, or a maintenance-mode
+evacuation. In the dirty case with AC-recovery enabled, the hosts boot with no
+datastores, so HA cannot even read its protected-VM list (it lives on the NAS); by
+the time storage is back, the POSTINIT orchestrator is already doing ordered
+power-on. HA priorities would be a backup to a backup, at the cost of ~20 per-VM
+overrides and a possible race with the orchestrator.
+
+Worth recording accurately for future reference, since the mechanism is easy to
+misremember: **vCenter configures HA, but the FDM agents on the hosts execute it** —
+which is why HA can restart vCenter itself. It is cluster-level configuration, not
+per-host.
 
 ## Arming
 

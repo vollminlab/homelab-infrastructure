@@ -11,6 +11,9 @@
 # UPS shutdown credentials (deployed to TrueNAS, never committed)
 scripts/ups-shutdown/ups-shutdown.env
 scripts/ups-shutdown/pushover.env
+scripts/ups-shutdown/amt.env
+# runtime artifacts: logs and the run lock
+scripts/ups-shutdown/logs/
 
 # Git worktrees (org convention)
 .worktrees/
