@@ -35,6 +35,77 @@ Rejected, with reasons, so they are not re-proposed:
 - **Doing nothing and recovering by hand** — the status quo; acceptable only
   because outages have been rare, and it scales badly at 2am.
 
+## The recovery, end to end
+
+Who does what — and in particular, what this script does **not** do.
+
+```mermaid
+flowchart TD
+    UTIL["utility power returns"] --> UPSOUT["UPS restores its outlets<br/>ups.delay.start 30s"]
+
+    UPSOUT --> HOSTS["esxi01 / esxi02 / esxi03<br/>BIOS: restore on AC power loss = Always On"]
+    UPSOUT --> NAS["TrueNAS boots<br/>imports pools, starts iSCSI and NFS"]
+
+    HOSTS --> IDLE["hosts come up with NO datastores<br/>and sit idle -- harmless, because per-host<br/>autostart is disabled for HA-cluster hosts"]
+    IDLE --> READY["hosts answer on 443"]
+
+    NAS --> HOOK["POSTINIT hook runs<br/>ups-graceful-startup.sh"]
+    HOOK --> GATES["gates: power, storage, host, api"]
+    READY --> GATES
+    GATES --> TIERS["tiers 0 to 5, staggered"]
+    TIERS --> UP["lab is back"]
+
+    style HOSTS fill:#e8e8e8,stroke:#888
+    style IDLE fill:#e8e8e8,stroke:#888
+```
+
+**Nothing in the grey path is orchestrated.** Host power-on is firmware, and that is
+the deliberate choice: it depends on no network, no NAS, no AMT and no credential,
+and when it fails the result is a host idling without storage rather than a host
+that never comes back. If the NAS woke the hosts instead, every one of those
+dependencies would sit between a power cut and your cluster existing again.
+
+## How it decides: gates, then guests
+
+First, which tiers are eligible at all:
+
+```mermaid
+flowchart TD
+    START["build inventory<br/>name to host, across every reachable host"] --> PG{"ups.status has OL<br/>AND charge >= 50%?"}
+    PG -->|"no, after UPS_WAIT"| STOP["refuse to start anything<br/>alert via Pushover"]
+    PG -->|"cannot read the UPS"| REQ{"UPS_GATE_REQUIRED?"}
+    REQ -->|"1"| STOP
+    REQ -->|"0, the default"| SG
+    PG -->|yes| SG{"pools ONLINE, 3260 listening,<br/>NFS export present?"}
+    SG -->|no| T0ONLY["tier 0 only -- the CPs are on<br/>host-local NVMe and need no NAS"]
+    SG -->|yes| ALL["every tier is eligible"]
+```
+
+A broken NUT driver must never be able to prevent recovery, which is why an
+unreadable UPS proceeds by default. Set `UPS_GATE_REQUIRED=1` to invert that.
+
+Then, for each guest in each tier, in order:
+
+```mermaid
+flowchart TD
+    G["guest in the current tier"] --> SKIP{"template, vCLS,<br/>or already powered on?"}
+    SKIP -->|yes| NEXT["skip -- this is what makes<br/>the script safe to re-run"]
+    SKIP -->|no| KNOWN{"in some host's inventory?"}
+    KNOWN -->|no| REC["record the failure<br/>and carry on with the rest"]
+    KNOWN -->|yes| HG{"its host answers on 443?"}
+    HG -->|"no, after HOST_WAIT"| REC
+    HG -->|yes| ON["vm.power -on<br/>host-direct, as ups-shutdown"]
+    ON --> TOOLS["once the tier is issued: wait for Tools<br/>up to TIER_WAIT, then continue regardless"]
+```
+
+Tier 3 additionally waits for the k8s API VIP on 6443 before it starts any worker —
+a wait rather than a hard gate, because starting workers without an API endpoint is
+harmless and they will retry.
+
+Two properties worth reading off these: a guest that appears in **no** tier is never
+started, only reported, so nothing gets woken by accident; and a host that never
+returns costs you its own guests, not the whole recovery.
+
 ## What the inventory forces
 
 Measured 2026-09-16.
