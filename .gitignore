@@ -10,6 +10,7 @@
 
 # UPS shutdown credentials (deployed to TrueNAS, never committed)
 scripts/ups-shutdown/ups-shutdown.env
+scripts/ups-shutdown/pushover.env
 
 # Git worktrees (org convention)
 .worktrees/

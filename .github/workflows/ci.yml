@@ -44,6 +44,9 @@ jobs:
       - name: UPS shutdown orchestrator tests
         run: bash scripts/ups-shutdown/ups-graceful-shutdown_test.sh
 
+      - name: UPS preflight tests
+        run: bash scripts/ups-shutdown/ups-preflight_test.sh
+
       - name: Shell scripts parse
         run: |
           fail=0
