@@ -78,6 +78,47 @@ stuck guest cannot stall the sequence.
    safe to re-run by hand at any point. It must be usable as a recovery tool, not
    only as an automation.
 
+## What to gate on — and what not to
+
+A real observation from the 2026-09-16 rehearsal, worth designing against.
+When `k8scp03` rebooted, `metallb-speaker` crash-looped with:
+
+```
+dial tcp 10.96.0.1:443: i/o timeout
+```
+
+It had started before kube-proxy and Calico finished programming the service
+network. It recovered on its own within a minute. The tempting conclusion is that
+the orchestrator should wait for Kubernetes to be *ready* before proceeding.
+
+**It should not, and could not.** That race is **intra-node**: kubelet starts every
+DaemonSet pod on a node at roughly the same moment, and metallb-speaker lost a
+footrace against two peers started by the same kubelet on the same machine. No
+ordering of *virtual machines* can affect it. CrashLoopBackOff is the mechanism
+working — retry with backoff until the dependency exists.
+
+Gating on Kubernetes object state would also invert the dependency graph. The NAS
+would need a kubeconfig, a token and a route to the API — and the API VIP is
+`haproxy01/02`, **virtual machines this orchestrator is responsible for starting**.
+It would be waiting on something it has not started yet. Worse, it couples the
+power layer to the application layer, so a Kubernetes problem stalls VM power-on,
+turning a self-healing annoyance into a stuck recovery. That is the same trade
+rejected for AMT-driven host power-on, for the same reason.
+
+**The rule: gate on reachability of what the next tier needs, never on the health
+of what the last tier runs.** Every gate must be answerable with no credentials and
+no cluster knowledge.
+
+| Before | Wait for | Mechanism |
+| --- | --- | --- |
+| any tier | previous tier's guests actually booted | VMware Tools heartbeat via `govc` |
+| tier 3 (workers) | the k8s API answering | `nc -z 192.168.152.7 6443` (HAProxy VIP) |
+| tier 1 | storage serving | pools ONLINE, 3260 listening, NFS exported |
+
+If application-level ordering is ever genuinely needed, its home is **in-cluster** —
+startup probes, init containers, or a post-boot Job. Kubernetes has those
+primitives; the NAS does not and should not.
+
 ## Two privileges the `ups-shutdown` role does not have
 
 The role was built for shutting down. Starting up needs:
@@ -133,6 +174,9 @@ storage is local, so HA could never restart them elsewhere.
 4. **HA restart priorities** — land these first, independently of the orchestrator?
 5. **Does `devsbx01` belong in tier 5?** It is where Claude sessions run, so
    bringing it up earlier may be convenient during a recovery.
+
+*(A sixth — whether to gate on DaemonSet/pod readiness — is answered above: no.
+Recorded rather than dropped, so it is not re-proposed.)*
 
 ## Work breakdown
 
