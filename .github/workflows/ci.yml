@@ -50,6 +50,9 @@ jobs:
       - name: UPS startup orchestrator tests
         run: bash scripts/ups-shutdown/ups-graceful-startup_test.sh
 
+      - name: UPS event watcher tests
+        run: bash scripts/ups-shutdown/ups-watch_test.sh
+
       - name: Shell scripts parse
         run: |
           fail=0

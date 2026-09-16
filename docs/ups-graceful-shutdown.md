@@ -414,6 +414,62 @@ After any merge, copy it over and confirm:
 sha256sum /mnt/pool_0/scripts/ups-shutdown/ups-graceful-shutdown.sh   # must match git
 ```
 
+## Knowing it is happening: the event watcher
+
+Everything else here is about what happens *during* an outage. None of it says one is
+happening. TrueNAS's own notification path —
+`NOTIFYFLAG ONBATT/LOWBATT` → `upssched` → `midclt ups.upssched_event` → a middleware
+alert — terminates in an **unconfigured mail server** (`outgoingserver: ''`,
+`from: root@truenas.local`), so before 2026-09-16 a power event was entirely silent
+until things began shutting down.
+
+`scripts/ups-shutdown/ups-watch.sh` runs every minute from a TrueNAS cron job and
+pushes to Pushover **on a state change only**:
+
+| Transition | Priority | Why |
+| --- | --- | --- |
+| → on battery | 1 (high) | includes charge and remaining runtime |
+| → low battery | **2 (emergency)** | the orchestration is starting; this is the last warning |
+| → FSD | **2 (emergency)** | guests, hosts and the NAS are going down now |
+| → power restored | 0 (normal) | names the state it came from |
+| driver silent 3 minutes | 1 (high) | the shutdown path cannot trigger on a state nobody can read |
+
+Details that are load-bearing rather than decorative:
+
+- **Pushover priority 2 requires `retry` and `expire`.** Without them the API rejects
+  the message, which would lose precisely the two alerts that matter most.
+- **`OL LB` is not treated as a low battery.** It is the bad-telemetry case TrueNAS's
+  own guard exists for, and a UPS reporting both should not page anyone.
+- **A single unreadable poll is ignored.** `usbhid-ups` logs benign libusb pipe errors
+  dozens of times a day and keeps working; only three consecutive minutes of silence
+  is worth waking someone for, and it alerts once rather than every minute.
+- **Recovering from a driver outage does not fake a power event.** The previous state
+  is held across the silence, so readings resuming on mains is not reported as
+  "power restored".
+- Deliberately **independent of the cluster**, like the preflight: a UPS problem has to
+  be reportable when the thing hosting Alertmanager is what is at risk.
+
+Verified end to end on 2026-09-16 by stubbing `upsc` to report `OB DISCHRG` — the real
+UPS untouched — which produced a real "Lab is on battery" notification, stayed silent
+on the following poll, and sent "Lab power restored" when pointed back at the real
+device.
+
+```bash
+# What would it do right now, without notifying anyone?
+DRY_RUN=1 ./ups-watch.sh
+```
+
+**Why the network gear is deliberately not orchestrated.** The UDM and switches are on
+the UPS and are left alone on purpose — they are not an oversight. They must stay up
+*through* the shutdown: the orchestrator reaches the ESXi hosts over the network, and
+the Pi-holes learn the UPS state over it as NUT secondaries. Shutting the network down
+early would break the very sequence it is carrying. There is also no good place to do
+it: they would have to go last, after the NAS, and once the NAS is off nothing is left
+to issue the command. The UPS cutting its outlets *is* the correct final step for them,
+and their state is flash written rarely rather than continuously. The one device worth
+revisiting is a UDM with an attached disk for Protect recordings, which does write
+continuously.
+
 ## Keeping it true: the scheduled preflight
 
 Verification that only happens when someone remembers to run it decays into no
