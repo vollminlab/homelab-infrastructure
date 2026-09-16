@@ -47,6 +47,9 @@ jobs:
       - name: UPS preflight tests
         run: bash scripts/ups-shutdown/ups-preflight_test.sh
 
+      - name: UPS startup orchestrator tests
+        run: bash scripts/ups-shutdown/ups-graceful-startup_test.sh
+
       - name: Shell scripts parse
         run: |
           fail=0

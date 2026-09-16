@@ -1,0 +1,36 @@
+# ups-startup.service — reference unit for the startup orchestrator.
+#
+# PREFER THE TRUENAS MIDDLEWARE HOOK INSTEAD. TrueNAS SCALE's root filesystem is
+# not preserved across upgrades, so a unit dropped in /etc/systemd/system can
+# vanish exactly when you are least likely to notice. Middleware-registered
+# init scripts survive, for the same reason the UPS service's shutdowncmd and the
+# preflight cron job do:
+#
+#   midclt call initshutdownscript.create '{"type":"SCRIPT",
+#     "script":"/mnt/pool_0/scripts/ups-shutdown/ups-graceful-startup.sh",
+#     "when":"POSTINIT","enabled":true,"timeout":3600,
+#     "comment":"UPS startup orchestration (tiered guest power-on)"}'
+#
+# This file is kept as documentation of the intended semantics, and for any host
+# where the middleware hook is not an option.
+#
+# Note the deliberate absence of ordering on storage units: readiness is proven by
+# the script's own gates, which check that pools are ONLINE, that 3260 is listening
+# and that the NFS export exists. Unit ordering would assert readiness; the gates
+# measure it.
+
+[Unit]
+Description=UPS startup orchestration (tiered guest power-on)
+After=network-online.target
+Wants=network-online.target
+
+[Service]
+Type=oneshot
+ExecStart=/mnt/pool_0/scripts/ups-shutdown/ups-graceful-startup.sh
+# Gates can legitimately wait a long time for storage or for a host to boot.
+TimeoutStartSec=3600
+StandardOutput=journal
+StandardError=journal
+
+[Install]
+WantedBy=multi-user.target
