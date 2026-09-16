@@ -1,6 +1,6 @@
 # UPS startup orchestration — plan
 
-**Status:** proposal, for review
+**Status:** implemented (#34), **not yet armed** — see *Arming* below
 **Counterpart:** [ups-graceful-shutdown.md](ups-graceful-shutdown.md), which is complete and verified
 
 The shutdown path brings 22 guests, 3 hosts and the NAS down cleanly when the
@@ -178,11 +178,89 @@ storage is local, so HA could never restart them elsewhere.
 *(A sixth — whether to gate on DaemonSet/pod readiness — is answered above: no.
 Recorded rather than dropped, so it is not re-proposed.)*
 
-## Work breakdown
+## Implementation status
 
-| PR | Contents |
+| Item | State |
+| --- | --- |
+| Role extended with `VirtualMachine.Interact.PowerOn` | **done**, all three hosts |
+| `ups-graceful-startup.sh` + `VERIFY=1` | **done**, deployed to the NAS |
+| Stubbed test suite (45 assertions) | **done**, wired into CI |
+| Live rehearsal of the power-on path | **done** — see below |
+| `RESCAN_STORAGE` (needs `Host.Config.Storage`) | implemented, **default off** — your call |
+| AMT fallback | hook + log line only, **default off** — needs a decision on credentials |
+| HA restart priorities mirroring the tiers | **not done** — live cluster-behaviour change, deliberately left to you |
+| Arming it (boot hook) | **not done** — see *Arming* |
+
+### What was actually exercised, 2026-09-16
+
+`VERIFY=1` against the real lab, with every gate genuinely evaluated because all of
+them are read-only:
+
+```
+inventory: 22 guests across 3 host(s)
+  PROBE PASS  [esxi01] role 'ups-shutdown' holds VirtualMachine.Interact.PowerOn
+  PROBE PASS  [esxi02] role 'ups-shutdown' holds VirtualMachine.Interact.PowerOn
+  PROBE PASS  [esxi03] role 'ups-shutdown' holds VirtualMachine.Interact.PowerOn
+  PROBE PASS  power gate readable: status='OL' charge=100% (threshold 50%)
+  PROBE PASS  storage gate: pools ONLINE (pool_0 pool_1)
+  PROBE PASS  storage gate: iSCSI 3260 listening
+  PROBE PASS  storage gate: /mnt/pool_0/vm-lt-metrics present
+  PROBE PASS  api gate: 192.168.152.7:6443 answering
+  PROBE PASS  no powered-off guest is missing from the tiers
+VERIFY PASSED
+```
+
+Because every guest was already running, that still left the **power-on action
+itself** unexercised — the same gap `host.shutdown` had. It was closed with a
+disposable canary: a 256 MB, no-disk, no-OS VM on `esxi03-local`, driven through
+the real script with `TIERS="9:ups-canary-DELETEME"`:
+
+```
+inventory: 23 guests across 3 host(s)
+power gate: OK (status='OL' charge=100% >= 50%)
+storage gate: OK
+[ups-canary-DELETEME] powering on (host esxi03)
+WARNING tier 9: still waiting on Tools for ups-canary-DELETEME after 20s — continuing
+=== startup complete, no failures ===
+```
+
+That single run proved four things at once: the inventory picks up a guest it has
+never seen, the gates pass against live state, **`vm.power -on` works as the
+least-privilege account against the host's own API**, and the Tools-wait timeout
+path continues rather than hanging when a guest never reports. A second run proved
+idempotency for real — `already powered on — skipping (idempotent)`, no power-on
+issued. The canary was then destroyed; inventory is back to 22 guests with no
+leftover files.
+
+**Still unexercised:** a real multi-tier sequence, which by definition needs guests
+that are actually off. The next planned power-down is the honest place for it.
+
+## Arming
+
+Deliberately **not armed**. The script is deployed and runnable by hand, but nothing
+starts it at boot, because an automation that powers virtual machines on should not
+arm itself unreviewed.
+
+Prefer the TrueNAS middleware hook over a systemd unit: SCALE's root filesystem is
+not preserved across upgrades, so a unit in `/etc/systemd/system` can vanish
+exactly when nobody is looking. Middleware-registered scripts survive, for the same
+reason the UPS `shutdowncmd` and the preflight cron job do.
+
+```bash
+midclt call initshutdownscript.create '{"type":"SCRIPT",
+  "script":"/mnt/pool_0/scripts/ups-shutdown/ups-graceful-startup.sh",
+  "when":"POSTINIT","enabled":true,"timeout":3600,
+  "comment":"UPS startup orchestration (tiered guest power-on)"}'
+```
+
+`scripts/ups-shutdown/ups-startup.service` is kept as a reference for the semantics
+and for any host where the middleware hook is not available.
+
+## Work breakdown — what remains
+
+| # | Contents |
 | --- | --- |
 | 1 | HA restart priorities mirroring the tiers (independent, useful alone) |
-| 2 | Role extension: `VirtualMachine.Interact.PowerOn` (+ `Host.Config.Storage`?) |
-| 3 | `ups-graceful-startup.sh` + `VERIFY=1` + stubbed tests + systemd unit |
-| 4 | Preflight extension, docs, one live rehearsal with a single guest |
+| 2 | Decide `RESCAN_STORAGE` and the AMT fallback; both are off and inert until then |
+| 3 | Arm the boot hook once reviewed |
+| 4 | Extend `ups-preflight.sh` to cover the startup path's own drift |

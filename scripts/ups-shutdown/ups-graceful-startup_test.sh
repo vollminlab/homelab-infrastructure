@@ -1,0 +1,193 @@
+#!/usr/bin/env bash
+# Tests for ups-graceful-startup.sh. Every dependency stubbed: no hosts, no UPS,
+# no pools, no network. Run: bash ups-graceful-startup_test.sh
+
+set -uo pipefail
+SCRIPT_DIR="$(cd "$(dirname "${BASH_SOURCE[0]}")" && pwd)"
+SCRIPT="$SCRIPT_DIR/ups-graceful-startup.sh"
+PASS=0; FAIL=0
+ok()  { PASS=$((PASS+1)); echo "  ok   — $1"; }
+bad() { FAIL=$((FAIL+1)); echo "  FAIL — $1"; }
+check()  { if [[ "$2" == *"$3"* ]]; then ok "$1"; else bad "$1 (wanted '$3')"; fi; }
+absent() { if [[ "$2" != *"$3"* ]]; then ok "$1"; else bad "$1 ('$3' should be absent)"; fi; }
+
+setup() {
+  S="$(mktemp -d)"; CALLS="$S/calls"; : > "$CALLS"
+
+  # govc stub. Inventory is driven by STUB_VMS: "name:state:template,..."
+  cat > "$S/govc" <<'STUB'
+#!/usr/bin/env bash
+echo "govc $*" >> "$CALLS"
+vms="${STUB_VMS:-a1:poweredOff:vm}"
+case "$*" in
+  *"ls /ha-datacenter/vm"*)
+      IFS=, read -ra list <<< "$vms"
+      for e in "${list[@]}"; do echo "/ha-datacenter/vm/${e%%:*}"; done ;;
+  *"vm.info -json"*)
+      printf '{"virtualMachines":['
+      IFS=, read -ra list <<< "$vms"; first=1
+      for e in "${list[@]}"; do
+        n="${e%%:*}"; rest="${e#*:}"; st="${rest%%:*}"; tm="${rest##*:}"
+        [[ $first == 1 ]] || printf ','
+        first=0
+        printf '{"name":"%s","runtime":{"powerState":"%s"},"config":{"template":%s},"guest":{"toolsRunningStatus":"%s"}}' \
+          "$n" "$st" "$([[ $tm == template ]] && echo true || echo false)" "${STUB_TOOLS:-guestToolsRunning}"
+      done
+      printf ']}' ;;
+  *"find / -type h"*) echo "/ha-datacenter/host/stub/stub" ;;
+  *permissions.ls*)   printf 'Role   Entity  Principal  Propagate\n%s  /   ups-shutdown  Yes\n' "${STUB_ROLE:-ups-shutdown}" ;;
+  *role.ls*)          printf '%s\n' ${STUB_PRIVS-VirtualMachine.Interact.PowerOn VirtualMachine.Interact.PowerOff Host.Config.Maintenance} ;;
+  *"vm.power -on"*)   exit ${STUB_POWERON_RC:-0} ;;
+esac
+exit 0
+STUB
+  printf '#!/usr/bin/env bash\necho "upsc $*" >> "%s"\ncase "$2" in ups.status) echo "${STUB_UPS_STATUS-OL}";; battery.charge) echo "${STUB_CHARGE-100}";; esac\nexit 0\n' "$CALLS" > "$S/upsc"
+  printf '#!/usr/bin/env bash\necho "${STUB_POOL_HEALTH-ONLINE}"\n' > "$S/zpool"
+  printf '#!/usr/bin/env bash\necho "${STUB_SS-LISTEN 0 0 *:3260 *:*}"\n' > "$S/ss"
+  printf '#!/usr/bin/env bash\necho "nc $*" >> "%s"\nexit ${STUB_NC_RC:-0}\n' "$CALLS" > "$S/nc"
+  printf '#!/usr/bin/env bash\necho "curl $*" >> "%s"\nexit 0\n' "$CALLS" > "$S/curl"
+  chmod +x "$S"/{govc,upsc,zpool,ss,nc,curl}
+  mkdir -p "$S/nfs"
+  printf 'ESXI_USER=ups-shutdown\nESXI_PASS=stub\nESXI_HOSTS="h1=203.0.113.9"\n' > "$S/env"
+  printf 'PUSHOVER_TOKEN=t\nPUSHOVER_USER=u\n' > "$S/pushover.env"
+}
+teardown() { rm -rf "$S"; }
+
+run() {
+  env CALLS="$CALLS" ENV_FILE="$S/env" GOVC="$S/govc" \
+      LOG_DIR="$S/logs" LOG_FILE="$S/logs/startup.log" \
+      PUSHOVER_ENV="$S/pushover.env" LOCK_FILE="$S/logs/.lock" \
+      UPSC="$S/upsc" ZPOOL="$S/zpool" SS="$S/ss" NC="$S/nc" CURL="$S/curl" \
+      NFS_EXPORT="$S/nfs" ZPOOLS="pool_0" TIER_DELAY=0 \
+      UPS_WAIT=0 STORAGE_WAIT=0 HOST_WAIT=0 API_WAIT=0 TIER_WAIT=0 \
+      "$@" bash "$SCRIPT" 2>&1
+}
+
+echo "== a normal recovery starts every tier, in order =="
+setup
+out=$(run STUB_VMS="k8scp01:poweredOff:vm,vcenter:poweredOff:vm,haproxy01:poweredOff:vm" \
+          TIERS="0:k8scp01 1:vcenter 2:haproxy01")
+check "power gate passes"      "$out" "power gate: OK"
+check "storage gate passes"    "$out" "storage gate: OK"
+check "tier 0 runs first"      "$out" "=== tier 0"
+check "k8scp01 powered on"     "$out" "[k8scp01] powering on"
+check "vcenter powered on"     "$out" "[vcenter] powering on"
+check "completes cleanly"      "$out" "startup complete, no failures"
+o01=$(grep -n 'tier 0' <<< "$out" | head -1 | cut -d: -f1)
+o02=$(grep -n 'tier 2' <<< "$out" | head -1 | cut -d: -f1)
+if [[ -n "$o01" && -n "$o02" ]] && (( o01 < o02 )); then ok "tier order is 0 before 2"; else bad "tier order wrong"; fi
+teardown
+
+echo "== already-on guests are skipped (idempotent) =="
+setup
+out=$(run STUB_VMS="k8scp01:poweredOn:vm" TIERS="0:k8scp01")
+check "skip is explicit" "$out" "already powered on — skipping"
+absent "no power-on issued" "$(cat "$CALLS")" "vm.power -on"
+teardown
+
+echo "== templates and vCLS are never started =="
+setup
+out=$(run STUB_VMS="ubuntu-template:poweredOff:template,vCLS-abc:poweredOff:vm" \
+          TIERS="0:ubuntu-template,vCLS-abc")
+check "vCLS refused by name"  "$out" "vCLS-abc] skipped — on the never-start list"
+check "template refused"      "$out" "ubuntu-template] skipped"
+absent "nothing powered on"   "$(cat "$CALLS")" "vm.power -on"
+teardown
+
+echo "== a flapping utility must not start anything =="
+setup
+out=$(run STUB_VMS="k8scp01:poweredOff:vm" TIERS="0:k8scp01" STUB_UPS_STATUS="OB DISCHRG" STUB_CHARGE=20); rc=$?
+check "power gate refuses"   "$out" "power gate: still not satisfied"
+check "says why it stopped"  "$out" "refusing to start guests"
+absent "nothing powered on"  "$(cat "$CALLS")" "vm.power -on"
+if (( rc != 0 )); then ok "exit non-zero ($rc)"; else bad "exit was 0"; fi
+check "alert sent"           "$(cat "$CALLS")" "curl"
+teardown
+
+echo "== charge below threshold is refused even when OL =="
+setup
+out=$(run STUB_VMS="k8scp01:poweredOff:vm" TIERS="0:k8scp01" STUB_CHARGE=10 UPS_MIN_CHARGE=50)
+check "threshold enforced" "$out" "power gate: still not satisfied"
+teardown
+
+echo "== an unreadable UPS proceeds by default, refuses when told to =="
+setup
+out=$(run STUB_VMS="k8scp01:poweredOff:vm" TIERS="0:k8scp01" STUB_UPS_STATUS="")
+check "proceeds with a warning" "$out" "proceeding anyway"
+check "still starts the tier"   "$out" "[k8scp01] powering on"
+teardown
+setup
+out=$(run STUB_VMS="k8scp01:poweredOff:vm" TIERS="0:k8scp01" STUB_UPS_STATUS="" UPS_GATE_REQUIRED=1)
+check "fail-closed honoured" "$out" "UPS_GATE_REQUIRED=1"
+absent "nothing powered on"  "$(cat "$CALLS")" "vm.power -on"
+teardown
+
+echo "== tier 0 starts without storage; later tiers do not =="
+setup
+out=$(run STUB_VMS="k8scp01:poweredOff:vm,vcenter:poweredOff:vm" TIERS="0:k8scp01 1:vcenter" \
+          STUB_POOL_HEALTH="DEGRADED")
+check "storage gate fails"        "$out" "storage gate: not serving"
+check "tier 0 still starts"       "$out" "[k8scp01] powering on"
+check "tier 1 is skipped"         "$out" "tier 1 skipped: storage never came up"
+absent "vcenter not started"      "$out" "[vcenter] powering on"
+teardown
+
+echo "== a host that never comes back does not strand the others =="
+setup
+out=$(run STUB_VMS="k8scp01:poweredOff:vm" TIERS="0:k8scp01" STUB_NC_RC=1)
+check "host gate reported" "$out" "not answering on 443"
+check "named in failures"  "$out" "is in no host's inventory"
+teardown
+
+echo "== a failed power-on is reported, not swallowed =="
+setup
+out=$(run STUB_VMS="k8scp01:poweredOff:vm" TIERS="0:k8scp01" STUB_POWERON_RC=1); rc=$?
+check "failure recorded" "$out" "power-on failed for 'k8scp01'"
+check "run marked failed" "$out" "finished WITH FAILURES"
+if (( rc != 0 )); then ok "exit non-zero ($rc)"; else bad "exit was 0"; fi
+teardown
+
+echo "== VERIFY probes without starting anything =="
+setup
+out=$(run VERIFY=1 STUB_VMS="k8scp01:poweredOff:vm" TIERS="0:k8scp01")
+check "privilege probed"   "$out" "holds VirtualMachine.Interact.PowerOn"
+check "power gate probed"  "$out" "power gate readable"
+check "pools probed"       "$out" "pools ONLINE"
+check "iSCSI probed"       "$out" "iSCSI 3260 listening"
+check "api probed"         "$out" "api gate:"
+check "verdict passed"     "$out" "VERIFY PASSED"
+absent "never powers on"   "$(cat "$CALLS")" "vm.power -on"
+teardown
+
+echo "== VERIFY fails when the role cannot power anything on =="
+setup
+out=$(run VERIFY=1 STUB_VMS="k8scp01:poweredOff:vm" TIERS="0:k8scp01" \
+          STUB_PRIVS="VirtualMachine.Interact.PowerOff Host.Config.Maintenance"); rc=$?
+check "missing privilege named" "$out" "lacks VirtualMachine.Interact.PowerOn"
+check "verdict failed"          "$out" "VERIFY FAILED"
+if (( rc != 0 )); then ok "exit non-zero ($rc)"; else bad "exit was 0"; fi
+teardown
+
+echo "== VERIFY names guests that no tier would ever start =="
+setup
+out=$(run VERIFY=1 STUB_VMS="k8scp01:poweredOff:vm,forgotten01:poweredOff:vm" TIERS="0:k8scp01")
+check "orphan named" "$out" "never started: forgotten01"
+teardown
+
+echo "== RESCAN_STORAGE=1 without the privilege is caught =="
+setup
+out=$(run VERIFY=1 STUB_VMS="k8scp01:poweredOff:vm" TIERS="0:k8scp01" RESCAN_STORAGE=1 \
+          STUB_PRIVS="VirtualMachine.Interact.PowerOn")
+check "missing rescan privilege" "$out" "lacks Host.Config.Storage"
+teardown
+
+echo "== environment beats the env file =="
+setup
+out=$(run STUB_VMS="k8scp01:poweredOff:vm" TIERS="0:k8scp01" ESXI_HOSTS="fromenv=203.0.113.9")
+check "env host used" "$out" "[fromenv]"
+absent "file host ignored" "$out" "[h1]"
+teardown
+
+echo
+echo "passed: $PASS   failed: $FAIL"
+(( FAIL == 0 ))
