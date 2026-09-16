@@ -34,6 +34,7 @@ GOVC="${GOVC:-$SCRIPT_DIR/govc}"
 LOG_DIR="${LOG_DIR:-$SCRIPT_DIR/logs}"
 LOG_FILE="${LOG_FILE:-$LOG_DIR/ups-startup.log}"
 PUSHOVER_ENV="${PUSHOVER_ENV:-$SCRIPT_DIR/pushover.env}"
+AMT_ENV="${AMT_ENV:-$SCRIPT_DIR/amt.env}"
 LOCK_FILE="${LOCK_FILE:-$SCRIPT_DIR/logs/.startup.lock}"
 
 # ── Tiers ─────────────────────────────────────────────────────────────────────
@@ -71,7 +72,12 @@ ISCSI_PORT_DEFAULT=3260
 NFS_EXPORT_DEFAULT=/mnt/pool_0/vm-lt-metrics
 ZPOOLS_DEFAULT="pool_0 pool_1"
 RESCAN_STORAGE_DEFAULT=0       # 1 needs Host.Config.Storage on the role — off by default
-AMT_FALLBACK_DEFAULT=0         # 1 would need AMT credentials on the NAS — off by default
+
+# Intel AMT out-of-band power-on, for a host that never came back on its own.
+# These are MS-01s with no BMC; AMT is the only lights-out path they have.
+AMT_FALLBACK_DEFAULT=0         # 1 requires AMT_ENV to exist
+AMT_HOSTS_DEFAULT="esxi01=192.168.100.6 esxi02=192.168.100.7 esxi03=192.168.100.8"
+AMT_WAIT_DEFAULT=300           # s to wait for :443 after asking AMT to power a host on
 
 # Seams, so the test suite can stub every external dependency.
 UPSC="${UPSC:-upsc}"
@@ -110,7 +116,7 @@ probe_fail() { log "  PROBE FAIL  $*"; FAILURES="${FAILURES}- $*"$'\n'; return 0
 OVERRIDABLE=(ESXI_USER ESXI_PASS ESXI_HOSTS TIERS NEVER_START UPS_MIN_CHARGE
              UPS_WAIT UPS_GATE_REQUIRED STORAGE_WAIT HOST_WAIT API_VIP API_PORT
              API_WAIT TIER_WAIT TIER_DELAY ISCSI_PORT NFS_EXPORT ZPOOLS
-             RESCAN_STORAGE AMT_FALLBACK)
+             RESCAN_STORAGE AMT_FALLBACK AMT_HOSTS AMT_WAIT)
 declare -A _ovr
 for _v in "${OVERRIDABLE[@]}"; do [[ -n "${!_v:-}" ]] && _ovr["$_v"]="${!_v}"; done
 if [[ -f "$ENV_FILE" ]]; then
@@ -141,6 +147,8 @@ NFS_EXPORT="${NFS_EXPORT:-$NFS_EXPORT_DEFAULT}"
 ZPOOLS="${ZPOOLS:-$ZPOOLS_DEFAULT}"
 RESCAN_STORAGE="${RESCAN_STORAGE:-$RESCAN_STORAGE_DEFAULT}"
 AMT_FALLBACK="${AMT_FALLBACK:-$AMT_FALLBACK_DEFAULT}"
+AMT_HOSTS="${AMT_HOSTS:-$AMT_HOSTS_DEFAULT}"
+AMT_WAIT="${AMT_WAIT:-$AMT_WAIT_DEFAULT}"
 ESXI_HOSTS="${ESXI_HOSTS:-esxi01=192.168.151.2 esxi02=192.168.151.3 esxi03=192.168.151.4}"
 
 govc_host() {
@@ -150,6 +158,71 @@ govc_host() {
 }
 
 port_open() { timeout 5 "$NC" -z "$1" "$2" 2>/dev/null; }
+
+# ── Intel AMT: the only lights-out path these hosts have ──────────────────────
+#
+# The MS-01s have no BMC. AMT answers on 16993 (TLS only here; 16992 is closed)
+# and works while the host is powered off, which is the whole point.
+#
+# Two things make this fiddly, both learned the hard way:
+#   * OpenSSL 3 refuses AMT's handshake with "unsafe legacy renegotiation
+#     disabled". Without the generated config below every request returns
+#     http_code 000, which looks like a firewall rather than a TLS policy.
+#   * The WS-Man Get/invoke actions live in the 2004/09 transfer namespace. Using
+#     the 2004/08 addressing namespace for them returns ActionNotSupported.
+
+AMT_CONF=""
+amt_openssl_conf() {
+  [[ -n "$AMT_CONF" && -f "$AMT_CONF" ]] && return 0
+  AMT_CONF="$(mktemp)" || return 1
+  printf 'openssl_conf = d\n[d]\nssl_conf = s\n[s]\nsystem_default = sd\n[sd]\nOptions = UnsafeLegacyRenegotiation\nCipherString = DEFAULT:@SECLEVEL=0\n' > "$AMT_CONF"
+}
+
+amt_addr() {
+  local label=$1 entry
+  for entry in $AMT_HOSTS; do
+    [[ "${entry%%=*}" == "$label" ]] && { echo "${entry##*=}"; return 0; }
+  done
+  return 1
+}
+
+amt_creds() {
+  [[ -r "$AMT_ENV" ]] || return 1
+  # shellcheck disable=SC1090
+  . "$AMT_ENV"
+  [[ -n "${AMT_USER:-}" && -n "${AMT_PASS:-}" ]]
+}
+
+# $1 addr  $2 action URI  $3 resource URI  $4 extra header XML  $5 body XML
+amt_soap() {
+  local addr=$1 action=$2 res=$3 hdr=$4 body=$5
+  amt_openssl_conf || return 1
+  printf '%s' "<s:Envelope xmlns:s=\"http://www.w3.org/2003/05/soap-envelope\" xmlns:a=\"http://schemas.xmlsoap.org/ws/2004/08/addressing\" xmlns:w=\"http://schemas.dmtf.org/wbem/wsman/1/wsman.xsd\" xmlns:p=\"$res\"><s:Header><a:To>/wsman</a:To><w:ResourceURI>$res</w:ResourceURI><a:ReplyTo><a:Address>http://schemas.xmlsoap.org/ws/2004/08/addressing/role/anonymous</a:Address></a:ReplyTo><a:Action>$action</a:Action><a:MessageID>uuid:$$-$RANDOM</a:MessageID><w:OperationTimeout>PT30S</w:OperationTimeout>$hdr</s:Header><s:Body>$body</s:Body></s:Envelope>" \
+  | OPENSSL_CONF="$AMT_CONF" "$CURL" -sk --digest -u "$AMT_USER:$AMT_PASS" -m 25 \
+      -H 'Content-Type: application/soap+xml;charset=UTF-8' --data-binary @- \
+      "https://${addr}:16993/wsman" 2>/dev/null
+}
+
+# CIM power state: 2 is On. Anything else here would be a reset or a power cycle
+# (5, 9, 10, 15, 16 among them) and must never appear in this file.
+amt_power_state() {
+  amt_soap "$1" \
+    "http://schemas.xmlsoap.org/ws/2004/09/transfer/Get" \
+    "http://schemas.dmtf.org/wbem/wscim/1/cim-schema/2/CIM_AssociatedPowerManagementService" \
+    "" "" | grep -oE '<g:PowerState>[0-9]+' | grep -oE '[0-9]+$' | head -1
+}
+
+amt_power_on() {
+  local addr=$1 res="http://schemas.dmtf.org/wbem/wscim/1/cim-schema/2/CIM_PowerManagementService" out
+  local hdr='<w:SelectorSet><w:Selector Name="Name">Intel(r) AMT Power Management Service</w:Selector><w:Selector Name="SystemName">Intel(r) AMT</w:Selector><w:Selector Name="CreationClassName">CIM_PowerManagementService</w:Selector><w:Selector Name="SystemCreationClassName">CIM_ComputerSystem</w:Selector></w:SelectorSet>'
+  # PowerState is hardcoded to 2. It is never parameterised, so no caller and no
+  # config value can turn this into a reset of a running hypervisor.
+  local body='<p:RequestPowerStateChange_INPUT><p:PowerState>2</p:PowerState><p:ManagedElement><a:Address>http://schemas.xmlsoap.org/ws/2004/08/addressing/role/anonymous</a:Address><a:ReferenceParameters><w:ResourceURI>http://schemas.dmtf.org/wbem/wscim/1/cim-schema/2/CIM_ComputerSystem</w:ResourceURI><w:SelectorSet><w:Selector Name="CreationClassName">CIM_ComputerSystem</w:Selector><w:Selector Name="Name">ManagedSystem</w:Selector></w:SelectorSet></a:ReferenceParameters></p:ManagedElement></p:RequestPowerStateChange_INPUT>'
+  out=$(amt_soap "$addr" "$res/RequestPowerStateChange" "$res" "$hdr" "$body")
+  grep -qE '<g:ReturnValue>0<' <<< "$out"
+}
+
+declare -A AMT_TRIED
 
 # ── Gates ─────────────────────────────────────────────────────────────────────
 
@@ -209,15 +282,50 @@ gate_storage() {
   done
 }
 
+# Returns 0 if it issued a power-on and the caller should keep waiting.
+amt_try_power_on() {
+  local label=$1 addr=$2 amt state
+  if ! amt=$(amt_addr "$label"); then
+    log "  [$label] no AMT address configured — cannot power it on"
+    return 1
+  fi
+  if ! amt_creds; then
+    log "  [$label] AMT_FALLBACK=1 but $AMT_ENV is missing or incomplete"
+    return 1
+  fi
+  state=$(amt_power_state "$amt")
+  if [[ -z "$state" ]]; then
+    log "  [$label] AMT at $amt did not answer — cannot power it on"
+    return 1
+  fi
+  if [[ "$state" == "2" ]]; then
+    # Powered on but not answering on 443 is a booting or broken host, not a
+    # powered-off one. Asking AMT to power on an already-on system achieves
+    # nothing, and anything stronger would reset a running hypervisor.
+    log "  [$label] AMT reports PowerState=2 already — it is on but not serving; not touching it"
+    return 1
+  fi
+  log "  [$label] AMT at $amt reports PowerState=$state — requesting power on"
+  if amt_power_on "$amt"; then
+    log "  [$label] AMT accepted the power-on; waiting up to ${AMT_WAIT}s for :443"
+    HOST_WAIT=$AMT_WAIT
+    return 0
+  fi
+  log "  [$label] AMT refused the power-on request"
+  return 1
+}
+
 gate_host() {
   local label=$1 addr=$2 waited=0
   while :; do
     port_open "$addr" 443 && { log "host gate: [$label] answering on 443 after ${waited}s"; return 0; }
     if (( waited >= HOST_WAIT )); then
+      # Before giving up: if AMT is configured, the host may simply never have been
+      # told to power on — BIOS AC-recovery not set, or it lost the outlet race.
+      # Try exactly once per host per run.
       # Its guests simply cannot be started. Say so and carry on with the rest —
       # one dead host must not strand the hosts that did come back.
       fail_note "host gate: [$label] ($addr) never answered on 443 after ${HOST_WAIT}s"
-      (( AMT_FALLBACK )) && log "  (AMT fallback is enabled but not implemented — see the plan doc)"
       return 1
     fi
     log "host gate: [$label] waiting for $addr:443"
@@ -250,16 +358,39 @@ gate_api() {
 declare -A VM_HOST VM_ADDR VM_STATE VM_TEMPLATE
 declare -A HOST_UP
 
+# Wait for the hosts BEFORE taking inventory.
+#
+# This ordering is not cosmetic. A host that is down has no guests in the
+# inventory — we cannot even name them — so anything that depends on knowing a
+# guest's host (including the AMT fallback, when it lived in gate_host) can never
+# fire for exactly the host it was meant to rescue. The fallback belongs here,
+# ahead of enumeration.
+wait_for_hosts() {
+  local entry label addr up=0 total=0
+  for entry in $ESXI_HOSTS; do
+    label="${entry%%=*}"; addr="${entry##*=}"; total=$((total+1))
+    if gate_host "$label" "$addr"; then
+      HOST_UP[$label]=1; up=$((up+1)); continue
+    fi
+    HOST_UP[$label]=0
+    if (( AMT_FALLBACK )) && [[ -z "${AMT_TRIED[$label]:-}" ]]; then
+      AMT_TRIED[$label]=1
+      if amt_try_power_on "$label" "$addr" && gate_host "$label" "$addr"; then
+        HOST_UP[$label]=1; up=$((up+1))
+      fi
+    fi
+  done
+  log "hosts up: $up of $total"
+}
+
 build_inventory() {
   local entry label addr paths
   for entry in $ESXI_HOSTS; do
     label="${entry%%=*}"; addr="${entry##*=}"
-    if ! port_open "$addr" 443; then
-      log "inventory: [$label] ($addr) not answering on 443 — will gate later"
-      HOST_UP[$label]=0
+    if [[ "${HOST_UP[$label]:-0}" != 1 ]]; then
+      log "inventory: [$label] ($addr) is not up — its guests cannot be enumerated"
       continue
     fi
-    HOST_UP[$label]=1
     paths=$(govc_host "$addr" ls /ha-datacenter/vm 2>/dev/null)
     [[ -z "$paths" ]] && { log "inventory: [$label] enumerated nothing"; continue; }
     # shellcheck disable=SC2046
@@ -383,6 +514,31 @@ probe_privileges() {
   done
 }
 
+probe_amt() {
+  (( AMT_FALLBACK )) || { probe_ok "AMT fallback disabled — nothing to probe"; return 0; }
+  if [[ ! -r "$AMT_ENV" ]]; then
+    probe_fail "AMT_FALLBACK=1 but $AMT_ENV is not readable"; return 0
+  fi
+  local mode; mode=$(stat -c '%a' "$AMT_ENV" 2>/dev/null)
+  [[ "$mode" == "600" || "$mode" == "400" ]] \
+    && probe_ok "AMT credentials file mode $mode" \
+    || probe_fail "AMT credentials file mode is $mode — must be 600"
+  amt_creds || { probe_fail "$AMT_ENV has no AMT_USER/AMT_PASS"; return 0; }
+  local entry label amt state
+  for entry in $ESXI_HOSTS; do
+    label="${entry%%=*}"
+    if ! amt=$(amt_addr "$label"); then
+      probe_fail "[$label] has no AMT address in AMT_HOSTS"; continue
+    fi
+    state=$(amt_power_state "$amt")
+    if [[ -n "$state" ]]; then
+      probe_ok "[$label] AMT at $amt reachable and authenticated, PowerState=$state"
+    else
+      probe_fail "[$label] AMT at $amt did not answer — credentials, TLS or routing"
+    fi
+  done
+}
+
 probe_gates() {
   local status charge
   status=$("$UPSC" "$UPS_IDENT" ups.status 2>/dev/null)
@@ -447,6 +603,8 @@ alert_on_failure() {
 
 # One at a time. A second copy racing the first would double-power-on and double
 # the I/O burst this whole design exists to spread out.
+trap '[[ -n "${AMT_CONF:-}" ]] && rm -f "$AMT_CONF"' EXIT
+
 exec 9> "$LOCK_FILE" 2>/dev/null || true
 if ! flock -n 9 2>/dev/null; then
   log "another startup run holds $LOCK_FILE — exiting"
@@ -458,11 +616,13 @@ log "=== UPS graceful startup (DRY_RUN=$DRY_RUN VERIFY=$VERIFY) ==="
 [[ -n "${ESXI_USER:-}" && -n "${ESXI_PASS:-}" ]] || {
   fail_note "ESXI_USER/ESXI_PASS not set (check $ENV_FILE)"; alert_on_failure; exit 1; }
 
+wait_for_hosts
 build_inventory
 
 if (( VERIFY )); then
   probe_privileges
   probe_gates
+  probe_amt
   probe_unlisted
 fi
 

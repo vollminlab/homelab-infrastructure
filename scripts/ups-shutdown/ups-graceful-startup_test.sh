@@ -45,8 +45,28 @@ STUB
   printf '#!/usr/bin/env bash\necho "${STUB_POOL_HEALTH-ONLINE}"\n' > "$S/zpool"
   printf '#!/usr/bin/env bash\necho "${STUB_SS-LISTEN 0 0 *:3260 *:*}"\n' > "$S/ss"
   printf '#!/usr/bin/env bash\necho "nc $*" >> "%s"\nexit ${STUB_NC_RC:-0}\n' "$CALLS" > "$S/nc"
-  printf '#!/usr/bin/env bash\necho "curl $*" >> "%s"\nexit 0\n' "$CALLS" > "$S/curl"
-  chmod +x "$S"/{govc,upsc,zpool,ss,nc,curl}
+  # The curl stub doubles as the AMT endpoint: it reads the SOAP body from stdin
+  # and answers either a power state or a RequestPowerStateChange result.
+  cat > "$S/curl" <<'STUB'
+#!/usr/bin/env bash
+# Only the AMT calls pipe a body in. The Pushover alert path passes -F flags and no
+# stdin, so reading stdin unconditionally hangs the whole suite waiting on a pipe
+# that will never close.
+case "$*" in *--data-binary*) body=$(cat) ;; *) body="" ;; esac
+echo "curl $*" >> "$CALLS"
+case "$body" in
+  *RequestPowerStateChange_INPUT*)
+      echo "amt-power-on-issued" >> "$CALLS"
+      echo "requested-state=$(sed -n 's/.*<p:PowerState>\([0-9]*\)<.*/\1/p' <<< "$body")" >> "$CALLS"
+      if [[ "${STUB_AMT_ACCEPT:-1}" == 1 ]]; then echo "<g:ReturnValue>0</g:ReturnValue>"; else echo "<g:ReturnValue>2</g:ReturnValue>"; fi ;;
+  *CIM_AssociatedPowerManagementService*)
+      echo "<g:PowerState>${STUB_AMT_STATE-8}</g:PowerState>" ;;
+esac
+exit 0
+STUB
+  chmod +x "$S/curl"
+  printf 'AMT_USER=admin\nAMT_PASS=stub\n' > "$S/amt.env"; chmod 600 "$S/amt.env"
+  chmod +x "$S"/{govc,upsc,zpool,ss,nc}
   mkdir -p "$S/nfs"
   printf 'ESXI_USER=ups-shutdown\nESXI_PASS=stub\nESXI_HOSTS="h1=203.0.113.9"\n' > "$S/env"
   printf 'PUSHOVER_TOKEN=t\nPUSHOVER_USER=u\n' > "$S/pushover.env"
@@ -58,6 +78,7 @@ run() {
       LOG_DIR="$S/logs" LOG_FILE="$S/logs/startup.log" \
       PUSHOVER_ENV="$S/pushover.env" LOCK_FILE="$S/logs/.lock" \
       UPSC="$S/upsc" ZPOOL="$S/zpool" SS="$S/ss" NC="$S/nc" CURL="$S/curl" \
+      AMT_ENV="$S/amt.env" AMT_HOSTS="h1=198.51.100.9" AMT_WAIT=0 \
       NFS_EXPORT="$S/nfs" ZPOOLS="pool_0" TIER_DELAY=0 \
       UPS_WAIT=0 STORAGE_WAIT=0 HOST_WAIT=0 API_WAIT=0 TIER_WAIT=0 \
       "$@" bash "$SCRIPT" 2>&1
@@ -135,8 +156,10 @@ teardown
 echo "== a host that never comes back does not strand the others =="
 setup
 out=$(run STUB_VMS="k8scp01:poweredOff:vm" TIERS="0:k8scp01" STUB_NC_RC=1)
-check "host gate reported" "$out" "not answering on 443"
-check "named in failures"  "$out" "is in no host's inventory"
+check "host gate reported"    "$out" "never answered on 443"
+check "inventory says why"    "$out" "its guests cannot be enumerated"
+check "guest reported, not silently dropped" "$out" "is in no host's inventory"
+check "count of live hosts logged"           "$out" "hosts up: 0 of 1"
 teardown
 
 echo "== a failed power-on is reported, not swallowed =="
@@ -186,6 +209,59 @@ setup
 out=$(run STUB_VMS="k8scp01:poweredOff:vm" TIERS="0:k8scp01" ESXI_HOSTS="fromenv=203.0.113.9")
 check "env host used" "$out" "[fromenv]"
 absent "file host ignored" "$out" "[h1]"
+teardown
+
+echo "== AMT fallback: a powered-off host gets powered on =="
+setup
+out=$(run STUB_VMS="k8scp01:poweredOff:vm" TIERS="0:k8scp01" STUB_NC_RC=1 AMT_FALLBACK=1 STUB_AMT_STATE=8)
+check "reads the AMT power state" "$out" "reports PowerState=8"
+check "issues the power-on"       "$out" "AMT accepted the power-on"
+check "power-on was sent"         "$(cat "$CALLS")" "amt-power-on-issued"
+check "and ONLY ever state 2"     "$(cat "$CALLS")" "requested-state=2"
+absent "never a reset value"      "$(cat "$CALLS")" "requested-state=5"
+teardown
+
+echo "== AMT refuses to touch a host that is already on =="
+setup
+out=$(run STUB_VMS="k8scp01:poweredOff:vm" TIERS="0:k8scp01" STUB_NC_RC=1 AMT_FALLBACK=1 STUB_AMT_STATE=2)
+check "explains why it declines" "$out" "not touching it"
+absent "no power-on issued"      "$(cat "$CALLS")" "amt-power-on-issued"
+teardown
+
+echo "== AMT is tried at most once per host per run =="
+setup
+out=$(run STUB_VMS="k8scp01:poweredOff:vm,k8scp02:poweredOff:vm" TIERS="0:k8scp01,k8scp02" STUB_NC_RC=1 AMT_FALLBACK=1 STUB_AMT_STATE=8)
+n=$(grep -c 'amt-power-on-issued' "$CALLS")
+if (( n == 1 )); then ok "one power-on for one host"; else bad "issued $n power-ons"; fi
+teardown
+
+echo "== with the fallback off, AMT is never contacted =="
+setup
+out=$(run STUB_VMS="k8scp01:poweredOff:vm" TIERS="0:k8scp01" STUB_NC_RC=1 AMT_FALLBACK=0)
+absent "no AMT traffic" "$(cat "$CALLS")" "16993"
+teardown
+
+echo "== VERIFY probes AMT, and catches a loose or missing creds file =="
+setup
+out=$(run VERIFY=1 STUB_VMS="k8scp01:poweredOff:vm" TIERS="0:k8scp01" AMT_FALLBACK=1)
+check "AMT probed"   "$out" "reachable and authenticated"
+check "mode checked" "$out" "AMT credentials file mode 600"
+teardown
+setup
+chmod 644 "$S/amt.env"
+out=$(run VERIFY=1 STUB_VMS="k8scp01:poweredOff:vm" TIERS="0:k8scp01" AMT_FALLBACK=1)
+check "loose mode caught" "$out" "must be 600"
+teardown
+setup
+out=$(run VERIFY=1 STUB_VMS="k8scp01:poweredOff:vm" TIERS="0:k8scp01" AMT_FALLBACK=1 AMT_ENV="$S/nope")
+check "missing creds caught" "$out" "is not readable"
+check "verdict failed"       "$out" "VERIFY FAILED"
+teardown
+
+echo "== AMT disabled is reported, not silently skipped =="
+setup
+out=$(run VERIFY=1 STUB_VMS="k8scp01:poweredOff:vm" TIERS="0:k8scp01")
+check "says it is disabled" "$out" "AMT fallback disabled"
 teardown
 
 echo

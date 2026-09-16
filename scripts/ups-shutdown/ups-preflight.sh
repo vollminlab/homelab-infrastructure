@@ -23,6 +23,11 @@ SCRIPT_DIR="$(cd "$(dirname "${BASH_SOURCE[0]}")" && pwd)"
 # Seams. Defaults are production; the test suite overrides every one of them.
 SHUTDOWN_SCRIPT="${SHUTDOWN_SCRIPT:-$SCRIPT_DIR/ups-graceful-shutdown.sh}"
 SHA_FILE="${SHA_FILE:-$SCRIPT_DIR/ups-graceful-shutdown.sh.sha256}"
+STARTUP_SCRIPT="${STARTUP_SCRIPT:-$SCRIPT_DIR/ups-graceful-startup.sh}"
+STARTUP_SHA_FILE="${STARTUP_SHA_FILE:-$SCRIPT_DIR/ups-graceful-startup.sh.sha256}"
+# The boot hook is deliberately unarmed for now, so its absence is a note rather
+# than a failure. Flip this to 1 once it is armed and it becomes enforced.
+EXPECT_STARTUP_ARMED="${EXPECT_STARTUP_ARMED:-0}"
 GOVC_BIN="${GOVC_BIN:-$SCRIPT_DIR/govc}"
 ENV_FILE="${ENV_FILE:-$SCRIPT_DIR/ups-shutdown.env}"
 PUSHOVER_ENV="${PUSHOVER_ENV:-$SCRIPT_DIR/pushover.env}"
@@ -141,6 +146,55 @@ if [[ -x "$SHUTDOWN_SCRIPT" ]]; then
   fi
 else
   skip "VERIFY not run — orchestrator not executable"
+fi
+
+# ── The startup path gets the same treatment ─────────────────────────────────
+#
+# It rots the same way and for the same reasons. Two paths that are verified to
+# different standards is how one of them quietly stops working.
+
+if [[ -x "$STARTUP_SCRIPT" ]]; then
+  pass "startup orchestrator present and executable"
+else
+  fail "startup orchestrator missing or not executable at $STARTUP_SCRIPT"
+fi
+
+if [[ -f "$STARTUP_SHA_FILE" ]]; then
+  swant=$(awk '{print $1}' "$STARTUP_SHA_FILE")
+  sgot=$(sha256sum "$STARTUP_SCRIPT" 2>/dev/null | awk '{print $1}')
+  if [[ -n "$sgot" && "$sgot" == "$swant" ]]; then
+    pass "startup orchestrator matches its pinned sha256"
+  else
+    fail "startup orchestrator sha256 mismatch — pinned ${swant:0:12}, on disk ${sgot:0:12}"
+  fi
+else
+  skip "no pinned sha256 at $STARTUP_SHA_FILE (write one at deploy time)"
+fi
+
+# Covers the PowerOn privilege, every gate, the tier list, orphaned guests, and the
+# AMT credentials when the fallback is enabled — all read-only.
+if [[ -x "$STARTUP_SCRIPT" ]]; then
+  if sverify=$(VERIFY=1 "$STARTUP_SCRIPT" 2>&1); then
+    pass "startup VERIFY run passed ($(grep -c 'PROBE PASS' <<< "$sverify") probes)"
+  else
+    fail "startup VERIFY run failed: $(grep 'PROBE FAIL' <<< "$sverify" | head -5 | tr '\n' ';')"
+  fi
+else
+  skip "startup VERIFY not run — orchestrator not executable"
+fi
+
+# Is anything actually going to run it at boot? A perfect script nobody invokes is
+# the same outcome as no script.
+if hooks=$("$MIDCLT" call initshutdownscript.query 2>/dev/null) && [[ -n "$hooks" ]]; then
+  if grep -q 'ups-graceful-startup.sh' <<< "$hooks"; then
+    pass "a POSTINIT hook is registered for the startup orchestrator"
+  elif (( EXPECT_STARTUP_ARMED )); then
+    fail "EXPECT_STARTUP_ARMED=1 but no init hook references ups-graceful-startup.sh"
+  else
+    say "  note  startup orchestrator is NOT armed at boot (expected for now)"
+  fi
+else
+  skip "could not query init scripts (not root?) — arming state unchecked"
 fi
 
 say "=== preflight complete: $PASSED passed, $FAILED failed, $SKIPPED skipped ==="
