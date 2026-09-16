@@ -25,9 +25,11 @@ SHUTDOWN_SCRIPT="${SHUTDOWN_SCRIPT:-$SCRIPT_DIR/ups-graceful-shutdown.sh}"
 SHA_FILE="${SHA_FILE:-$SCRIPT_DIR/ups-graceful-shutdown.sh.sha256}"
 STARTUP_SCRIPT="${STARTUP_SCRIPT:-$SCRIPT_DIR/ups-graceful-startup.sh}"
 STARTUP_SHA_FILE="${STARTUP_SHA_FILE:-$SCRIPT_DIR/ups-graceful-startup.sh.sha256}"
-# The boot hook is deliberately unarmed for now, so its absence is a note rather
-# than a failure. Flip this to 1 once it is armed and it becomes enforced.
-EXPECT_STARTUP_ARMED="${EXPECT_STARTUP_ARMED:-0}"
+# The boot hook is armed (TrueNAS init script id 2, POSTINIT, 2026-09-16), so its
+# absence is now a failure rather than a note. A TrueNAS upgrade or a middleware
+# config restore that drops it would otherwise be invisible until the next outage,
+# which is exactly the class of silent rot this preflight exists to catch.
+EXPECT_STARTUP_ARMED="${EXPECT_STARTUP_ARMED:-1}"
 GOVC_BIN="${GOVC_BIN:-$SCRIPT_DIR/govc}"
 ENV_FILE="${ENV_FILE:-$SCRIPT_DIR/ups-shutdown.env}"
 PUSHOVER_ENV="${PUSHOVER_ENV:-$SCRIPT_DIR/pushover.env}"

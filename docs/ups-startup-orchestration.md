@@ -261,7 +261,7 @@ Recorded rather than dropped, so it is not re-proposed.)*
 | AMT out-of-band power-on fallback | **implemented and credentials deployed**; validated read-only from the NAS. See below |
 | HA restart priorities mirroring the tiers | **dropped** — see *Why HA priorities were dropped* |
 | Preflight covers the startup path too | **done** — 14 checks, incl. the startup sha and its VERIFY |
-| Arming it (boot hook) | **not done** — see *Arming* |
+| Arming it (boot hook) | **done** — TrueNAS init script id 2, POSTINIT |
 
 ### What was actually exercised, 2026-09-16
 
@@ -377,11 +377,12 @@ per-host.
 
 ## Arming
 
-Deliberately **not armed**. The script is deployed and runnable by hand, but nothing
-starts it at boot, because an automation that powers virtual machines on should not
-arm itself unreviewed.
+**Armed 2026-09-16** as TrueNAS init script **id 2** (`POSTINIT`, timeout 3600).
+The preflight now *enforces* its presence — `EXPECT_STARTUP_ARMED` defaults to 1, so
+a TrueNAS upgrade or config restore that drops the hook fails the weekly check
+instead of being discovered during an outage.
 
-Prefer the TrueNAS middleware hook over a systemd unit: SCALE's root filesystem is
+The middleware hook is preferred over a systemd unit: SCALE's root filesystem is
 not preserved across upgrades, so a unit in `/etc/systemd/system` can vanish
 exactly when nobody is looking. Middleware-registered scripts survive, for the same
 reason the UPS `shutdowncmd` and the preflight cron job do.
@@ -396,11 +397,15 @@ midclt call initshutdownscript.create '{"type":"SCRIPT",
 `scripts/ups-shutdown/ups-startup.service` is kept as a reference for the semantics
 and for any host where the middleware hook is not available.
 
+**What is still untested about arming:** that the hook actually fires at boot. That
+needs a NAS reboot, so it will be confirmed the next time one happens for other
+reasons. The failure mode if it does not fire is today's behaviour — guests wait for
+a human — not something worse.
+
 ## Work breakdown — what remains
 
 | # | Contents |
 | --- | --- |
 | 1 | HA restart priorities mirroring the tiers (independent, useful alone) |
 | 2 | Decide `RESCAN_STORAGE` and the AMT fallback; both are off and inert until then |
-| 3 | Arm the boot hook once reviewed |
 | 4 | Extend `ups-preflight.sh` to cover the startup path's own drift |
