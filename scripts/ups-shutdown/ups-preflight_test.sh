@@ -44,6 +44,14 @@ cat <<JSON
 JSON
 MID
   chmod +x "$S/midclt"
+  cat > "$S/ss" <<'STUB'
+#!/usr/bin/env bash
+echo "Recv-Q Send-Q Local Address:Port Peer Address:Port"
+n=${STUB_SECONDARIES-2}
+i=0; while [ "$i" -lt "$n" ]; do echo "0 0 [::ffff:192.168.150.2]:3493 [::ffff:192.168.100.$((3+i))]:41766"; i=$((i+1)); done
+echo "0 0 [::1]:3493 [::1]:34578"
+STUB
+  chmod +x "$S/ss"
   printf '#!/usr/bin/env bash\necho "curl $*" >> "%s"\nexit 0\n' "$CALLS" > "$S/curl"; chmod +x "$S/curl"
 }
 teardown() { rm -rf "$S"; }
@@ -52,7 +60,7 @@ run() {
   env CALLS="$CALLS" SHUTDOWN_SCRIPT="$S/orchestrator.sh" SHA_FILE="$S/orchestrator.sha256" \
       GOVC_BIN="$S/govc" ENV_FILE="$S/ups-shutdown.env" PUSHOVER_ENV="$S/pushover.env" \
       UPSMON_CONF="$S/upsmon.conf" STAMP_FILE="$S/logs/stamp" \
-      UPSC="$S/upsc" MIDCLT="$S/midclt" CURL="$S/curl" \
+      UPSC="$S/upsc" MIDCLT="$S/midclt" CURL="$S/curl" SS="$S/ss" \
       STARTUP_SCRIPT="$S/startup.sh" STARTUP_SHA_FILE="$S/startup.sha256" \
       STUB_ARMED="${BASELINE_ARMED:-1}" \
       "$@" bash "$SCRIPT" 2>&1
@@ -168,6 +176,33 @@ setup
 out=$(run STUB_ARMED=0 EXPECT_STARTUP_ARMED=0); rc=$?
 check "reported as a note" "$out" "NOT armed at boot"
 if (( rc == 0 )); then ok "exit 0 — a note does not fail the run"; else bad "exit was $rc"; fi
+teardown
+
+echo "== NUT secondaries are counted, not assumed =="
+setup
+out=$(run)
+check "both secondaries seen" "$out" "2 NUT secondary connection(s) established"
+teardown
+
+echo "== a secondary that stopped connecting is caught =="
+setup
+out=$(run STUB_SECONDARIES=1); rc=$?
+check "shortfall reported" "$out" "only 1 NUT secondary"
+check "says why it matters" "$out" "gets hard-cut"
+if (( rc != 0 )); then ok "exit non-zero"; else bad "exit was 0"; fi
+teardown
+
+echo "== loopback connections are not counted as secondaries =="
+setup
+out=$(run STUB_SECONDARIES=0); rc=$?
+check "zero counted" "$out" "only 0 NUT secondary"
+teardown
+
+echo "== EXPECT_SECONDARIES=0 disables the check =="
+setup
+out=$(run STUB_SECONDARIES=0 EXPECT_SECONDARIES=0); rc=$?
+absent "check skipped" "$out" "NUT secondary connection"
+if (( rc == 0 )); then ok "exit 0"; else bad "exit was $rc"; fi
 teardown
 
 echo

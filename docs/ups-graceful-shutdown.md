@@ -606,6 +606,68 @@ different code path from the one that runs during an outage.
 Intel AMT is provisioned and in admin control mode, MeshCommander can power the
 host back on remotely; otherwise step 4 needs physical access to the power button.
 
+## The Pi-holes shut themselves down: NUT secondaries
+
+`pihole1` and `pihole2` are on the UPS but have **no USB connection to it** — so
+before 2026-09-16 nothing told them a power event was happening and they were
+hard-cut when the outlets were killed.
+
+That is what NUT's client/server split is for. The cable is only needed on one
+machine: the NAS runs the driver plus `upsd` plus `upsmon` in **primary** mode, and
+any other host runs `upsmon` in **secondary** mode, which opens a TCP connection to
+the primary's `upsd` on 3493 and is told the UPS state. No hardware on the client.
+
+```mermaid
+flowchart LR
+    UPS["CyberPower CP1500"] -->|USB-HID| NAS["TrueNAS -- primary<br/>driver + upsd + upsmon"]
+    NAS -->|"TCP 3493, user upsslave"| P1["pihole1 -- secondary<br/>upsmon only"]
+    NAS -->|"TCP 3493, user upsslave"| P2["pihole2 -- secondary<br/>upsmon only"]
+    NAS -->|"on FSD"| ORCH["guests, hosts, then itself"]
+    P1 -->|"on FSD"| S1["/sbin/shutdown -P now"]
+    P2 -->|"on FSD"| S2["/sbin/shutdown -P now"]
+```
+
+When the primary declares FSD, each secondary runs its own local shutdown, in
+parallel with the guest/host orchestration. **`HOSTSYNC 15` was already configured on
+the primary** and until now did nothing — it is precisely "wait up to 15s for
+secondaries to finish and disconnect before I proceed".
+
+Configuration, for the record:
+
+- **NAS**: `rmonitor: True` on the UPS service, which is what makes `upsd` listen off
+  the box (it was `LISTEN ::1 3493` — IPv6 localhost only — so no client could have
+  connected regardless). A dedicated `upsslave` account was added via `extrausers`
+  so it survives config regeneration; credential in 1Password **TrueNAS NUT Secondary**.
+- **Each Pi**: `nut-client`, `MODE=netclient`, and
+  `MONITOR ups@192.168.150.2 1 upsslave <password> secondary` with
+  `SHUTDOWNCMD "/sbin/shutdown -P now"`.
+
+**Note the `-P`.** Raspberry Pi OS is Debian 12, so `/sbin/shutdown` is systemd's
+compat interface and rejects lowercase `-p` exactly as the NAS did — verified on both
+Pis before writing the config. The same one-character bug was available to make here.
+
+`collect-host-configs.sh` now snapshots `/etc/nut/upsmon.conf` and `nut.conf`, with
+the MONITOR line's password redacted. It is a *positional* field, so the existing
+`redact_kv` helper cannot reach it and a dedicated `sed` handles it, on the host,
+before the file is transmitted.
+
+**The preflight counts the secondaries** (`EXPECT_SECONDARIES`, default 2). A Pi whose
+`upsmon` quietly stops connecting is back to being hard-cut, and nothing else would
+say so.
+
+### What is not tested
+
+That each Pi actually shuts down on FSD. Proving it means triggering a real shutdown
+of a DNS server, which was explicitly out of scope. What *is* verified: the secondary
+authenticates and reads live UPS state (`upsc ups@192.168.150.2` returns `OL`), the
+NAS logs `User upsslave@<ip> logged into UPS [ups]`, `nut-monitor` is enabled at boot
+on both, and the `SHUTDOWNCMD` flag parses on each host. The remaining gap is the same
+shape as the one the shutdown orchestrator had before the maintenance-mode rehearsal,
+and the next planned Pi reboot closes it.
+
+DNS was verified answering on `192.168.100.2`, `.3` and the `.4` VIP before, during
+and after; pihole1 kept the VIP throughout.
+
 ## Arming
 
 | Field | State | Why |
