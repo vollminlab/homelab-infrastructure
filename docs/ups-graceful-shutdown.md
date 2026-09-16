@@ -107,6 +107,45 @@ draining would only migrate pods onto nodes that are about to die. A Tools
 shutdown triggers a normal systemd shutdown inside each node, which stops kubelet
 and unmounts volumes cleanly — which is the property that matters.
 
+## How the trigger actually reaches the orchestrator
+
+Two independent paths lead to `SHUTDOWNCMD`, and **only one of them is guarded**.
+This is the single most surprising part of the setup, so it is worth a picture.
+
+```mermaid
+flowchart TD
+    UPS["CyberPower CP1500 -- USB-HID, to the NAS only<br/>reports OB, then OB LB"]
+    UPS --> UPSD["usbhid-ups driver, then upsd"]
+    UPSD --> MON["upsmon, primary<br/>MONITOR ups@localhost"]
+
+    MON -->|"NOTIFY LOWBATT"| CMD["upssched, then custom-upssched-cmd<br/>midclt call ups.upssched_event"]
+    CMD --> TESTG{"self-test in progress?<br/>INERT HERE: matches TestInProgress,<br/>driver says In progress"}
+    TESTG -->|"never taken"| IGNORE["event ignored"]
+    TESTG -->|"always taken"| OLG{"ups.status contains OL?"}
+    OLG -->|yes| REFUSE["refuse -- bad telemetry<br/>cannot shut us down"]
+    OLG -->|no| FSD["upsmon -c fsd"]
+
+    MON -->|"OB AND LB together -- native<br/>critical path, NO guard at all"| FSD
+
+    FSD -->|"writes POWERDOWNFLAG /etc/killpower first"| SC["SHUTDOWNCMD as root<br/>ups-graceful-shutdown.sh"]
+    SC --> ORCH["guests off, then hosts off"]
+    ORCH --> POFF["/sbin/shutdown -P now"]
+    POFF --> CUT["systemd-shutdown hook nutshutdown<br/>reads /etc/killpower, runs upsdrvctl shutdown<br/>UPS cuts the outlets"]
+```
+
+Three things this makes obvious that the prose does not:
+
+- **The `OL` check is the only working guard.** The self-test check next to it
+  compares against `TestInProgress`, while `usbhid-ups` reports `In progress`, so it
+  never matches.
+- **upsmon's native path bypasses the middleware entirely.** Nothing TrueNAS does
+  can veto it. It requires `OB` *and* `LB` together — which the sandbox rig
+  confirms empirically, and which is why a deep battery test's outcome hinges
+  entirely on whether the driver reports `OB` while discharging.
+- **Cutting the UPS outlets is downstream of the NAS actually entering shutdown.**
+  That is why `shutdown -p` failing silently cost more than the NAS staying up: the
+  `nutshutdown` hook never ran either.
+
 ## Files
 
 Mastered here, deployed to the NAS:
@@ -126,6 +165,87 @@ cannot prompt and 1Password is unreachable by then. File permissions are the
 control. The value comes from 1Password item **ESXi Root** (Homelab vault).
 Hardening follow-up: replace root with a dedicated ESXi local user holding only
 the shutdown privileges.
+
+## What the orchestrator does
+
+Three host jobs run in parallel; the main shell polls them and owns the deadline.
+
+```mermaid
+sequenceDiagram
+    autonumber
+    participant O as orchestrator job
+    participant H as host API via govc
+    participant G as guests on that host
+
+    O->>H: ls /ha-datacenter/vm + vm.info
+    H-->>O: names, power states, Tools status
+    loop every powered-on guest
+        alt Tools running
+            O->>H: vm.power -s = ShutdownGuest
+            H->>G: graceful OS shutdown
+        else no Tools
+            O->>H: vm.power -off, no graceful path exists
+        end
+    end
+    loop up to GUEST_TIMEOUT 120s, every 10s
+        O->>H: vm.info
+        H-->>O: still poweredOn?
+    end
+    O->>H: vm.power -off -force on any straggler
+    O->>H: find / -type h
+    H-->>O: the HostSystem inventory path
+    O->>H: host.shutdown -f on that path
+    loop up to HOST_TIMEOUT 60s, every 5s
+        O->>H: nc -z :443
+    end
+    Note over O,H: silence on 443 is the proof it went down
+```
+
+The main shell's own loop is deliberately not `wait`:
+
+```mermaid
+flowchart TD
+    FORK["fork one job per host"] --> POLL["poll kill -0 on the PIDs"]
+    POLL --> DL{"TOTAL_DEADLINE<br/>240s expired?"}
+    DL -->|yes| KILL["kill the outstanding jobs"]
+    DL -->|no| FIN{"all jobs finished?"}
+    FIN -->|no| POLL
+    FIN -->|yes| NAS
+    KILL --> NAS["poweroff_nas<br/>/sbin/shutdown -P now"]
+    NAS --> RC{"returned non-zero?"}
+    RC -->|yes| FB["FATAL, then systemctl --force poweroff"]
+    RC -->|no| FINISH["NAS powers off, outlets cut"]
+    FB --> FINISH
+```
+
+`wait` only reaps the calling shell's own children, so delegating it to a subshell
+returned instantly and powered the NAS off five seconds in — the exact failure this
+script exists to prevent. Polling `kill -0` in the main shell is the fix.
+
+## The timing budget, and why it nests
+
+Every timeout here is bounded by the one above it. The window opens when `LOWBATT`
+fires, which is `battery.runtime.low` — 300 seconds of projected runtime.
+
+```mermaid
+gantt
+    title Everything must finish inside the LOWBATT window
+    dateFormat X
+    axisFormat %S
+    section UPS
+    battery.runtime.low 300s           :0, 300
+    section Orchestrator
+    TOTAL_DEADLINE  240s               :0, 240
+    GUEST_TIMEOUT  120s                :0, 120
+    HOST_TIMEOUT 60s after guests      :120, 180
+    section Node - proposed
+    kubelet shutdownGracePeriod 60s    :0, 60
+```
+
+The bottom bar is not configured yet — kubelet's Graceful Node Shutdown is off, so
+containers are killed abruptly on every node shutdown (cluster repo issue #1269).
+**If it is ever enabled, its period must fit inside `GUEST_TIMEOUT`**, or every node
+gets force-powered-off mid-checkpoint, which is worse than not having it at all.
 
 ## Safety properties
 
