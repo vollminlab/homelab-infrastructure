@@ -378,6 +378,91 @@ arrives. That is the mechanism behind "never run a deep battery test while the
 lab is up" — whether a deep test trips this depends entirely on whether the
 driver reports `OB` while discharging.
 
+## The credential: a least-privilege account, not root
+
+The orchestrator authenticates as **`ups-shutdown`**, a local account on each host
+holding a **custom `ups-shutdown` role** — not Admin:
+
+```
+Host.Config.Maintenance            # required by ShutdownHost_Task
+VirtualMachine.Interact.PowerOff   # ShutdownGuest and the forced power-off
+System.View / System.Read / System.Anonymous
+```
+
+Custom roles **are** supported on a standalone ESXi host, contrary to a common
+belief that they are a vCenter-only feature. `govc role.ls` showing only the eight
+built-ins means none has been created, not that none can be. Note that
+`esxcli system permission set` accepts only Admin/ReadOnly/NoAccess, so the
+assignment must go through the API, Host Client or PowerCLI.
+
+```bash
+# What was done on each host, reproducibly
+govc role.create ups-shutdown System.Anonymous System.Read System.View \
+                              VirtualMachine.Interact.PowerOff Host.Config.Maintenance
+govc host.account.create -id ups-shutdown -password "$PW" \
+                         -description "UPS graceful shutdown orchestrator (TrueNAS)"
+govc permissions.set -principal ups-shutdown -role ups-shutdown -propagate=true /
+```
+
+**Why this was worth doing, given the role still can power off any guest:** it is
+not really about privilege reduction. It is that the previous credential was ESXi
+root, which the vault records as *also* vCenter root — so a cleartext file on the
+NAS held the keys to all three hypervisors and vCenter. It also decouples rotation
+(rotating admin credentials no longer silently breaks the shutdown path), contains
+the measured lockout policy (`Security.AccountLockFailures=5`,
+`Security.AccountUnlockTime=900`) to one principal, and makes the audit trail
+unambiguous — `root` powering off a host is indistinguishable from an admin doing
+it deliberately.
+
+Password lives in the 1Password item **ESXi UPS Shutdown**. Rotating it means
+editing the vault item, `govc host.account.update -id ups-shutdown -password …` on
+all three hosts, updating `ups-shutdown.env`, and re-running `VERIFY=1`.
+
+**The privilege probe asks what the role _contains_, not what it is called.**
+Asserting `role == Admin` was wrong in both directions: it fails a correct
+least-privilege role, and it would pass an "Admin" role someone had edited to
+remove a privilege. Override the expected set with `REQUIRED_PRIVILEGES` if the
+orchestrator ever needs more.
+
+## Proving `host.shutdown`: the maintenance-mode rehearsal
+
+`host.shutdown` is the one step `VERIFY` cannot exercise, because there is no way
+to test it but to do it. Maintenance mode makes that safe: DRS evacuates every
+guest first, so the call lands on an empty host.
+
+**Measured 2026-09-16 — the cluster can absorb it.** Guest RAM totals 177.4 GB
+against 191.4 GB on any two hosts (93 % committed while one host is out, ~7-8 GB
+margin on consumed memory). All four DRS rules are **soft**, so anti-affinity will
+not block the evacuation. HA admission control (33 % CPU / 33 % memory) means you
+**cannot power on new VMs** while a host is out; running guests and vMotion are
+unaffected. Stay out of the 03:00-06:00 UTC backup window.
+
+**Evacuate `esxi03`** — fewest guests (5), least RAM to move (53.2 GB), and it
+holds neither `devsbx01` nor the active vCenter.
+
+```bash
+# 1. Evacuate. DRS is fullyAutomated, so this moves the guests for you.
+govc host.maintenance.enter -host esxi03.vollminlab.com
+govc object.collect -s HostSystem:host-XXX runtime.inMaintenanceMode   # wait for true
+
+# 2. The exact call the orchestrator makes — no substitutions.
+govc host.shutdown -f /ha-datacenter/host/esxi03.vollminlab.com/esxi03.vollminlab.com
+
+# 3. Confirm it actually went down, the way the orchestrator does.
+nc -z 192.168.151.4 443 || echo "host is down"
+
+# 4. Power back on, then exit maintenance mode.
+govc host.maintenance.exit -host esxi03.vollminlab.com
+```
+
+Step 2 must be issued **against the host's own API** (`GOVC_URL=https://192.168.151.4/sdk`)
+as `ups-shutdown`, not through vCenter as an admin — otherwise it proves a
+different code path from the one that runs during an outage.
+
+**Before starting, confirm the power-on path.** These are MS-01s with no BMC. If
+Intel AMT is provisioned and in admin control mode, MeshCommander can power the
+host back on remotely; otherwise step 4 needs physical access to the power button.
+
 ## Arming
 
 | Field | State | Why |
