@@ -332,6 +332,51 @@ ssh vollmin@192.168.150.2 'cd /mnt/pool_0/scripts/ups-shutdown &&
 
 Re-pinning the sha is part of deploying, not an afterthought — check 2 fails
 until it is done, which is the intended prompt.
+## The sandbox rig — testing the link nothing else touches
+
+`VERIFY=1` proves the orchestrator would do the right thing *if it were called*.
+The preflight proves the configuration still points at it. Neither exercises the
+link between them: **upsmon's own decision that the UPS is critical, and the
+hand-off from that decision to `SHUTDOWNCMD`.** That link is upstream C plus a
+generated config, it runs exactly once in the life of a power event, and until
+2026-09-16 it had never run here at all.
+
+`scripts/ups-shutdown/test-rig/run-sandbox-test.sh` replays a simulated outage
+through a real NUT stack:
+
+```bash
+sudo ./scripts/ups-shutdown/test-rig/run-sandbox-test.sh
+```
+
+A `dummy-ups` driver walks `OL` → `OL LB` → `OB` → `OB LB`; a private `upsmon`
+watches it and calls the **real orchestrator** as its `SHUTDOWNCMD`, against a
+stub `govc`, TEST-NET hosts and a stub poweroff command. What it asserts:
+
+| Assertion | Why it matters |
+|---|---|
+| upsmon reached FSD and invoked SHUTDOWNCMD | the never-tested link |
+| invoked as root | a non-root invocation could not power the NAS off |
+| POWERDOWNFLAG written *before* SHUTDOWNCMD | confirms the UPS outlets will be cut |
+| **no trigger while the UPS was `OL`** | `LB` alone must never act — this is the bad-telemetry case |
+| orchestrator completed under upsmon's environment | `PATH` is `/usr/local/bin:/usr/bin:/bin:/usr/games` — **no `/sbin`** |
+| orchestrator reached and ran the poweroff command | dry runs return before this line; here it actually executes |
+
+It runs deliberately **not** on the NAS: `NUT_CONFPATH` and a short private
+`NUT_STATEPATH`, port 3494, and the binaries invoked at `/lib/nut/*` to bypass
+the Debian `/sbin` wrappers that refuse to start unless `MODE` is set in the
+*system* `nut.conf`. Nothing real is contacted and nothing is powered off.
+
+Not wired into CI: it needs root and the NUT packages
+(`apt install nut-server nut-client`). Run it on devsbx01 after any change to the
+orchestrator's invocation contract. Mutation-checked — pointing `ORCHESTRATOR` at
+a script that exits non-zero turns three assertions red.
+
+**The `OL LB` step is the empirical version of a claim worth keeping:** upsmon
+declares a UPS critical only when `OB` *and* `LB` are set together. The rig sits
+through five seconds of `OL LB` without acting, then fires 14s in when `OB LB`
+arrives. That is the mechanism behind "never run a deep battery test while the
+lab is up" — whether a deep test trips this depends entirely on whether the
+driver reports `OB` while discharging.
 
 ## Arming
 
