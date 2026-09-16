@@ -271,6 +271,68 @@ After any merge, copy it over and confirm:
 sha256sum /mnt/pool_0/scripts/ups-shutdown/ups-graceful-shutdown.sh   # must match git
 ```
 
+## Keeping it true: the scheduled preflight
+
+Verification that only happens when someone remembers to run it decays into no
+verification. `scripts/ups-shutdown/ups-preflight.sh` runs weekly from a TrueNAS
+cron job as root and answers one question — *if the power failed right now, would
+the orchestration run?*
+
+| # | Check | The failure it catches |
+|---|---|---|
+| 1 | orchestrator present and executable | a dataset rollback, a botched deploy |
+| 2 | sha256 matches the pinned value | a hand-edit to the deployed copy |
+| 3 | `govc` present and executable | the binary lost or replaced |
+| 4 | env file exists, mode 600 | a credential file made world-readable |
+| 5 | `upsc` returns a status | the NUT driver stopped reporting |
+| 6 | `ups.config` shutdowncmd / mode / powerdown | a TrueNAS upgrade or UI save regenerating `/etc/nut` |
+| 7 | `upsmon.conf` has MONITOR + the right SHUTDOWNCMD | upsmon running but watching nothing |
+| 8 | `VERIFY=1` exits 0 | rotated ESXi password, unreachable host, lost privilege, bad poweroff flag |
+
+Checks 6 and 7 need root; a non-root run reports them as SKIP rather than passing
+them vacuously, and the summary line always states how many were skipped.
+
+**Failure alerts go straight to Pushover, not through Alertmanager.** A UPS
+problem has to be reportable when the cluster hosting Alertmanager is exactly
+what is at risk. Credentials live in `pushover.env` (0600, gitignored, values
+from the 1Password item *Pushover API Token*); success is silent and writes
+`logs/last-preflight-ok`.
+
+**The schedule is a TrueNAS middleware cron job** (id 5, `Mondays 09:17`, user
+root), not a raw crontab entry — middleware jobs survive upgrades and are visible
+in the UI under System → Advanced → Cron Jobs.
+
+```bash
+# Recreate it if it is ever lost
+midclt call cronjob.create '{"user":"root",
+  "command":"/mnt/pool_0/scripts/ups-shutdown/ups-preflight.sh",
+  "description":"UPS shutdown path preflight (alerts via Pushover on failure)",
+  "schedule":{"minute":"17","hour":"9","dom":"*","month":"*","dow":"1"},
+  "enabled":true,"stdout":true,"stderr":false}'
+```
+
+```bash
+# On demand, without sending anything
+ALERT=0 ./ups-preflight.sh; echo "exit=$?"
+
+# When did it last pass?
+cat /mnt/pool_0/scripts/ups-shutdown/logs/last-preflight-ok
+```
+
+## Deploying a change to the NAS
+
+Merging does not update the NAS. After any merge that touches the orchestrator:
+
+```bash
+scp scripts/ups-shutdown/ups-graceful-shutdown.sh vollmin@192.168.150.2:/mnt/pool_0/scripts/ups-shutdown/
+ssh vollmin@192.168.150.2 'cd /mnt/pool_0/scripts/ups-shutdown &&
+  sha256sum ups-graceful-shutdown.sh | tee ups-graceful-shutdown.sh.sha256 &&
+  VERIFY=1 ./ups-graceful-shutdown.sh; echo "exit=$?"'
+```
+
+Re-pinning the sha is part of deploying, not an afterthought — check 2 fails
+until it is done, which is the intended prompt.
+
 ## Arming
 
 | Field | State | Why |
