@@ -38,6 +38,12 @@ jobs:
       - name: Collected snapshots are fresh
         run: ./scripts/check-collected-freshness.sh
 
+      # bash -n only proves syntax. It cannot know that `shutdown -p` is an
+      # invalid option, which is precisely the defect that shipped here — so the
+      # orchestrator gets real tests, with stubs, no cluster required.
+      - name: UPS shutdown orchestrator tests
+        run: bash scripts/ups-shutdown/ups-graceful-shutdown_test.sh
+
       - name: Shell scripts parse
         run: |
           fail=0

@@ -174,6 +174,35 @@ The dry run found two defects that would have been fatal in a real event:
    overwrote them, so a test run with substituted hosts acted on the *real* hosts
    instead. Precedence is now environment > env file > defaults.
 
+### The third defect, found 2026-09-16 — and why it took five weeks
+
+`poweroff_nas()` ran `/sbin/shutdown -p now`. On TrueNAS SCALE `/sbin/shutdown` is
+systemd's compatibility interface, which accepts `-P` but **not** lowercase `-p`:
+
+```
+$ /sbin/shutdown -p --show
+/sbin/shutdown: invalid option -- 'p'      # exit 1
+$ /sbin/shutdown -P --show
+No scheduled shutdown.                     # parses fine
+```
+
+In a real event every guest and host would have shut down correctly, and then the
+last step would have failed silently — the log line "powering off the NAS" written,
+the command exiting 1, the script exiting 0. The NAS would have stayed up on
+battery with the pools imported until the UPS died, taking the uncontrolled power
+loss itself, and `/lib/systemd/system-shutdown/nutshutdown` would never have run to
+cut the UPS outlets. `die_but_poweroff()` shares the function, so every fatal path
+failed the same way.
+
+**Why no amount of dry running could find it:** `poweroff_nas()` returns at its
+`DRY_RUN` branch *before* reaching the command. The rehearsal exercised every line
+except that one. `bash -n` cannot help either — the syntax is valid; only the flag
+is wrong.
+
+The lesson is general enough to be worth stating as a rule: **a rehearsal must
+execute something for every line the real run executes.** That is what `VERIFY=1`
+now does, and the flag itself is asserted by the test suite in CI.
+
 The guest-shutdown path was then proven **live** on 2026-08-17: `govc vm.power -s`
 against `devsbx01` on the real host API returned `OK` in 0.2 s, the guest shut down
 cleanly via Tools, and came back healthy. That is the same call the orchestrator
@@ -190,17 +219,57 @@ acceptable.
 
 ## Testing it
 
+Three layers, cheapest first.
+
+**1. The test suite — no cluster, no UPS, runs in CI.**
+
 ```bash
-# Dry run — enumerates and prints the plan, changes nothing
-ssh vollmin@192.168.150.2
-sudo -i
-cd /mnt/pool_0/scripts/ups-shutdown && DRY_RUN=1 ./ups-graceful-shutdown.sh
+bash scripts/ups-shutdown/ups-graceful-shutdown_test.sh
+```
+
+Pure-shell stubs for `govc`, `nc` and the poweroff command. It asserts the
+poweroff flag parses, that `VERIFY` never invokes a destructive verb, that a
+failed poweroff is never silent, and that environment beats the env file. The
+poweroff assertions fail if the `-p` defect is reintroduced — verified by
+mutation.
+
+**2. `VERIFY=1` on the NAS — probes every real action without performing one.**
+
+```bash
+cd /mnt/pool_0/scripts/ups-shutdown && VERIFY=1 ./ups-graceful-shutdown.sh; echo "exit=$?"
+```
+
+| Real action | What VERIFY executes instead |
+|---|---|
+| `shutdown -P now` | the same binary and flags with `--show` — parses, no action |
+| `vm.power -s <vm>` | `govc vm.info <vm>` — the name the real call uses still resolves |
+| `host.shutdown -f <path>` | resolve the HostSystem path, then read the principal's granted role |
+| `nc -z <host> 443` | run as-is — proves the host-down poll works while the host is up |
+
+Exit status is the verdict: 0 means every probe passed, non-zero lists the
+failures. Safe to run any time, and the thing to run after any credential
+rotation, TrueNAS upgrade or script edit.
+
+**3. Dry run — enumerates and prints the plan.**
+
+```bash
+DRY_RUN=1 ./ups-graceful-shutdown.sh
 
 # Exercise the deadline without touching real hosts
 DRY_RUN=1 ESXI_HOSTS="blackhole=192.0.2.1" TOTAL_DEADLINE=25 ./ups-graceful-shutdown.sh
 ```
 
-Logs land in `/mnt/pool_0/scripts/ups-shutdown/logs/ups-shutdown.log`.
+Logs land in `/mnt/pool_0/scripts/ups-shutdown/logs/ups-shutdown.log`. A non-root
+run cannot write that file (it is root-owned) and now says so once instead of
+emitting a "Permission denied" line per log call.
+
+**Deploying a change is a separate step.** The script lives in git and runs from
+`/mnt/pool_0/scripts/ups-shutdown/` on the NAS; merging does not update the NAS.
+After any merge, copy it over and confirm:
+
+```bash
+sha256sum /mnt/pool_0/scripts/ups-shutdown/ups-graceful-shutdown.sh   # must match git
+```
 
 ## Arming
 
