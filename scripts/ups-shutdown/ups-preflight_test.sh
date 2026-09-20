@@ -15,7 +15,9 @@ setup() {
   S="$(mktemp -d)"; CALLS="$S/calls"; : > "$CALLS"
 
   # A healthy world: every stub returns what production would.
-  printf '#!/usr/bin/env bash\nexit ${VERIFY_EXIT:-0}\n' > "$S/orchestrator.sh"
+  # Emits the two lines preflight reads the EFFECTIVE timeouts back from, so the
+  # stub exercises that path rather than skipping it. Overridable per-test.
+  printf '#!/usr/bin/env bash\necho "=== UPS graceful shutdown starting (DRY_RUN=1, VERIFY=1, deadline=${STUB_DEADLINE:-240}s) ==="\necho "[esxi01] DRY-RUN would poll up to ${STUB_GUEST:-180}s for guests to power off"\nexit ${VERIFY_EXIT:-0}\n' > "$S/orchestrator.sh"
   chmod +x "$S/orchestrator.sh"
   sha256sum "$S/orchestrator.sh" > "$S/orchestrator.sha256"
   printf '#!/usr/bin/env bash\nexit ${STARTUP_VERIFY_EXIT:-0}\n' > "$S/startup.sh"
@@ -77,6 +79,8 @@ check "shutdowncmd verified"        "$out" "shutdowncmd points at the orchestrat
 check "MASTER verified"             "$out" "mode is MASTER"
 check "MONITOR verified"            "$out" "has a MONITOR statement"
 check "VERIFY ran"                  "$out" "VERIFY run passed"
+check "effective guest timeout"     "$out" "effective GUEST_TIMEOUT is 180s"
+check "effective total deadline"    "$out" "effective TOTAL_DEADLINE is 240s"
 if (( rc == 0 )); then ok "exit 0"; else bad "exit was $rc"; fi
 [[ -f "$S/logs/stamp" ]] && ok "success stamp written" || bad "no success stamp"
 absent "no alert on success"        "$(cat "$CALLS")" "curl"
@@ -110,6 +114,27 @@ out=$(run UPSC_OUT=""); rc=$?
 check "no status reported" "$out" "the driver is not reporting"
 if (( rc != 0 )); then ok "exit non-zero"; else bad "exit was 0"; fi
 teardown
+
+echo "== the env file pinning a stale GUEST_TIMEOUT is caught =="
+# The 2026-09-20 case: script deployed, sha256 matches git, every other check
+# passes, and ups-shutdown.env still overrides GUEST_TIMEOUT back to 120.
+setup
+out=$(run STUB_GUEST=120); rc=$?
+check "stale guest timeout reported" "$out" "effective GUEST_TIMEOUT is 120s, expected 180s"
+check "names the env file"           "$out" "it overrides the script default"
+[[ $rc -ne 0 ]] && ok "exit non-zero" || bad "exit was $rc"
+
+echo "== EXPECT_GUEST_TIMEOUT retunes the check without code changes =="
+setup
+out=$(run STUB_GUEST=120 EXPECT_GUEST_TIMEOUT=120); rc=$?
+check "accepts the tuned value" "$out" "effective GUEST_TIMEOUT is 120s"
+[[ $rc -eq 0 ]] && ok "exit zero" || bad "exit was $rc"
+
+echo "== a stale TOTAL_DEADLINE is caught too =="
+setup
+out=$(run STUB_DEADLINE=200); rc=$?
+check "stale deadline reported" "$out" "effective TOTAL_DEADLINE is 200s, expected 240s"
+[[ $rc -ne 0 ]] && ok "exit non-zero" || bad "exit was $rc"
 
 echo "== a failing VERIFY is caught =="
 setup

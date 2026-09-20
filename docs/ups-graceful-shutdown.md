@@ -518,11 +518,36 @@ emitting a "Permission denied" line per log call.
 
 **Deploying a change is a separate step.** The script lives in git and runs from
 `/mnt/pool_0/scripts/ups-shutdown/` on the NAS; merging does not update the NAS.
-After any merge, copy it over and confirm:
+After any merge, copy it over, re-pin the sha, and confirm:
 
 ```bash
-sha256sum /mnt/pool_0/scripts/ups-shutdown/ups-graceful-shutdown.sh   # must match git
+scp scripts/ups-shutdown/ups-graceful-shutdown.sh \
+    truenas:/mnt/pool_0/scripts/ups-shutdown/
+cd /mnt/pool_0/scripts/ups-shutdown
+sha256sum ups-graceful-shutdown.sh > ups-graceful-shutdown.sh.sha256   # re-pin
+sha256sum ups-graceful-shutdown.sh                                     # must match git
 ```
+
+**A matching sha256 does not mean the change took effect.** `ups-shutdown.env`
+overrides the script's built-in defaults, so a correctly deployed script can still
+run with a stale timeout. On 2026-09-20 `GUEST_TIMEOUT_DEFAULT` was raised to 180
+and deployed, the sha matched git exactly, and the orchestrator went on running with
+120 because the env file pinned it — every check in the deploy procedure passed while
+the behaviour was unchanged.
+
+**So read the effective value back out of a VERIFY run**, which is the only place it
+is observable:
+
+```bash
+VERIFY=1 ./ups-graceful-shutdown.sh 2>&1 | grep -E 'deadline=|would poll up to'
+#   === UPS graceful shutdown starting (DRY_RUN=1, VERIFY=1, deadline=240s) ===
+#   [esxi01] DRY-RUN would poll up to 180s for guests to power off
+```
+
+`ups-preflight.sh` now does exactly this every Monday and fails on a mismatch
+(`EXPECT_GUEST_TIMEOUT`, `EXPECT_TOTAL_DEADLINE`). `HOST_TIMEOUT` has no equivalent
+check: it is only ever logged in a warning that cannot fire during a dry run, so
+there is nothing to read back.
 
 ## Knowing it is happening: the event watcher
 
