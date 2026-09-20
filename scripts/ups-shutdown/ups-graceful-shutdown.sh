@@ -49,7 +49,21 @@ ESXI_HOSTS_DEFAULT="esxi01=192.168.151.2 esxi02=192.168.151.3 esxi03=192.168.151
 
 # Seconds to wait for a host's guests to finish a Tools-initiated shutdown
 # before forcing them off.
-GUEST_TIMEOUT_DEFAULT=120
+#
+# 180, not 120. A Kubernetes node's shutdown is dominated by the kernel iSCSI
+# recovery timeout, not by kubelet: any Longhorn session still logged in when the
+# CSI plugin dies is orphaned, and the kernel waits out
+# node.session.timeo.replacement_timeout (120 s, a value Longhorn does not manage)
+# before releasing it. So
+#
+#     node shutdown  ~=  (time until the last session is orphaned) + 120 s
+#
+# kubelet kills the CSI plugin at the end of its first shutdown tier (30 s), which
+# bounds the first term regardless of how many volumes the node has. Measured
+# 2026-09-20: 120.9 s with 1 volume, 127.0 s with 3, 154.9 s with 14 -- all inside
+# the ~160 s the equation predicts. At the old 120 s even the quietest node in the
+# cluster missed the window and would have been force-powered-off mid-unmount.
+GUEST_TIMEOUT_DEFAULT=180
 
 # Seconds to wait for an ESXi host to drop off the network after poweroff.
 HOST_TIMEOUT_DEFAULT=60
