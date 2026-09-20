@@ -187,7 +187,7 @@ sequenceDiagram
             O->>H: vm.power -off, no graceful path exists
         end
     end
-    loop up to GUEST_TIMEOUT 120s, every 10s
+    loop up to GUEST_TIMEOUT 180s, every 10s
         O->>H: vm.info
         H-->>O: still poweredOn?
     end
@@ -236,28 +236,80 @@ gantt
     battery.runtime.low 300s           :0, 300
     section Orchestrator
     TOTAL_DEADLINE  240s               :0, 240
-    GUEST_TIMEOUT  120s                :0, 120
-    HOST_TIMEOUT 60s after guests      :120, 180
-    section Node
+    GUEST_TIMEOUT  180s                :0, 180
+    HOST_TIMEOUT 60s after guests      :180, 240
+    section Node - measured
+    orphaned iSCSI recovery 120s       :30, 150
+    section Node - kubelet tiers
     logind InhibitDelayMaxSec 70s      :0, 70
-    kubelet grace - normal pods 40s    :0, 40
-    kubelet grace - critical pods 20s  :40, 60
+    workloads 30s                      :0, 30
+    longhorn-critical 20s              :30, 50
+    system-critical 10s                :50, 60
 ```
 
 The node bars went live on 2026-09-20 (cluster repo issue #1269). Before that,
 `shutdownGracePeriod` was `0s` on all nine nodes, so containers were killed abruptly
 on every shutdown and `terminationGracePeriodSeconds` was never honoured.
 
-**The kubelet period must fit inside `GUEST_TIMEOUT`**, or every node gets
-force-powered-off mid-checkpoint, which is worse than not having it at all. 60s
-against 120s leaves the guest-shutdown poll room to observe the node actually stop.
+### A node's shutdown is dominated by iSCSI, not by kubelet
 
-### The node bars have their own nesting, one level down
+This is the single most counter-intuitive thing in the budget, and it is why
+`GUEST_TIMEOUT` is 180s rather than 120s.
 
-`shutdownGracePeriod` is the **total**, and `shutdownGracePeriodCriticalPods` is the
-slice reserved at the end of it — not an addition. 60s/20s means ordinary pods get
-40s, then critical pods get the last 20s. Raising the critical value shrinks the
-normal one.
+A Longhorn volume is reached over iSCSI. If a session is still logged in when the
+Longhorn CSI plugin pod dies, nothing can unstage it, and the kernel waits out
+`node.session.timeo.replacement_timeout` — **120s**, a default that
+[Longhorn does not manage](https://github.com/longhorn/longhorn/wiki/Longhorn-v1-Data-Plane-Timeouts) —
+before giving up. So:
+
+```
+node shutdown  ≈  (time until the last session is orphaned) + 120s
+```
+
+kubelet kills the CSI plugin at the end of its first tier, so that first term is
+bounded by the tier-0 length (30s) **no matter how many volumes the node has**.
+Measured 2026-09-20:
+
+| node | attached volumes | shutdown |
+| --- | --- | --- |
+| k8sworker06 | 1 | 120.9s |
+| k8sworker02 | 3 | 127.0s |
+| k8sworker04 | 14 | 154.9s |
+
+All three sit inside the ~160s the equation predicts, and **all three exceed the
+old 120s `GUEST_TIMEOUT`** — even the quietest node in the cluster would have been
+force-powered-off mid-unmount on every power event.
+
+Two consequences that are easy to get backwards:
+
+- **Widening tier 0 makes the bound worse, not better.** It delays when sessions
+  are orphaned, which delays the 120s clock. The equation only improves if *zero*
+  sessions are orphaned, so a partial improvement is strictly a regression. Tier 0
+  stays at 30s deliberately.
+- **Lowering `replacement_timeout` is not the obvious win it looks like.** On a
+  *running* node that same timeout is how long the initiator tolerates an engine
+  restart before surfacing I/O errors to the application. On a cluster with
+  recurring instance-manager churn, shortening it trades a slow shutdown for
+  filesystem errors during normal operation.
+
+### The kubelet tiers
+
+The node runs `shutdownGracePeriodByPodPriority`, not the simpler
+`shutdownGracePeriod` / `shutdownGracePeriodCriticalPods` pair. The two forms are
+alternatives; with the list form the scalar fields read back as `0s`.
+
+| priority | who | seconds |
+| --- | --- | --- |
+| 0 | ordinary workloads | 30 |
+| 1000000000 | `longhorn-critical` — CSI plugin, instance managers | 20 |
+| 2000000000 | `system-cluster-critical` / `system-node-critical` | 10 |
+
+**The middle tier exists because kubelet's built-in "critical" bucket starts at
+2000000000, and Longhorn's own `longhorn-critical` class is 1000000000.** With the
+two-value form there are only two buckets, so Longhorn's CSI plugin landed in the
+same tier as the workloads whose volumes it exists to unmount, and was killed
+alongside them. A chart calling its priority class "critical" does not make kubelet
+treat it as critical.
 
 Above both sits a systemd ceiling that is easy to miss. kubelet holds a logind
 inhibitor lock, and systemd honours it for at most `InhibitDelayMaxSec`. If that
@@ -305,17 +357,21 @@ kubelet config, so a name that loses the sort fails loudly instead of quietly.
 - **A hard deadline** (`TOTAL_DEADLINE`, 240 s) bounds the whole run. When it
   expires the NAS powers off regardless of what is still in flight. It is sized to
   fit inside the ~300 s the LOWBATT trigger leaves.
-- **Per-host guest timeout** (`GUEST_TIMEOUT`, 120 s), after which stragglers are
-  forced off so one stuck guest cannot block its host.
+- **Per-host guest timeout** (`GUEST_TIMEOUT`, 180 s), after which stragglers are
+  forced off so one stuck guest cannot block its host. Sized from measured node
+  shutdowns of 120.9-154.9 s — see the timing budget above for why they are that
+  long and why the figure is bounded.
 - **Host poweroff is confirmed**, not assumed — the script polls until the host
   stops answering on 443, so a silently-failed shutdown is visible in the log.
 - **A guest without running Tools is powered off immediately** rather than waiting
   out the full timeout, since no graceful path exists for it.
 - **The k8s nodes drain themselves inside their guest-shutdown window.** kubelet's
-  Graceful Node Shutdown (60s, split 40s/20s) runs while the orchestrator is waiting
-  out `GUEST_TIMEOUT`, so pods get their `terminationGracePeriodSeconds` instead of a
-  SIGKILL. It is bounded by a 70s logind inhibitor ceiling — see the timing budget
-  above for why that ceiling is not where you would expect to find it.
+  Graceful Node Shutdown (three priority tiers, 30s/20s/10s) runs while the
+  orchestrator is waiting out `GUEST_TIMEOUT`, so pods get their
+  `terminationGracePeriodSeconds` instead of a SIGKILL. It is bounded by a 70s logind
+  inhibitor ceiling — see the timing budget above for why that ceiling is not where
+  you would expect to find it, and why the node's total shutdown is longer than the
+  tiers suggest.
 
 ## Verification so far
 
