@@ -238,14 +238,63 @@ gantt
     TOTAL_DEADLINE  240s               :0, 240
     GUEST_TIMEOUT  120s                :0, 120
     HOST_TIMEOUT 60s after guests      :120, 180
-    section Node - proposed
-    kubelet shutdownGracePeriod 60s    :0, 60
+    section Node
+    logind InhibitDelayMaxSec 70s      :0, 70
+    kubelet grace - normal pods 40s    :0, 40
+    kubelet grace - critical pods 20s  :40, 60
 ```
 
-The bottom bar is not configured yet — kubelet's Graceful Node Shutdown is off, so
-containers are killed abruptly on every node shutdown (cluster repo issue #1269).
-**If it is ever enabled, its period must fit inside `GUEST_TIMEOUT`**, or every node
-gets force-powered-off mid-checkpoint, which is worse than not having it at all.
+The node bars went live on 2026-09-20 (cluster repo issue #1269). Before that,
+`shutdownGracePeriod` was `0s` on all nine nodes, so containers were killed abruptly
+on every shutdown and `terminationGracePeriodSeconds` was never honoured.
+
+**The kubelet period must fit inside `GUEST_TIMEOUT`**, or every node gets
+force-powered-off mid-checkpoint, which is worse than not having it at all. 60s
+against 120s leaves the guest-shutdown poll room to observe the node actually stop.
+
+### The node bars have their own nesting, one level down
+
+`shutdownGracePeriod` is the **total**, and `shutdownGracePeriodCriticalPods` is the
+slice reserved at the end of it — not an addition. 60s/20s means ordinary pods get
+40s, then critical pods get the last 20s. Raising the critical value shrinks the
+normal one.
+
+Above both sits a systemd ceiling that is easy to miss. kubelet holds a logind
+inhibitor lock, and systemd honours it for at most `InhibitDelayMaxSec`. If that
+value is below `shutdownGracePeriod`, pods get the **smaller** number while
+`configz` still reports the larger one — configured, reported, and inert.
+
+That ceiling is **not** in `/etc/systemd/logind.conf`, where the setting appears
+commented out as `#InhibitDelayMaxSec=5`. Ubuntu ships a package drop-in that sets
+it to 30s:
+
+```
+/usr/lib/systemd/logind.conf.d/unattended-upgrades-logind-maxdelay.conf
+```
+
+So ask systemd what is in effect rather than reading that one file:
+
+```bash
+systemd-analyze cat-config systemd/logind.conf | grep InhibitDelayMaxSec
+busctl get-property org.freedesktop.login1 /org/freedesktop/login1 \
+  org.freedesktop.login1.Manager InhibitDelayMaxUSec
+```
+
+**The override's filename decides whether it works at all.** systemd applies logind
+drop-ins in filename sort order across every drop-in directory, last assignment
+wins. The obvious name, `99-kubelet-graceful-shutdown.conf`, sorts *before*
+`unattended-upgrades-logind-maxdelay.conf` and would be silently overridden back to
+30s. Being in `/etc` does not save it — directory precedence only breaks ties
+between files with the *same* name. The live file is therefore:
+
+```
+/etc/systemd/logind.conf.d/zz-kubelet-inhibit-delay.conf
+  [Login]
+  InhibitDelayMaxSec=70
+```
+
+and the rollout asserts the live D-Bus value is `70000000` before touching the
+kubelet config, so a name that loses the sort fails loudly instead of quietly.
 
 ## Safety properties
 
@@ -262,6 +311,11 @@ gets force-powered-off mid-checkpoint, which is worse than not having it at all.
   stops answering on 443, so a silently-failed shutdown is visible in the log.
 - **A guest without running Tools is powered off immediately** rather than waiting
   out the full timeout, since no graceful path exists for it.
+- **The k8s nodes drain themselves inside their guest-shutdown window.** kubelet's
+  Graceful Node Shutdown (60s, split 40s/20s) runs while the orchestrator is waiting
+  out `GUEST_TIMEOUT`, so pods get their `terminationGracePeriodSeconds` instead of a
+  SIGKILL. It is bounded by a 70s logind inhibitor ceiling — see the timing budget
+  above for why that ceiling is not where you would expect to find it.
 
 ## Verification so far
 
