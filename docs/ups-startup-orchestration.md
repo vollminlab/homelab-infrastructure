@@ -262,6 +262,8 @@ Recorded rather than dropped, so it is not re-proposed.)*
 | HA restart priorities mirroring the tiers | **dropped** — see *Why HA priorities were dropped* |
 | Preflight covers the startup path too | **done** — 14 checks, incl. the startup sha and its VERIFY |
 | Arming it (boot hook) | **done** — TrueNAS init script id 2, POSTINIT |
+| BIOS "restore on AC power loss" on all three hosts | **done** 2026-09-16 (esxi03) and 2026-09-20 (esxi02, esxi01) |
+| NAS power restore policy | **already correct** — `always-on`, and the only policy the BMC supports |
 
 ### What was actually exercised, 2026-09-16
 
@@ -306,6 +308,55 @@ leftover files.
 
 **Still unexercised:** a real multi-tier sequence, which by definition needs guests
 that are actually off. The next planned power-down is the honest place for it.
+
+## Host and NAS power-on: what was actually set
+
+**All three ESXi hosts** now have BIOS *Restore on AC Power Loss = **Always On***
+(esxi03 2026-09-16; esxi02 and esxi01 2026-09-20). It must be `Always On`, never
+`Last State`: the orchestration deliberately powers the hosts off, so `Last State`
+means they stay off when utility returns — silently defeating the whole design.
+
+**The NAS needed nothing.** Its power restore policy was already correct, and is the
+only one its BMC offers:
+
+```
+$ sudo ipmitool chassis status | grep -i 'power restore'
+  Power Restore Policy : always-on
+$ sudo ipmitool chassis policy list
+  Supported chassis power policy:  always-on
+```
+
+Two things worth recording, because the assumption was that this would need a
+lab-wide outage to change in the BIOS:
+
+- **It is an IPMI chassis command, not a BIOS menu** — `ipmitool chassis policy
+  always-on` sets it live, with no reboot and no downtime, had it needed changing.
+- **`ipmitool` works in-band on the NAS**, over the local KCS interface, so it needs
+  no BMC network path and no BMC credentials. Just run it as root on the box.
+
+### What still cannot be verified remotely
+
+Neither ESXi nor AMT exposes the BIOS AC-recovery value, so the host settings are
+**unverified until an actual power event** — the first real outage, or a deliberate
+one in a future window, is the confirmation. The NAS setting, by contrast, is
+readable any time with the command above.
+
+### Getting a host evacuated, third and fourth time
+
+The recipe from the esxi03 rehearsal held, with two refinements:
+
+- **The local-storage control plane always blocks maintenance mode.** `k8scp0N` lives
+  on `esxi0N-local`, and DRS performs only compute vMotion, so it can never be
+  evacuated automatically. Drain the node, power the guest off, proceed.
+- **A VCHA node always has to be hand-migrated.** It was `vcenter-Passive` on esxi03
+  and esxi02, and the **active `vcenter`** on esxi01 — DRS moves it between runs, so
+  check which one is there rather than assuming. `govc vm.migrate` clears it in about
+  90 seconds, and vCenter tolerates moving itself.
+- **Do not race POST.** Use MeshCommander's *Power up to BIOS setup*, which sets an
+  AMT boot flag so the machine lands in setup directly. Powering on normally and
+  trying to catch the keypress cost an extra shutdown cycle on esxi02.
+- `govc host.maintenance.enter` takes the host **positionally**; `-host <path>` fails
+  with a bare `no argument`.
 
 ## The AMT fallback
 
