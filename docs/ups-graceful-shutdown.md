@@ -373,6 +373,57 @@ kubelet config, so a name that loses the sort fails loudly instead of quietly.
   you would expect to find it, and why the node's total shutdown is longer than the
   tiers suggest.
 
+## The trigger chain, and what can never be rehearsed
+
+Verified 2026-09-21 by reading the live TrueNAS UPS config and the registered
+init/shutdown scripts:
+
+| Link | How it is wired | Verified |
+| --- | --- | --- |
+| Power fails → on battery → alert | `ups-watch.sh`, cron id 6, every minute | **proven** 2026-09-16 with a stubbed `upsc` |
+| Battery drains → `battery.runtime` < 300 | `battery.runtime.low = 300` | measured: 1450 s runtime at 30 % load (~24 min) |
+| Low battery → FSD | `shutdown = LOWBATT` | registered |
+| FSD → orchestrator | `shutdowncmd = /mnt/pool_0/scripts/ups-shutdown/ups-graceful-shutdown.sh` | registered |
+| Orchestrator → guests | `ShutdownGuest` per host | VERIFY, 32 probes |
+| → hosts | `host.shutdown -f` | proven live on esxi02 and esxi03 |
+| → NAS | `poweroff_nas()`, `powerdown = True` (killpower) | the `-p` → `-P` bug was found and fixed here |
+| Power returns → hosts, NAS | BIOS AC-recovery on all three hosts; NAS BMC `always-on` | set 2026-09-16 |
+| NAS boots → startup orchestration | init/shutdown script id 2, `POSTINIT`, enabled, timeout 3600 | registered |
+
+Supporting settings: `mode = MASTER`, `hostsync = 15`, `rmonitor = True`,
+two NUT secondaries connected.
+
+**The orchestrator is upsmon's `SHUTDOWNCMD`.** That is worth stating plainly,
+because it rules out the obvious rehearsal: there is no way to make upsmon invoke
+it without a real shutdown. `upsmon -c fsd` fires the genuine article. A `DRY_RUN`
+dress rehearsal of the *trigger* is therefore impossible — `DRY_RUN` changes what
+the orchestrator does once it is running, not whether NUT decides to run it.
+
+So the ceiling on no-downtime verification is exactly the table above: every link
+is either proven, measured, or confirmed registered.
+
+### The two links that stay unproven
+
+1. **upsmon actually executing `SHUTDOWNCMD` on FSD.** This is NUT's own core
+   behaviour rather than anything written here, which is a materially different
+   bet from trusting untested local code.
+2. **The startup sequence running end to end.** This one is local code, and it is
+   the real remaining gap. Manual power-on is always available as a fallback, so
+   the failure mode is a slow recovery rather than a lost one.
+
+Both need a real or simulated outage. That is an accepted risk, not an oversight.
+
+### What a one-minute mains pull does and does not prove
+
+Pulling the UPS's *input* power is not the same as cutting power to the lab: the
+lab keeps running on battery. It exercises the `OL → OB` transition, the watcher's
+on-battery Pushover alert, and the `OB → OL` "power restored" alert — with ~24
+minutes of headroom before anything begins shutting down.
+
+It does **not** reach `LOWBATT`, so it proves nothing about FSD or the orchestrator.
+Leave it on battery for at least 90 seconds: the watcher polls once a minute, so a
+60-second outage can fall between two polls and produce no alert at all.
+
 ## Verification so far
 
 Dry run on the NAS, 2026-08-17. It enumerated all three hosts and 22 powered-on
