@@ -41,6 +41,21 @@ SS="${SS:-ss}"
 # USB connection to the UPS. If one stops connecting it is silently back to being
 # hard-cut when the outlets are killed, so the count is checked rather than assumed.
 EXPECT_SECONDARIES="${EXPECT_SECONDARIES:-2}"
+
+# The timeouts the orchestrator must actually be RUNNING with.
+#
+# These are checked against the VERIFY run's own output, not against the script's
+# defaults and not against the env file, because neither is the effective value:
+# ups-shutdown.env overrides the built-in defaults, so a deployed script whose
+# sha256 matches git can still run with a stale timeout. That is exactly what
+# happened on 2026-09-20 -- GUEST_TIMEOUT_DEFAULT was raised to 180 and deployed,
+# the sha matched, every existing check passed, and the env file was still
+# pinning 120.
+#
+# HOST_TIMEOUT is deliberately absent: it is only ever logged in a warning that
+# cannot fire during a dry run, so there is no honest way to observe it here.
+EXPECT_GUEST_TIMEOUT="${EXPECT_GUEST_TIMEOUT:-180}"
+EXPECT_TOTAL_DEADLINE="${EXPECT_TOTAL_DEADLINE:-240}"
 MIDCLT="${MIDCLT:-midclt}"
 CURL="${CURL:-curl}"
 UPS_IDENT="${UPS_IDENT:-ups@localhost}"
@@ -150,6 +165,25 @@ if [[ -x "$SHUTDOWN_SCRIPT" ]]; then
     pass "VERIFY run passed ($(grep -c 'PROBE PASS' <<< "$verify_out") probes)"
   else
     fail "VERIFY run failed: $(grep 'PROBE FAIL' <<< "$verify_out" | head -5 | tr '\n' ';')"
+  fi
+
+  # Effective timeouts, read back out of the run that just happened.
+  eff_guest=$(grep -oE 'would poll up to [0-9]+s' <<< "$verify_out" | grep -oE '[0-9]+' | head -1)
+  if [[ -z "$eff_guest" ]]; then
+    fail "could not read the effective GUEST_TIMEOUT out of the VERIFY run"
+  elif [[ "$eff_guest" == "$EXPECT_GUEST_TIMEOUT" ]]; then
+    pass "effective GUEST_TIMEOUT is ${eff_guest}s"
+  else
+    fail "effective GUEST_TIMEOUT is ${eff_guest}s, expected ${EXPECT_GUEST_TIMEOUT}s — check $ENV_FILE, it overrides the script default"
+  fi
+
+  eff_deadline=$(grep -oE 'deadline=[0-9]+s' <<< "$verify_out" | grep -oE '[0-9]+' | head -1)
+  if [[ -z "$eff_deadline" ]]; then
+    fail "could not read the effective TOTAL_DEADLINE out of the VERIFY run"
+  elif [[ "$eff_deadline" == "$EXPECT_TOTAL_DEADLINE" ]]; then
+    pass "effective TOTAL_DEADLINE is ${eff_deadline}s"
+  else
+    fail "effective TOTAL_DEADLINE is ${eff_deadline}s, expected ${EXPECT_TOTAL_DEADLINE}s — check $ENV_FILE, it overrides the script default"
   fi
 else
   skip "VERIFY not run — orchestrator not executable"
