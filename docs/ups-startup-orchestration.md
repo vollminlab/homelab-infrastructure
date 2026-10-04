@@ -1,6 +1,10 @@
-# UPS startup orchestration — plan
+# UPS startup orchestration
 
-**Status:** implemented (#34), **not yet armed** — see *Arming* below
+**Status:** implemented (#34) and **armed 2026-09-16** as TrueNAS init script id 2
+(`POSTINIT`, enabled, timeout 3600) — registration re-verified live 2026-10-04 and
+enforced weekly by the preflight (`EXPECT_STARTUP_ARMED`). **The hook has still never
+fired**: it only runs on a NAS boot, and the NAS has been up since 2026-08-08. See
+*Arming* below for what that does and does not prove.
 **Counterpart:** [ups-graceful-shutdown.md](ups-graceful-shutdown.md), which is complete and verified
 
 The shutdown path brings 22 guests, 3 hosts and the NAS down cleanly when the
