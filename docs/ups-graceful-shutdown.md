@@ -225,7 +225,30 @@ script exists to prevent. Polling `kill -0` in the main shell is the fix.
 ## The timing budget, and why it nests
 
 Every timeout here is bounded by the one above it. The window opens when `LOWBATT`
-fires, which is `battery.runtime.low` — 300 seconds of projected runtime.
+fires, which is `battery.runtime.low` — 300 seconds of **projected** runtime.
+
+> **`battery.runtime` is not a measurement, and 300 of its seconds are not 300 real
+> seconds.** Measured 2026-10-04 with a 102-second mains pull at 30 % load: the
+> projection fell from 1400 s to ~460 s within 90 seconds while `battery.voltage`
+> stayed **flat at 23.2 V** and the pack was barely touched. Both `battery.charge`
+> and `battery.runtime` on this unit are derived from terminal voltage, which sags
+> 25.6 → 23.2 V the instant load transfers, and they settle to ~33 % within a
+> minute regardless of actual capacity.
+>
+> The consequence is **benign, and accidental**. Because the projection collapses
+> early, `LOWBATT` fires a few minutes into an outage rather than with 300 real
+> seconds remaining. Against the ~20 minutes of genuine runtime seen in a real
+> outage, that leaves roughly 15 minutes of battery for a 240 s sequence — far
+> more margin than this budget claims to have.
+>
+> **So do not "fix" this.** Lowering `battery.runtime.low` to get more warning, or
+> correcting the gauge, removes the margin that currently makes the whole sequence
+> comfortable. The numbers below are safe because the trigger is pessimistic, not
+> because the projection is accurate.
+>
+> Full analysis in homelab-infrastructure#45. Every future event is recorded at
+> 15 s by `nut-exporter` (cluster repo #1302), so this no longer needs staging:
+> query `network_ups_tools_battery_voltage` and `network_ups_tools_battery_charge`.
 
 ```mermaid
 gantt
